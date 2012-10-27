@@ -1,0 +1,14 @@
+language: php
+
+php:
+  - 5.3
+  
+before_script:
+  - wget -nc http://getcomposer.org/composer.phar
+  - php composer.phar install --dev
+
+script: phpunit -c phpunit.xml.dist
+
+notifications:
+  email:
+    - info@endroid.nl
