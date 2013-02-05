@@ -6,7 +6,7 @@ class QrCode
 {
     protected $text = '';
 
-    protected $size = 100;
+    protected $size = 0;
 
     /**
      * @var resource
@@ -622,11 +622,16 @@ class QrCode
 		
 		
 		$mib=$max_modules_1side+8;
-		$qrcode_image_size=$mib*$qrcode_module_size;
-		if ($qrcode_image_size>1480){
-		  trigger_error("QRcode : Too large image size",E_USER_ERROR);
-		}
-		$output_image =ImageCreate($qrcode_image_size,$qrcode_image_size);
+
+        if ($this->size == 0) {
+            $this->size=$mib*$qrcode_module_size;
+            if ($this->size>1480){
+              trigger_error("QRcode : Too large image size",E_USER_ERROR);
+            }
+        }
+
+
+		$output_image =ImageCreate($this->size,$this->size);
 		
 		$image_path=$image_path."/qrv".$qrcode_version.".png";
 		
@@ -652,7 +657,7 @@ class QrCode
 		    $ii++;
 		}
 
-		ImageCopyResized($output_image,$base_image,0,0,0,0,$qrcode_image_size,$qrcode_image_size,$mib,$mib);
+		ImageCopyResized($output_image,$base_image,0,0,0,0,$this->size,$this->size,$mib,$mib);
 
         $this->image = $output_image;
 	}
