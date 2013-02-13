@@ -1,0 +1,7 @@
+tools:
+    php_cs_fixer: true
+    php_code_sniffer:
+        config:
+            standard: PSR2
+    php_mess_detector: true
+    php_analyzer: false
