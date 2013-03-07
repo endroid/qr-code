@@ -4,23 +4,72 @@ namespace Endroid\QrCode;
 
 class QrCode
 {
+    /**
+     * @var string
+     */
     protected $text = '';
 
+    /**
+     * @var int
+     */
     protected $size = 0;
+
+    /**
+     * @var int
+     */
+    protected $padding = 16;
 
     /**
      * @var resource
      */
     protected $image = null;
 
+    /**
+     * @param $text
+     */
     public function setText($text)
     {
         $this->text = $text;
     }
 
+    /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * @param $size
+     */
     public function setSize($size)
     {
         $this->size = $size;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
+
+    /**
+     * @param $padding
+     */
+    public function setPadding($padding)
+    {
+        $this->size = $padding;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPadding()
+    {
+        return $this->padding;
     }
 
     /**
@@ -32,7 +81,7 @@ class QrCode
     }
 
     /**
-     *
+     * @param null $filename
      */
     public function render($filename = null)
     {
@@ -47,7 +96,8 @@ class QrCode
     }
 
     /**
-     *
+     * @param string $format
+     * @return string
      */
     public function get($format = 'png')
     {
@@ -63,6 +113,9 @@ class QrCode
         return ob_get_clean();
     }
 
+    /**
+     * Create the image.
+     */
     public function create()
     {
         $target_filename = null;
@@ -632,6 +685,7 @@ class QrCode
 
 
 		$output_image =ImageCreate($this->size,$this->size);
+        imagecolorallocate($output_image, 255, 255, 255);
 		
 		$image_path=$image_path."/qrv".$qrcode_version.".png";
 		
@@ -657,7 +711,7 @@ class QrCode
 		    $ii++;
 		}
 
-		ImageCopyResized($output_image,$base_image,0,0,0,0,$this->size,$this->size,$mib,$mib);
+		ImageCopyResampled($output_image,$base_image,$this->padding,$this->padding,4,4,$this->size - $this->padding * 2,$this->size - $this->padding * 2,$mib - 8,$mib - 8);
 
         $this->image = $output_image;
 	}
