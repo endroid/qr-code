@@ -11,6 +11,7 @@ Tile helps you generate images containing a QR code.
 $qrCode = new Endroid\QrCode\QrCode();
 $qrCode->setText("Life is too short to be generating QR codes");
 $qrCode->setSize(300);
+$qrCode->setPadding(10);
 $qrCode->render();
 ```
 
