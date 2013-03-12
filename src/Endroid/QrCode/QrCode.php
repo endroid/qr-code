@@ -684,15 +684,15 @@ class QrCode
         }
 
 
-		$output_image =ImageCreate($this->size,$this->size);
+		$output_image =imagecreate($this->size,$this->size);
         imagecolorallocate($output_image, 255, 255, 255);
 
 		$image_path=$image_path."/qrv".$qrcode_version.".png";
 
-		$base_image=ImageCreateFromPNG($image_path);
+		$base_image=imagecreatefrompng($image_path);
 
-		$col[1]=ImageColorAllocate($base_image,0,0,0);
-		$col[0]=ImageColorAllocate($base_image,255,255,255);
+		$col[1]=imagecolorallocate($base_image,0,0,0);
+		$col[0]=imagecolorallocate($base_image,255,255,255);
 
 		$i=4;
 		$mxe=4+$max_modules_1side;
@@ -702,7 +702,7 @@ class QrCode
 		    $jj=0;
 		    while ($j<$mxe){
 		        if ($matrix_content[$ii][$jj] & $mask_content){
-		            ImageSetPixel($base_image,$i,$j,$col[1]);
+		            imagesetpixel($base_image,$i,$j,$col[1]);
 		        }
 		        $j++;
 		        $jj++;
@@ -711,7 +711,7 @@ class QrCode
 		    $ii++;
 		}
 
-		ImageCopyResampled($output_image,$base_image,$this->padding,$this->padding,4,4,$this->size - $this->padding * 2,$this->size - $this->padding * 2,$mib - 8,$mib - 8);
+		imagecopyresampled($output_image,$base_image,$this->padding,$this->padding,4,4,$this->size - $this->padding * 2,$this->size - $this->padding * 2,$mib - 8,$mib - 8);
 
         $this->image = $output_image;
 	}
