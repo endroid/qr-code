@@ -2,30 +2,146 @@
 
 namespace Endroid\QrCode;
 
-class QrCode
-{
-    /**
-     * @var string
-     */
+/**
+ * Generate QR Code
+ */
+class QrCode {
+
+    /** @const int Error Correction Level Low (7%) */
+    const LEVEL_L = 1;
+
+    /** @const int Error Correction Level Medium (15%) */
+    const LEVEL_M = 0;
+
+    /** @const int Error Correction Level Quartile (25%) */
+    const LEVEL_Q = 3;
+
+    /** @const int Error Correction Level High (30%) */
+    const LEVEL_H = 2;
+
+    /** @var string */
     protected $text = '';
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $size = 0;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $padding = 16;
 
-    /**
-     * @var resource
-     */
+    /** @var resource */
     protected $image = null;
 
+    /** @var int */
+    protected $version;
+
+    /** @var int */
+    protected $error_correction = self::LEVEL_M;
+
+    /** @var array */
+    protected $error_corrections_available = array(self::LEVEL_L, self::LEVEL_M, self::LEVEL_Q, self::LEVEL_H);
+
+    /** @var int */
+    protected $module_size;
+
+    /** @var string */
+    protected $image_type = 'png';
+
+    /** @var array */
+    protected $image_types_available = array('gif', 'png', 'jpeg', 'wbmp');
+
     /**
-     * @param $text
+     * Set QR Code version
+     *
+     * @param int $version QR Code version
+     */
+    public function setVersion($version)
+    {
+        if ($version <= 40 && $version >= 0)
+        {
+            $this->version = $version;
+        }
+    }
+
+    /**
+     * Return QR Code version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set QR Code error correction level
+     *
+     * @param int $error_correction Error Correction Level
+     */
+    public function setErrorCorrection($error_correction)
+    {
+        if (in_array($error_correction, $this->error_corrections_available))
+        {
+            $this->error_correction = $error_correction;
+        }
+    }
+
+    /**
+     * Return QR Code error correction level
+     *
+     * @return int
+     */
+    public function getErrorCorrection()
+    {
+        return $this->error_correction;
+    }
+
+    /**
+     * Set QR Code module size
+     *
+     * @param int $module_size Module size
+     */
+    public function setModuleSize($module_size)
+    {
+        $this->module_size = $module_size;
+    }
+
+    /**
+     * Return QR Code module size
+     *
+     * @return int
+     */
+    public function getModuleSize()
+    {
+        return $this->module_size;
+    }
+
+    /**
+     * Set image type for rendering
+     *
+     * @param string $image_type Image type
+     */
+    public function setImageType($image_type)
+    {
+        if (in_array($image_type, $this->image_types_available))
+        {
+            $this->image_type = $image_type;
+        }
+    }
+
+    /**
+     * Return image type for rendering
+     *
+     * @return string
+     */
+    public function getImageType()
+    {
+        return $this->image_type;
+    }
+
+    /**
+     * Set text to hide in QR Code
+     *
+     * @param string $text Text to hide
      */
     public function setText($text)
     {
@@ -33,6 +149,8 @@ class QrCode
     }
 
     /**
+     * Return text that will be hid in QR Code
+     *
      * @return string
      */
     public function getText()
@@ -41,7 +159,9 @@ class QrCode
     }
 
     /**
-     * @param $size
+     * Set QR Code size (width)
+     *
+     * @param int $size Width of the QR Code
      */
     public function setSize($size)
     {
@@ -49,6 +169,8 @@ class QrCode
     }
 
     /**
+     * Return QR Code size (width)
+     *
      * @return int
      */
     public function getSize()
@@ -57,7 +179,9 @@ class QrCode
     }
 
     /**
-     * @param $padding
+     * Set padding around the QR Code
+     *
+     * @param int $padding Padding around QR Code
      */
     public function setPadding($padding)
     {
@@ -65,6 +189,8 @@ class QrCode
     }
 
     /**
+     * Return padding around the QR Code
+     *
      * @return int
      */
     public function getPadding()
@@ -73,7 +199,9 @@ class QrCode
     }
 
     /**
-     * @param $filename
+     * Render the QR Code than save it to given file name
+     *
+     * @param string $filename File name of the QR Code
      */
     public function save($filename)
     {
@@ -81,30 +209,44 @@ class QrCode
     }
 
     /**
-     * @param null $filename
+     * Render the QR Code than save it to given file name or
+     * output it to the browser if not file name given.
+     *
+     * @param null|string $filename File name of the QR Code
      */
     public function render($filename = null)
     {
         $this->create();
 
-        if ($filename === null) {
+        if (is_null($filename))
+        {
             imagepng($this->image);
             die;
-        } else {
+        }
+        else
+        {
             imagepng($this->image, $filename);
         }
     }
 
     /**
-     * @param string $format
+     * Create QR Code and return its content
+     *
+     * @param string|null $format Image type (gif, png, wbmp, jpeg)
      * @return string
      */
-    public function get($format = 'png')
+    public function get($format = null)
     {
         $this->create();
 
-        if ($format == 'jpg') {
+        if ($format == 'jpg')
+        {
             $format = 'jpeg';
+        }
+
+        if ( ! in_array($format, $this->image_types_available))
+        {
+            $format = $this->image_type;
         }
 
         ob_start();
@@ -121,97 +263,101 @@ class QrCode
         $target_filename = null;
         $source_data = $this->text;
 
-		$path=__DIR__.'/../../../assets/data';
-		$image_path=__DIR__.'/../../../assets/image';
+		$path = __DIR__ . '/../../../assets/data';
+		$image_path = __DIR__ . '/../../../assets/image';
 
-		$version_ul=40;
+		$version_ul = 40;
 
-		$qrcode_data_string=@$_GET["d"];
+		$qrcode_data_string = $source_data;
 
-		$qrcode_data_string=$source_data;
+		$qrcode_error_correct = $this->error_correction;
+		$qrcode_module_size = $this->module_size;
+		$qrcode_version = $this->version;
+		$qrcode_image_type = $this->image_type;
 
-		$qrcode_error_correct=@$_GET["e"];
-		$qrcode_module_size=@$_GET["s"];
-		$qrcode_version=@$_GET["v"];
-		$qrcode_image_type=@$_GET["t"];
+		$qrcode_structureappend_n = @$_GET["n"];
+		$qrcode_structureappend_m = @$_GET["m"];
+		$qrcode_structureappend_parity = @$_GET["p"];
+		$qrcode_structureappend_originaldata = @$_GET["o"];
 
-		$qrcode_structureappend_n=@$_GET["n"];
-		$qrcode_structureappend_m=@$_GET["m"];
-		$qrcode_structureappend_parity=@$_GET["p"];
-		$qrcode_structureappend_originaldata=@$_GET["o"];
-
-
-		if (($qrcode_image_type=="J")||($qrcode_image_type=="j")){
-		    $qrcode_image_type="jpeg";
-		}else {
-		    $qrcode_image_type="png";
-		}
-
-		if ($qrcode_module_size>0) {
-		} else {
-		    if ($qrcode_image_type=="jpeg"){
-		        $qrcode_module_size=8;
-		    } else {
-		        $qrcode_module_size=4;
+		if ($qrcode_module_size <= 0)
+        {
+		    if ($qrcode_image_type == "jpeg")
+            {
+		        $qrcode_module_size = 8;
+		    }
+            else
+            {
+		        $qrcode_module_size = 4;
 		    }
 		}
-		$qrcode_data_string=rawurldecode($qrcode_data_string);
-		$data_length=strlen($qrcode_data_string);
-		if ($data_length<=0) {
+
+		$qrcode_data_string = rawurldecode($qrcode_data_string);
+		$data_length = strlen($qrcode_data_string);
+
+		if ($data_length <= 0)
+        {
 		    trigger_error("QRcode : Data do not exist.",E_USER_ERROR);
 		    exit;
 		}
-		$data_counter=0;
-		if ($qrcode_structureappend_n>1
-		 && $qrcode_structureappend_n<=16
-		 && $qrcode_structureappend_m>0
-		 && $qrcode_structureqppend_m<=16){
 
-		    $data_value[0]=3;
-		    $data_bits[0]=4;
+		$data_counter = 0;
 
-		    $data_value[1]=$qrcode_structureappend_m-1;
-		    $data_bits[1]=4;
+		if ($qrcode_structureappend_n > 1
+		 && $qrcode_structureappend_n <= 16
+		 && $qrcode_structureappend_m > 0
+		 && $qrcode_structureappend_m <= 16)
+        {
 
-		    $data_value[2]=$qrcode_structureappend_n-1;
-		    $data_bits[2]=4;
+		    $data_value[0] = 3;
+		    $data_bits[0] = 4;
+
+		    $data_value[1] = $qrcode_structureappend_m - 1;
+		    $data_bits[1] = 4;
+
+		    $data_value[2] = $qrcode_structureappend_n - 1;
+		    $data_bits[2] = 4;
 
 
-		    $originaldata_length=strlen($qrcode_structureappend_originaldata);
-		    if ($originaldata_length>1){
-		        $qrcode_structureappend_parity=0;
-		        $i=0;
-		        while ($i<$originaldata_length){
-		            $qrcode_structureappend_parity=($qrcode_structureappend_parity ^ ord(substr($qrcode_structureappend_originaldata,$i,1)));
+		    $originaldata_length = strlen($qrcode_structureappend_originaldata);
+
+		    if ($originaldata_length > 1)
+            {
+		        $qrcode_structureappend_parity = 0;
+		        $i = 0;
+
+		        while ($i < $originaldata_length)
+                {
+		            $qrcode_structureappend_parity =
+                        ($qrcode_structureappend_parity ^ ord(substr($qrcode_structureappend_originaldata, $i, 1)));
 		            $i++;
 		        }
 		    }
 
-		    $data_value[3]=$qrcode_structureappend_parity;
-		    $data_bits[3]=8;
+		    $data_value[3] = $qrcode_structureappend_parity;
+		    $data_bits[3] = 8;
 
-		    $data_counter=4;
+		    $data_counter = 4;
 		}
 
-		$data_bits[$data_counter]=4;
+		$data_bits[$data_counter] = 4;
 
 		/*  --- determine encode mode */
-
-		if (preg_match("/[^0-9]/",$qrcode_data_string)!=0){
-		    if (preg_match("/[^0-9A-Z \$\*\%\+\.\/\:\-]/",$qrcode_data_string)!=0) {
-
-
+		if (preg_match('/[^\d]/', $qrcode_data_string) != 0)
+        {
+		    if (preg_match('/[^\d\W\s\$\*\%\+\.\/\:\-]/', $qrcode_data_string) != 0)
+            {
 		     /*  --- 8bit byte mode */
 
-		        $codeword_num_plus=array(0,0,0,0,0,0,0,0,0,0,
-		8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,
-		8,8,8,8,8,8,8,8,8,8,8,8,8,8);
+		        $codeword_num_plus = array(0,0,0,0,0,0,0,0,0,0,8,8,8,8,
+                                           8,8,8,8,8,8,8,8,8,8,8,8,8,8,
+                                           8,8,8,8,8,8,8,8,8,8,8,8,8);
 
-		        $data_value[$data_counter]=4;
+		        $data_value[$data_counter] = 4;
 		        $data_counter++;
-		        $data_value[$data_counter]=$data_length;
-		        $data_bits[$data_counter]=8;   /* #version 1-9 */
-		        $codeword_num_counter_value=$data_counter;
+		        $data_value[$data_counter] = $data_length;
+		        $data_bits[$data_counter] = 8;   /* #version 1-9 */
+		        $codeword_num_counter_value = $data_counter;
 
 		        $data_counter++;
 		        $i=0;
@@ -311,7 +457,11 @@ class QrCode
 
 		 $ec=@$ecc_character_hash[$qrcode_error_correct];
 
+        $ec = $this->error_correction;
+
 		 if (!$ec){$ec=0;}
+
+        $max_data_bits = 0;
 
 		$max_data_bits_array=array(
 		0,128,224,352,512,688,864,992,1232,1456,1728,
@@ -401,6 +551,7 @@ class QrCode
 
 		$filename = $path."/rsc".$rs_ecc_codewords.".dat";
 		$fp0 = fopen ($filename, "rb");
+        $rs_cal_table_array = array();
 		$i=0;
 		while ($i<256) {
 		    $rs_cal_table_array[$i]=fread ($fp0,$rs_ecc_codewords);
@@ -542,7 +693,7 @@ class QrCode
 		}
 
 		/* ---- flash matrix */
-
+        $matrix_content = array();
 		$i=0;
 		while ($i<$max_modules_1side){
 		    $j=0;
@@ -592,6 +743,7 @@ class QrCode
 		    }
 		$i=0;
 		$all_matrix=$max_modules_1side * $max_modules_1side;
+        $mask_number = 0;
 		while ($i<8){
 		    $demerit_n1=0;
 		    $ptn_temp=array();
@@ -697,6 +849,7 @@ class QrCode
 		$i=4;
 		$mxe=4+$max_modules_1side;
 		$ii=0;
+        $matrix_content = array();
 		while ($i<$mxe){
 		    $j=4;
 		    $jj=0;
@@ -717,4 +870,3 @@ class QrCode
 	}
 
 }
-?>
