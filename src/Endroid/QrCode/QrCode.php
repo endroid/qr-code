@@ -2,30 +2,194 @@
 
 namespace Endroid\QrCode;
 
+use Endroid\QrCode\Exceptions\DataDoesntExistsException;
+use Endroid\QrCode\Exceptions\VersionTooLargeException;
+use Endroid\QrCode\Exceptions\ImageSizeTooLargeException;
+use Endroid\QrCode\Exceptions\ImageFunctionUnknownException;
+
+/**
+ * Generate QR Code
+ */
 class QrCode
 {
-    /**
-     * @var string
-     */
+
+    /** @const int Error Correction Level Low (7%) */
+    const LEVEL_LOW = 1;
+
+    /** @const int Error Correction Level Medium (15%) */
+    const LEVEL_MEDIUM = 0;
+
+    /** @const int Error Correction Level Quartile (25%) */
+    const LEVEL_QUARTILE = 3;
+
+    /** @const int Error Correction Level High (30%) */
+    const LEVEL_HIGH = 2;
+
+    /** @const string Image type png */
+    const IMAGE_TYPE_PNG = 'png';
+
+    /** @const string Image type gif */
+    const IMAGE_TYPE_GIF = 'gif';
+
+    /** @const string Image type jpeg */
+    const IMAGE_TYPE_JPEG = 'jpeg';
+
+    /** @const string Image type wbmp */
+    const IMAGE_TYPE_WBMP = 'wbmp';
+
+    /** @var string */
     protected $text = '';
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $size = 0;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $padding = 16;
 
-    /**
-     * @var resource
-     */
+    /** @var resource */
     protected $image = null;
 
+    /** @var int */
+    protected $version;
+
+    /** @var int */
+    protected $error_correction = self::LEVEL_MEDIUM;
+
+    /** @var array */
+    protected $error_corrections_available = array(self::LEVEL_LOW, self::LEVEL_MEDIUM,
+        self::LEVEL_QUARTILE, self::LEVEL_HIGH);
+
+    /** @var int */
+    protected $module_size;
+
+    /** @var string */
+    protected $image_type = self::IMAGE_TYPE_PNG;
+
+    /** @var array */
+    protected $image_types_available = array(self::IMAGE_TYPE_GIF, self::IMAGE_TYPE_PNG,
+        self::IMAGE_TYPE_JPEG, self::IMAGE_TYPE_WBMP);
+
+    /** @var int */
+    protected $structure_append_n;
+
+    /** @var int */
+    protected $structure_append_m;
+
+    /** @var int */
+    protected $structure_append_parity;
+
+    /** @var string */
+    protected $structure_append_original_data;
+
     /**
-     * @param $text
+     * Set structure append
+     *
+     * @param int $n
+     * @param int $m
+     * @param int $parity           Parity
+     * @param string $original_data Original data
+     */
+    public function setStructureAppend($n, $m, $parity, $original_data)
+    {
+        $this->structure_append_n = $n;
+        $this->structure_append_m = $m;
+        $this->structure_append_parity = $parity;
+        $this->structure_append_original_data = $original_data;
+    }
+
+    /**
+     * Set QR Code version
+     *
+     * @param int $version QR Code version
+     */
+    public function setVersion($version)
+    {
+        if ($version <= 40 && $version >= 0)
+        {
+            $this->version = $version;
+        }
+    }
+
+    /**
+     * Return QR Code version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set QR Code error correction level
+     *
+     * @param int $error_correction Error Correction Level
+     */
+    public function setErrorCorrection($error_correction)
+    {
+        if (in_array($error_correction, $this->error_corrections_available))
+        {
+            $this->error_correction = $error_correction;
+        }
+    }
+
+    /**
+     * Return QR Code error correction level
+     *
+     * @return int
+     */
+    public function getErrorCorrection()
+    {
+        return $this->error_correction;
+    }
+
+    /**
+     * Set QR Code module size
+     *
+     * @param int $module_size Module size
+     */
+    public function setModuleSize($module_size)
+    {
+        $this->module_size = $module_size;
+    }
+
+    /**
+     * Return QR Code module size
+     *
+     * @return int
+     */
+    public function getModuleSize()
+    {
+        return $this->module_size;
+    }
+
+    /**
+     * Set image type for rendering
+     *
+     * @param string $image_type Image type
+     */
+    public function setImageType($image_type)
+    {
+        if (in_array($image_type, $this->image_types_available))
+        {
+            $this->image_type = $image_type;
+        }
+    }
+
+    /**
+     * Return image type for rendering
+     *
+     * @return string
+     */
+    public function getImageType()
+    {
+        return $this->image_type;
+    }
+
+    /**
+     * Set text to hide in QR Code
+     *
+     * @param string $text Text to hide
      */
     public function setText($text)
     {
@@ -33,6 +197,8 @@ class QrCode
     }
 
     /**
+     * Return text that will be hid in QR Code
+     *
      * @return string
      */
     public function getText()
@@ -41,7 +207,9 @@ class QrCode
     }
 
     /**
-     * @param $size
+     * Set QR Code size (width)
+     *
+     * @param int $size Width of the QR Code
      */
     public function setSize($size)
     {
@@ -49,6 +217,8 @@ class QrCode
     }
 
     /**
+     * Return QR Code size (width)
+     *
      * @return int
      */
     public function getSize()
@@ -57,7 +227,9 @@ class QrCode
     }
 
     /**
-     * @param $padding
+     * Set padding around the QR Code
+     *
+     * @param int $padding Padding around QR Code
      */
     public function setPadding($padding)
     {
@@ -65,6 +237,8 @@ class QrCode
     }
 
     /**
+     * Return padding around the QR Code
+     *
      * @return int
      */
     public function getPadding()
@@ -73,7 +247,9 @@ class QrCode
     }
 
     /**
-     * @param $filename
+     * Render the QR Code than save it to given file name
+     *
+     * @param string $filename File name of the QR Code
      */
     public function save($filename)
     {
@@ -81,7 +257,10 @@ class QrCode
     }
 
     /**
-     * @param null $filename
+     * Render the QR Code than save it to given file name or
+     * output it to the browser if not file name given.
+     *
+     * @param null|string $filename File name of the QR Code
      */
     public function render($filename = null)
     {
@@ -96,15 +275,25 @@ class QrCode
     }
 
     /**
-     * @param string $format
+     * Create QR Code and return its content
+     *
+     * @param string|null $format Image type (gif, png, wbmp, jpeg)
      * @return string
      */
-    public function get($format = 'png')
+    public function get($format = null)
     {
         $this->create();
 
         if ($format == 'jpg') {
             $format = 'jpeg';
+        }
+
+        if ( ! in_array($format, $this->image_types_available)){
+            $format = $this->image_type;
+        }
+
+        if ( ! function_exists('image' . $format)){
+            throw new ImageFunctionUnknownException('QRCode: function image' . $format . ' does not exists.');
         }
 
         ob_start();
@@ -115,6 +304,11 @@ class QrCode
 
     /**
      * Create the image.
+     *
+     * @throws Exceptions\DataDoesntExistsException
+     * @throws Exceptions\VersionTooLargeException
+     * @throws Exceptions\ImageSizeTooLargeException
+     * @throws \OverflowException
      */
     public function create()
     {
@@ -126,26 +320,18 @@ class QrCode
 
 		$version_ul=40;
 
-		$qrcode_data_string=@$_GET["d"];
-
-		$qrcode_data_string=$source_data;
-
-		$qrcode_error_correct=@$_GET["e"];
-		$qrcode_module_size=@$_GET["s"];
-		$qrcode_version=@$_GET["v"];
-		$qrcode_image_type=@$_GET["t"];
-
-		$qrcode_structureappend_n=@$_GET["n"];
-		$qrcode_structureappend_m=@$_GET["m"];
-		$qrcode_structureappend_parity=@$_GET["p"];
-		$qrcode_structureappend_originaldata=@$_GET["o"];
+		$qrcode_data_string = $source_data;//Previously from $_GET["d"];
 
 
-		if (($qrcode_image_type=="J")||($qrcode_image_type=="j")){
-		    $qrcode_image_type="jpeg";
-		}else {
-		    $qrcode_image_type="png";
-		}
+		$qrcode_error_correct = $this->error_correction;//Previously from $_GET["e"];
+		$qrcode_module_size = $this->module_size;//Previously from $_GET["s"];
+		$qrcode_version = $this->version;//Previously from $_GET["v"];
+		$qrcode_image_type = $this->image_type;//Previously from $_GET["t"];
+
+		$qrcode_structureappend_n = $this->structure_append_n;//Previously from $_GET["n"];
+		$qrcode_structureappend_m = $this->structure_append_m;//Previously from $_GET["m"];
+		$qrcode_structureappend_parity = $this->structure_append_parity;//Previously from $_GET["p"];
+		$qrcode_structureappend_originaldata = $this->structure_append_original_data;//Previously from $_GET["o"];
 
 		if ($qrcode_module_size>0) {
 		} else {
@@ -158,14 +344,13 @@ class QrCode
 		$qrcode_data_string=rawurldecode($qrcode_data_string);
 		$data_length=strlen($qrcode_data_string);
 		if ($data_length<=0) {
-		    trigger_error("QRcode : Data do not exist.",E_USER_ERROR);
-		    exit;
+            throw new DataDoesntExistsException('QRCode: Data does not exists.');
 		}
 		$data_counter=0;
 		if ($qrcode_structureappend_n>1
 		 && $qrcode_structureappend_n<=16
 		 && $qrcode_structureappend_m>0
-		 && $qrcode_structureqppend_m<=16){
+		 && $qrcode_structureappend_m<=16){
 
 		    $data_value[0]=3;
 		    $data_bits[0]=4;
@@ -309,9 +494,15 @@ class QrCode
 		"H"=>"2",
 		"h"=>"2");
 
-		 $ec=@$ecc_character_hash[$qrcode_error_correct];
+        if ( ! is_numeric($qrcode_error_correct)){
+            $ec = @$ecc_character_hash[$qrcode_error_correct];
+        }else{
+            $ec = $qrcode_error_correct;
+        }
 
 		 if (!$ec){$ec=0;}
+
+        $max_data_bits = 0;
 
 		$max_data_bits_array=array(
 		0,128,224,352,512,688,864,992,1232,1456,1728,
@@ -354,7 +545,7 @@ class QrCode
 		     $max_data_bits=$max_data_bits_array[$qrcode_version+40*$ec];
 		}
 		if ($qrcode_version>$version_ul){
-		  trigger_error("QRcode : too large version.",E_USER_ERROR);
+            throw new VersionTooLargeException('QRCode : version too large');
 		}
 
 		$total_data_bits+=$codeword_num_plus[$qrcode_version];
@@ -402,6 +593,7 @@ class QrCode
 		$filename = $path."/rsc".$rs_ecc_codewords.".dat";
 		$fp0 = fopen ($filename, "rb");
 		$i=0;
+        $rs_cal_table_array = array();
 		while ($i<256) {
 		    $rs_cal_table_array[$i]=fread ($fp0,$rs_ecc_codewords);
 		    $i++;
@@ -419,8 +611,7 @@ class QrCode
 		        $data_bits[$data_counter]=$max_data_bits-$total_data_bits;
 		    } else {
 		        if ($total_data_bits>$max_data_bits){
-			    trigger_error("QRcode : Overflow error",E_USER_ERROR);
-			    exit;
+                    throw new \OverflowException('QRCode : Overflow error');
 		        }
 		    }
 		}
@@ -542,7 +733,7 @@ class QrCode
 		}
 
 		/* ---- flash matrix */
-
+        $matrix_content = array();
 		$i=0;
 		while ($i<$max_modules_1side){
 		    $j=0;
@@ -592,6 +783,7 @@ class QrCode
 		    }
 		$i=0;
 		$all_matrix=$max_modules_1side * $max_modules_1side;
+        $mask_number = 0;
 		while ($i<8){
 		    $demerit_n1=0;
 		    $ptn_temp=array();
@@ -679,7 +871,7 @@ class QrCode
         if ($this->size == 0) {
             $this->size=$mib*$qrcode_module_size;
             if ($this->size>1480){
-              trigger_error("QRcode : Too large image size",E_USER_ERROR);
+                throw new ImageSizeTooLargeException('QRCode : Image size too large');
             }
         }
 
