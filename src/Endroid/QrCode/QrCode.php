@@ -14,16 +14,28 @@ class QrCode
 {
 
     /** @const int Error Correction Level Low (7%) */
-    const LEVEL_L = 1;
+    const LEVEL_LOW = 1;
 
     /** @const int Error Correction Level Medium (15%) */
-    const LEVEL_M = 0;
+    const LEVEL_MEDIUM = 0;
 
     /** @const int Error Correction Level Quartile (25%) */
-    const LEVEL_Q = 3;
+    const LEVEL_QUARTILE = 3;
 
     /** @const int Error Correction Level High (30%) */
-    const LEVEL_H = 2;
+    const LEVEL_HIGH = 2;
+
+    /** @const string Image type png */
+    const IMAGE_TYPE_PNG = 'png';
+
+    /** @const string Image type gif */
+    const IMAGE_TYPE_GIF = 'gif';
+
+    /** @const string Image type jpeg */
+    const IMAGE_TYPE_JPEG = 'jpeg';
+
+    /** @const string Image type wbmp */
+    const IMAGE_TYPE_WBMP = 'wbmp';
 
     /** @var string */
     protected $text = '';
@@ -41,19 +53,21 @@ class QrCode
     protected $version;
 
     /** @var int */
-    protected $error_correction = self::LEVEL_M;
+    protected $error_correction = self::LEVEL_MEDIUM;
 
     /** @var array */
-    protected $error_corrections_available = array(self::LEVEL_L, self::LEVEL_M, self::LEVEL_Q, self::LEVEL_H);
+    protected $error_corrections_available = array(self::LEVEL_LOW, self::LEVEL_MEDIUM,
+        self::LEVEL_QUARTILE, self::LEVEL_HIGH);
 
     /** @var int */
     protected $module_size;
 
     /** @var string */
-    protected $image_type = 'png';
+    protected $image_type = self::IMAGE_TYPE_PNG;
 
     /** @var array */
-    protected $image_types_available = array('gif', 'png', 'jpeg', 'wbmp');
+    protected $image_types_available = array(self::IMAGE_TYPE_GIF, self::IMAGE_TYPE_PNG,
+        self::IMAGE_TYPE_JPEG, self::IMAGE_TYPE_WBMP);
 
     /** @var int */
     protected $structure_append_n;
