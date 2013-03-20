@@ -10,7 +10,8 @@ use Endroid\QrCode\Exceptions\ImageFunctionUnknownException;
 /**
  * Generate QR Code
  */
-class QrCode {
+class QrCode
+{
 
     /** @const int Error Correction Level Low (7%) */
     const LEVEL_L = 1;
