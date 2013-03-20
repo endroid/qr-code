@@ -5,6 +5,7 @@ namespace Endroid\QrCode;
 use Endroid\QrCode\Exceptions\DataDoesntExistsException;
 use Endroid\QrCode\Exceptions\VersionTooLargeException;
 use Endroid\QrCode\Exceptions\ImageSizeTooLargeException;
+use Endroid\QrCode\Exceptions\ImageFunctionUnknownException;
 
 /**
  * Generate QR Code
@@ -279,6 +280,11 @@ class QrCode {
         if ( ! in_array($format, $this->image_types_available))
         {
             $format = $this->image_type;
+        }
+
+        if ( ! function_exists('image' . $format))
+        {
+            throw new ImageFunctionUnknownException('QRCode: function image' . $format . ' does not exists.');
         }
 
         ob_start();
@@ -1019,7 +1025,6 @@ class QrCode {
 		$i = 4;
 		$mxe = 4 + $max_modules_1side;
 		$ii = 0;
-        $matrix_content = array();
 
 		while ($i < $mxe)
         {
