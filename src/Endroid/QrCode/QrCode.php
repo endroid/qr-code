@@ -254,6 +254,20 @@ class QrCode
     }
 
     /**
+     * Return the image resource
+     *
+     * @return resource
+     */
+    public function getImage()
+    {
+        if (empty($this->image)) {
+            $this->create();
+        }
+        
+        return $this->image;
+    }
+
+    /**
      * Render the QR Code than save it to given file name
      *
      * @param string $filename File name of the QR Code
