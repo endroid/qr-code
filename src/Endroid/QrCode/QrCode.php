@@ -333,15 +333,12 @@ class QrCode
      */
     public function create()
     {
-        $target_filename = null;
-        $source_data = $this->text;
-
 		$path=__DIR__.'/../../../assets/data';
 		$image_path=__DIR__.'/../../../assets/image';
 
 		$version_ul=40;
 
-		$qrcode_data_string = $source_data;//Previously from $_GET["d"];
+		$qrcode_data_string = $this->text;//Previously from $_GET["d"];
 
 
 		$qrcode_error_correct = $this->error_correction;//Previously from $_GET["e"];
@@ -362,7 +359,6 @@ class QrCode
 		        $qrcode_module_size=4;
 		    }
 		}
-		$qrcode_data_string=rawurldecode($qrcode_data_string);
 		$data_length=strlen($qrcode_data_string);
 		if ($data_length<=0) {
             throw new DataDoesntExistsException('QRCode: Data does not exists.');
