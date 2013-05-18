@@ -289,7 +289,6 @@ class QrCode
 
         if ($filename === null) {
             imagepng($this->image);
-            die;
         } else {
             imagepng($this->image, $filename);
         }
