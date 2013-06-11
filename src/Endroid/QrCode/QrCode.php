@@ -282,15 +282,28 @@ class QrCode
      * output it to the browser if not file name given.
      *
      * @param null|string $filename File name of the QR Code
+     * @param png|string $format Format of the file (png, jpeg, jpg, gif, wbmp)
      */
-    public function render($filename = null)
+    public function render($filename = null, $format = 'png')
     {
         $this->create();
 
+        if ($format == 'jpg') {
+            $format = 'jpeg';
+        }
+
+        if ( ! in_array($format, $this->image_types_available)){
+            $format = $this->image_type;
+        }
+
+        if ( ! function_exists('image' . $format)){
+            throw new ImageFunctionUnknownException('QRCode: function image' . $format . ' does not exists.');
+        }
+
         if ($filename === null) {
-            imagepng($this->image);
+            call_user_func('image'.$format, $this->image);
         } else {
-            imagepng($this->image, $filename);
+            call_user_func_array('image'.$format, array($this->image, $filename));
         }
     }
 
