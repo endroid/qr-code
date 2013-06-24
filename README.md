@@ -17,6 +17,8 @@ $qrCode->setPadding(10);
 $qrCode->render();
 ```
 
+![QR Code](doc/qrcode.png)
+
 ## Symfony
 
 You can use [`EndroidQrCodeBundle`](https://github.com/endroid/EndroidQrCodeBundle) to enable this service in your Symfony application.
