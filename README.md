@@ -17,7 +17,7 @@ $qrCode->setPadding(10);
 $qrCode->render();
 ```
 
-![QR Code](doc/qrcode.png)
+![QR Code](http://endroid.nl/qrcode/Life_is_too_short_to_be_generating_QR_codes.png)
 
 ## Symfony
 
