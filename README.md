@@ -4,6 +4,8 @@ Endroid QR Code
 *By [endroid](http://endroid.nl/)*
 
 [![Build Status](https://secure.travis-ci.org/endroid/QrCode.png)](http://travis-ci.org/endroid/QrCode)
+[![Latest Stable Version](https://poser.pugx.org/endroid/qrcode/v/stable.png)](https://packagist.org/packages/endroid/qrcode)
+[![Total Downloads](https://poser.pugx.org/endroid/qrcode/downloads.png)](https://packagist.org/packages/endroid/qrcode)
 
 Tile helps you generate images containing a QR code.
 
