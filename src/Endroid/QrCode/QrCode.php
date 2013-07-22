@@ -938,4 +938,3 @@ class QrCode
 	}
 
 }
-?>
