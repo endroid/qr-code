@@ -76,6 +76,12 @@ class QrCode
     protected $image_types_available = array(self::IMAGE_TYPE_GIF, self::IMAGE_TYPE_PNG,
         self::IMAGE_TYPE_JPEG, self::IMAGE_TYPE_WBMP);
 
+    /** @var string */
+    protected $image_path;
+
+    /** @var string */
+    protected $path;
+
     /** @var int */
     protected $structure_append_n;
 
@@ -87,6 +93,13 @@ class QrCode
 
     /** @var string */
     protected $structure_append_original_data;
+    
+    public function __construct($text = '')
+    {
+        $this->setPath(__DIR__.'/../../../assets/data');
+        $this->setImagePath(__DIR__.'/../../../assets/image');
+        $this->setText($text);
+    }
 
     /**
      * Set structure append
@@ -191,6 +204,46 @@ class QrCode
     public function getImageType()
     {
         return $this->image_type;
+    }
+
+    /**
+     * Set path to the images directory
+     *
+     * @param string $image_path Image directory
+     */
+    public function setImagePath($image_path)
+    {
+        $this->image_path = $image_path;
+    }
+
+    /**
+     * Return path to the images directory
+     *
+     * @return string
+     */
+    public function getImagePath()
+    {
+        return $this->image_path;
+    }
+
+    /**
+     * Set path to the data directory
+     *
+     * @param string $image_type Data directory
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * Return path to the data directory
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 
     /**
@@ -345,8 +398,8 @@ class QrCode
      */
     public function create()
     {
-		$path=__DIR__.'/../../../assets/data';
-		$image_path=__DIR__.'/../../../assets/image';
+		$image_path = $this->image_path;
+		$path = $this->path;
 
 		$version_ul=40;
 
