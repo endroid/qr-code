@@ -556,7 +556,7 @@ class QrCode
 		        $i++;
 		    }
 		}
-		if (@$data_bits[$data_counter]>0) {
+		if (array_key_exists($data_counter,$data_bits) && $data_bits[$data_counter]>0) {
 		    $data_counter++;
 		}
 		$i=0;
