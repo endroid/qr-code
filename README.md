@@ -7,7 +7,7 @@ Endroid QR Code
 [![Latest Stable Version](https://poser.pugx.org/endroid/qrcode/v/stable.png)](https://packagist.org/packages/endroid/qrcode)
 [![Total Downloads](https://poser.pugx.org/endroid/qrcode/downloads.png)](https://packagist.org/packages/endroid/qrcode)
 
-Tile helps you generate images containing a QR code.
+This library helps you generate images containing a QR code.
 
 ```php
 <?php
