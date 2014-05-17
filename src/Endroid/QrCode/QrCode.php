@@ -53,6 +53,12 @@ class QrCode
     /** @var int */
     protected $padding = 16;
 
+    /** @var array */
+    protected $color_foreground = array('r' => 0, 'g' => 0, 'b' => 0);
+
+    /** @var array */
+    protected $color_background = array('r' => 255, 'g' => 255, 'b' => 255);
+
     /** @var resource */
     protected $image = null;
 
@@ -93,7 +99,7 @@ class QrCode
 
     /** @var string */
     protected $structure_append_original_data;
-    
+
     public function __construct($text = '')
     {
         $this->setPath(__DIR__.'/../../../assets/data');
@@ -307,6 +313,46 @@ class QrCode
     }
 
     /**
+     * Set foreground color of the QR Code
+     *
+     * @param array $color_foreground RGB color
+     */
+    public function setForegroundColor($color_foreground)
+    {
+        $this->color_foreground = $color_foreground;
+    }
+
+    /**
+     * Return foreground color of the QR Code
+     *
+     * @return array
+     */
+    public function getForegroundColor()
+    {
+        return $this->color_foreground;
+    }
+
+    /**
+     * Set background color of the QR Code
+     *
+     * @param array $color_background RGB color
+     */
+    public function setBackgroundColor($color_background)
+    {
+        $this->color_background = $color_background;
+    }
+
+    /**
+     * Return background color of the QR Code
+     *
+     * @return array
+     */
+    public function getBackgroundColor()
+    {
+        return $this->color_background;
+    }
+
+    /**
      * Return the image resource
      *
      * @return resource
@@ -316,7 +362,7 @@ class QrCode
         if (empty($this->image)) {
             $this->create();
         }
-        
+
         return $this->image;
     }
 
@@ -986,6 +1032,16 @@ class QrCode
 		}
 
 		imagecopyresampled($output_image,$base_image,$this->padding,$this->padding,4,4,$this->size - $this->padding * 2,$this->size - $this->padding * 2,$mib - 8,$mib - 8);
+
+        if ($this->color_background != null) {
+            $index = imagecolorclosest($output_image, 255, 255, 255);
+            imagecolorset($output_image, $index, $this->color_background['r'], $this->color_background['g'], $this->color_background['b']);
+        }
+
+        if ($this->color_foreground != null) {
+            $index = imagecolorclosest($output_image, 0, 0, 0);
+            imagecolorset($output_image, $index, $this->color_foreground['r'], $this->color_foreground['g'], $this->color_foreground['b']);
+        }
 
         $this->image = $output_image;
 	}
