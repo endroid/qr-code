@@ -1004,7 +1004,7 @@ class QrCode
         }
 
 
-		$output_image =imagecreate($this->size,$this->size);
+		$output_image =imagecreate($this->size + $this->padding * 2,$this->size + $this->padding * 2);
         imagecolorallocate($output_image, 255, 255, 255);
 
 		$image_path=$image_path."/qrv".$qrcode_version.".png";
@@ -1031,7 +1031,7 @@ class QrCode
 		    $ii++;
 		}
 
-		imagecopyresampled($output_image,$base_image,$this->padding,$this->padding,4,4,$this->size - $this->padding * 2,$this->size - $this->padding * 2,$mib - 8,$mib - 8);
+		imagecopyresampled($output_image,$base_image,$this->padding,$this->padding,4,4,$this->size,$this->size,$mib - 8,$mib - 8);
 
         if ($this->color_background != null) {
             $index = imagecolorclosest($output_image, 255, 255, 255);
