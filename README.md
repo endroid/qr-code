@@ -6,6 +6,7 @@ Endroid QR Code
 [![Build Status](https://secure.travis-ci.org/endroid/QrCode.png)](http://travis-ci.org/endroid/QrCode)
 [![Latest Stable Version](https://poser.pugx.org/endroid/qrcode/v/stable.png)](https://packagist.org/packages/endroid/qrcode)
 [![Total Downloads](https://poser.pugx.org/endroid/qrcode/downloads.png)](https://packagist.org/packages/endroid/qrcode)
+[![Reference Status](https://www.versioneye.com/php/endroid:qrcode/reference_badge.svg?style=flat)](https://www.versioneye.com/php/endroid:qrcode/references)
 
 This library helps you generate images containing a QR code.
 
