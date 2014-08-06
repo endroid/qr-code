@@ -9,6 +9,6 @@
 
 namespace Endroid\QrCode\Exceptions;
 
-class ImageSizeTooLargeException extends \Exception {
-
+class ImageSizeTooLargeException extends \Exception
+{
 }

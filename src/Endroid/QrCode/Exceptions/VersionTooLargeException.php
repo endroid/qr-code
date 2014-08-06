@@ -9,6 +9,6 @@
 
 namespace Endroid\QrCode\Exceptions;
 
-class VersionTooLargeException extends \Exception {
-
+class VersionTooLargeException extends \Exception
+{
 }
