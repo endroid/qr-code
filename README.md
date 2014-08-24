@@ -3,28 +3,31 @@ Endroid QR Code
 
 *By [endroid](http://endroid.nl/)*
 
-[![Build Status](https://secure.travis-ci.org/endroid/QrCode.png)](http://travis-ci.org/endroid/QrCode)
 [![Latest Stable Version](https://poser.pugx.org/endroid/qrcode/v/stable.png)](https://packagist.org/packages/endroid/qrcode)
+[![Build Status](https://secure.travis-ci.org/endroid/QrCode.png)](http://travis-ci.org/endroid/QrCode)
 [![Total Downloads](https://poser.pugx.org/endroid/qrcode/downloads.png)](https://packagist.org/packages/endroid/qrcode)
-[![Reference Status](https://www.versioneye.com/php/endroid:qrcode/reference_badge.svg?style=flat)](https://www.versioneye.com/php/endroid:qrcode/references)
+[![License](http://img.shields.io/packagist/l/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
+[![PayPayl donate button](http://img.shields.io/badge/paypal-donate-orange.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGH86QN825TWN "Keep me off the streets")
 
 This library helps you generate images containing a QR code.
 
 ```php
 <?php
 
-$qrCode = new Endroid\QrCode\QrCode();
+use Endroid\QrCode\QrCode;
+
+$qrCode = new QrCode();
 $qrCode->setText("Life is too short to be generating QR codes");
 $qrCode->setSize(300);
 $qrCode->setPadding(10);
 $qrCode->render();
 ```
 
-![QR Code](http://endroid.nl/qrcode/Life_is_too_short_to_be_generating_QR_codes.png)
+![QR Code](http://endroid.nl/qrcode/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png)
 
 ## Symfony
 
-You can use [`EndroidQrCodeBundle`](https://github.com/endroid/EndroidQrCodeBundle) to enable this service in your Symfony application.
+You can use [`EndroidQrCodeBundle`](https://github.com/endroid/EndroidQrCodeBundle) to integrate this service in your Symfony application.
 
 ## License
 
