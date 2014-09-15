@@ -22,4 +22,11 @@ class QrCodeTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(true);
     }
+
+    public function testReadQrCode()
+    {
+        // TODO: check if the QR code is readable and contains the desired text
+
+        $this->assertTrue(true);
+    }
 }
