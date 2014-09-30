@@ -29,6 +29,10 @@ $qrCode->render();
 
 You can use [`EndroidQrCodeBundle`](https://github.com/endroid/EndroidQrCodeBundle) to integrate this service in your Symfony application.
 
+## Versioning
+
+Semantic versioning ([semver](http://semver.org/)) is applied.
+
 ## License
 
 This bundle is under the MIT license. For the full copyright and license information, please view the LICENSE file that
