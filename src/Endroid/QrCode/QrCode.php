@@ -13,6 +13,7 @@ use Endroid\QrCode\Exceptions\DataDoesntExistsException;
 use Endroid\QrCode\Exceptions\VersionTooLargeException;
 use Endroid\QrCode\Exceptions\ImageSizeTooLargeException;
 use Endroid\QrCode\Exceptions\ImageFunctionUnknownException;
+use ReflectionFunction;
 
 /**
  * Generate QR Code
@@ -1112,10 +1113,13 @@ class QrCode
         }
 
 		imagecopyresampled($output_image,$base_image,$this->padding,$this->padding,4,4,$this->size,$this->size,$mib - 8,$mib - 8);
+
+        $imagecolorset_function = new ReflectionFunction('imagecolorset');
+        $allow_alpha = $imagecolorset_function->getNumberOfParameters() == 6;
         
         if ($this->color_background != null) {
             $index = imagecolorclosest($output_image, 255, 255, 255);
-            if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+            if ($allow_alpha) {
                 imagecolorset($output_image, $index, $this->color_background['r'], $this->color_background['g'], $this->color_background['b'], $this->color_background['a']);
             } else {
                 imagecolorset($output_image, $index, $this->color_background['r'], $this->color_background['g'], $this->color_background['b']);
@@ -1124,7 +1128,7 @@ class QrCode
 
         if ($this->color_foreground != null) {
             $index = imagecolorclosest($output_image, 0, 0, 0);
-            if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+            if ($allow_alpha) {
                 imagecolorset($output_image, $index, $this->color_foreground['r'], $this->color_foreground['g'], $this->color_foreground['b'], $this->color_foreground['a']);
             } else {
                 imagecolorset($output_image, $index, $this->color_foreground['r'], $this->color_foreground['g'], $this->color_foreground['b']);
