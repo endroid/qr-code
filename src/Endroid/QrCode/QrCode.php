@@ -1115,12 +1115,20 @@ class QrCode
         
         if ($this->color_background != null) {
             $index = imagecolorclosest($output_image, 255, 255, 255);
-            imagecolorset($output_image, $index, $this->color_background['r'], $this->color_background['g'], $this->color_background['b'], $this->color_background['a']);
+            if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+                imagecolorset($output_image, $index, $this->color_background['r'], $this->color_background['g'], $this->color_background['b'], $this->color_background['a']);
+            } else {
+                imagecolorset($output_image, $index, $this->color_background['r'], $this->color_background['g'], $this->color_background['b']);
+            }
         }
 
         if ($this->color_foreground != null) {
             $index = imagecolorclosest($output_image, 0, 0, 0);
-            imagecolorset($output_image, $index, $this->color_foreground['r'], $this->color_foreground['g'], $this->color_foreground['b'], $this->color_foreground['a']);
+            if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+                imagecolorset($output_image, $index, $this->color_foreground['r'], $this->color_foreground['g'], $this->color_foreground['b'], $this->color_foreground['a']);
+            } else {
+                imagecolorset($output_image, $index, $this->color_foreground['r'], $this->color_foreground['g'], $this->color_foreground['b']);
+            }
         }
 
         $this->image = $output_image;
