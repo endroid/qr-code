@@ -160,11 +160,16 @@ class QrCode
     /**
      * Set QR Code error correction level
      *
-     * @param  int    $error_correction Error Correction Level
+     * @param  mixed    $error_correction Error Correction Level
      * @return QrCode
      */
     public function setErrorCorrection($error_correction)
     {
+        if (!is_numeric($error_correction)) {
+            $level_constant = 'Endroid\QrCode\QrCode::LEVEL_'.strtoupper($error_correction);
+            $error_correction = constant($level_constant);
+        }
+
         if (in_array($error_correction, $this->error_corrections_available)) {
             $this->error_correction = $error_correction;
         }
