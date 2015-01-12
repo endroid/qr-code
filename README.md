@@ -18,13 +18,14 @@ use Endroid\QrCode\QrCode;
 
 $qrCode = new QrCode();
 $qrCode
-    ->setText("Life is too short to be generating QR codes");
-    ->setSize(300);
-    ->setPadding(10);
+    ->setText("Life is too short to be generating QR codes")
+    ->setSize(300)
+    ->setPadding(10)
     ->setErrorCorrection('high')
-    ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0));
-    ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0));
-    ->render();
+    ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
+    ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
+    ->render()
+;
 ```
 
 ![QR Code](http://endroid.nl/qrcode/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png)
