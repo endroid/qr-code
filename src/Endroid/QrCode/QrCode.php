@@ -13,7 +13,6 @@ use Endroid\QrCode\Exceptions\DataDoesntExistsException;
 use Endroid\QrCode\Exceptions\VersionTooLargeException;
 use Endroid\QrCode\Exceptions\ImageSizeTooLargeException;
 use Endroid\QrCode\Exceptions\ImageFunctionUnknownException;
-use Endroid\QrCode\Exceptions\MissingFontPathException;
 use ReflectionFunction;
 
 /**
@@ -60,14 +59,14 @@ class QrCode
     /** @var array */
     protected $color_background = array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0);
 
+    /** @var string */
+    protected $label = '';
+
     /** @var int */
-    protected $font_size = 12;
+    protected $label_font_size = 16;
 
     /** @var string */
-    protected $font_path;
-
-    /** @var string */
-    protected $label;
+    protected $label_font_path = '';
 
     /** @var resource */
     protected $image = null;
@@ -127,6 +126,7 @@ class QrCode
     {
         $this->setPath(__DIR__.'/../../../assets/data');
         $this->setImagePath(__DIR__.'/../../../assets/image');
+        $this->setLabelFontPath(__DIR__.'/../../../assets/font/opensans.ttf');
         $this->setText($text);
     }
 
@@ -408,37 +408,37 @@ class QrCode
     }
 
     /**
-     * Set QR Code font size
+     * Set QR Code label font size
      *
-     * @param  int    $font_size Font size of the QR code label
+     * @param  int    $label_font_size Font size of the QR code label
      * @return QrCode
      */
-    public function setFontSize($font_size)
+    public function setLabelFontSize($label_font_size)
     {
-        $this->font_size = $font_size;
+        $this->label_font_size = $label_font_size;
 
         return $this;
     }
 
     /**
-     * Return QR Code font size
+     * Return QR Code label font size
      *
      * @return int
      */
-    public function getFontSize()
+    public function getLabelFontSize()
     {
-        return $this->font_size;
+        return $this->label_font_size;
     }
 
     /**
-     * Set QR Code size (width)
+     * Set QR Code label font path
      *
-     * @param  int    $size Path to the QR Code label's TTF font file
+     * @param  int    $label_font_path Path to the QR Code label's TTF font file
      * @return QrCode
      */
-    public function setFontPath($font_path)
+    public function setLabelFontPath($label_font_path)
     {
-        $this->font_path = $font_path;
+        $this->label_font_path = $label_font_path;
 
         return $this;
     }
@@ -448,9 +448,9 @@ class QrCode
      *
      * @return string
      */
-    public function getFontPath()
+    public function getLabelFontPath()
     {
-        return $this->font_path;
+        return $this->label_font_path;
     }
 
     /**
@@ -1172,29 +1172,24 @@ class QrCode
             }
         }
 
-        $total_x = $this->size + $this->padding * 2;
-        $total_y = $this->size + $this->padding * 2;
+        $image_width = $this->size + $this->padding * 2;
+        $image_height = $this->size + $this->padding * 2;
 
-        if (empty($this->font_path) && !empty($this->label)) {
-            throw new MissingFontPathException('QRCode : set font path when using a label');
-        }
-        $font_x = 0;
-        $font_y = 0;
         if (!empty($this->label)) {
-            $font_arr = imagettfbbox($this->font_size, 0, 'sites/all/modules/barcode/fonts/DroidSans.ttf', $this->label);
-            $font_x = (int)$font_arr[2] - (int)$font_arr[0];
-            $font_y = (int)$font_arr[0] - (int)$font_arr[7];
-            $total_y += $font_y + $this->padding*2;
+            $font_box = imagettfbbox($this->label_font_size, 0, $this->label_font_path, $this->label);
+            $label_width = (int) $font_box[2] - (int) $font_box[0];
+            $label_height = (int) $font_box[0] - (int) $font_box[7];
+            $image_height += $label_height + $this->padding;
         }
 
-        $output_image = imagecreate($total_x, $total_y);
+        $output_image = imagecreate($image_width, $image_height);
         imagecolorallocate($output_image, 255, 255, 255);
 
         if (!empty($this->label)) {
-            $font_start_x = floor($total_x - $font_x) / 2;
-            $font_start_y = $this->size + $font_y + $this->padding * 3;
+            $font_x = floor($image_width - $label_width) / 2;
+            $font_y = $image_height - $this->padding;
             $color = imagecolorallocate($output_image, 0, 0, 0);
-            imagettftext($output_image, $this->font_size, 0, $font_start_x, $font_start_y, $color, $this->font_path, $this->label);
+            imagettftext($output_image, $this->label_font_size, 0, $font_x, $font_y, $color, $this->label_font_path, $this->label);
         }
 
         $image_path = $image_path."/qrv".$qrcode_version.".png";
