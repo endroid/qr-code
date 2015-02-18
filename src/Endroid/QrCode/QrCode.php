@@ -16,7 +16,7 @@ use Endroid\QrCode\Exceptions\ImageFunctionUnknownException;
 use ReflectionFunction;
 
 /**
- * Generate QR Code
+ * Generate QR Code.
  */
 class QrCode
 {
@@ -131,12 +131,13 @@ class QrCode
     }
 
     /**
-     * Set structure append
+     * Set structure append.
      *
-     * @param  int    $n
-     * @param  int    $m
-     * @param  int    $parity        Parity
-     * @param  string $original_data Original data
+     * @param int    $n
+     * @param int    $m
+     * @param int    $parity        Parity
+     * @param string $original_data Original data
+     *
      * @return QrCode
      */
     public function setStructureAppend($n, $m, $parity, $original_data)
@@ -150,9 +151,10 @@ class QrCode
     }
 
     /**
-     * Set QR Code version
+     * Set QR Code version.
      *
-     * @param  int    $version QR Code version
+     * @param int $version QR Code version
+     *
      * @return QrCode
      */
     public function setVersion($version)
@@ -165,7 +167,7 @@ class QrCode
     }
 
     /**
-     * Return QR Code version
+     * Return QR Code version.
      *
      * @return int
      */
@@ -175,9 +177,10 @@ class QrCode
     }
 
     /**
-     * Set QR Code error correction level
+     * Set QR Code error correction level.
      *
-     * @param  mixed  $error_correction Error Correction Level
+     * @param mixed $error_correction Error Correction Level
+     *
      * @return QrCode
      */
     public function setErrorCorrection($error_correction)
@@ -195,7 +198,7 @@ class QrCode
     }
 
     /**
-     * Return QR Code error correction level
+     * Return QR Code error correction level.
      *
      * @return int
      */
@@ -205,9 +208,10 @@ class QrCode
     }
 
     /**
-     * Set QR Code module size
+     * Set QR Code module size.
      *
-     * @param  int    $module_size Module size
+     * @param int $module_size Module size
+     *
      * @return QrCode
      */
     public function setModuleSize($module_size)
@@ -218,7 +222,7 @@ class QrCode
     }
 
     /**
-     * Return QR Code module size
+     * Return QR Code module size.
      *
      * @return int
      */
@@ -228,9 +232,10 @@ class QrCode
     }
 
     /**
-     * Set image type for rendering
+     * Set image type for rendering.
      *
-     * @param  string $image_type Image type
+     * @param string $image_type Image type
+     *
      * @return QrCode
      */
     public function setImageType($image_type)
@@ -243,7 +248,7 @@ class QrCode
     }
 
     /**
-     * Return image type for rendering
+     * Return image type for rendering.
      *
      * @return string
      */
@@ -253,9 +258,10 @@ class QrCode
     }
 
     /**
-     * Set image type for rendering via extension
+     * Set image type for rendering via extension.
      *
-     * @param  string $extension Image extension
+     * @param string $extension Image extension
+     *
      * @return QrCode
      */
     public function setExtension($extension)
@@ -270,9 +276,10 @@ class QrCode
     }
 
     /**
-     * Set path to the images directory
+     * Set path to the images directory.
      *
-     * @param  string $image_path Image directory
+     * @param string $image_path Image directory
+     *
      * @return QrCode
      */
     public function setImagePath($image_path)
@@ -283,7 +290,7 @@ class QrCode
     }
 
     /**
-     * Return path to the images directory
+     * Return path to the images directory.
      *
      * @return string
      */
@@ -293,9 +300,10 @@ class QrCode
     }
 
     /**
-     * Set path to the data directory
+     * Set path to the data directory.
      *
-     * @param  string $path Data directory
+     * @param string $path Data directory
+     *
      * @return QrCode
      */
     public function setPath($path)
@@ -306,7 +314,7 @@ class QrCode
     }
 
     /**
-     * Return path to the data directory
+     * Return path to the data directory.
      *
      * @return string
      */
@@ -316,9 +324,10 @@ class QrCode
     }
 
     /**
-     * Set text to hide in QR Code
+     * Set text to hide in QR Code.
      *
-     * @param  string $text Text to hide
+     * @param string $text Text to hide
+     *
      * @return QrCode
      */
     public function setText($text)
@@ -329,7 +338,7 @@ class QrCode
     }
 
     /**
-     * Return text that will be hid in QR Code
+     * Return text that will be hid in QR Code.
      *
      * @return string
      */
@@ -339,9 +348,10 @@ class QrCode
     }
 
     /**
-     * Set QR Code size (width)
+     * Set QR Code size (width).
      *
-     * @param  int    $size Width of the QR Code
+     * @param int $size Width of the QR Code
+     *
      * @return QrCode
      */
     public function setSize($size)
@@ -352,7 +362,7 @@ class QrCode
     }
 
     /**
-     * Return QR Code size (width)
+     * Return QR Code size (width).
      *
      * @return int
      */
@@ -362,9 +372,10 @@ class QrCode
     }
 
     /**
-     * Set padding around the QR Code
+     * Set padding around the QR Code.
      *
-     * @param  int    $padding Padding around QR Code
+     * @param int $padding Padding around QR Code
+     *
      * @return QrCode
      */
     public function setPadding($padding)
@@ -375,7 +386,7 @@ class QrCode
     }
 
     /**
-     * Return padding around the QR Code
+     * Return padding around the QR Code.
      *
      * @return int
      */
@@ -385,9 +396,10 @@ class QrCode
     }
 
     /**
-     * Set QR Code label (text)
+     * Set QR Code label (text).
      *
-     * @param  int    $string Label to print under QR code
+     * @param int $string Label to print under QR code
+     *
      * @return QrCode
      */
     public function setLabel($label)
@@ -398,7 +410,7 @@ class QrCode
     }
 
     /**
-     * Return QR Code label (text)
+     * Return QR Code label (text).
      *
      * @return string
      */
@@ -408,9 +420,10 @@ class QrCode
     }
 
     /**
-     * Set QR Code label font size
+     * Set QR Code label font size.
      *
-     * @param  int    $label_font_size Font size of the QR code label
+     * @param int $label_font_size Font size of the QR code label
+     *
      * @return QrCode
      */
     public function setLabelFontSize($label_font_size)
@@ -421,7 +434,7 @@ class QrCode
     }
 
     /**
-     * Return QR Code label font size
+     * Return QR Code label font size.
      *
      * @return int
      */
@@ -431,9 +444,10 @@ class QrCode
     }
 
     /**
-     * Set QR Code label font path
+     * Set QR Code label font path.
      *
-     * @param  int    $label_font_path Path to the QR Code label's TTF font file
+     * @param int $label_font_path Path to the QR Code label's TTF font file
+     *
      * @return QrCode
      */
     public function setLabelFontPath($label_font_path)
@@ -444,7 +458,7 @@ class QrCode
     }
 
     /**
-     * Return path to the QR Code label's TTF font file
+     * Return path to the QR Code label's TTF font file.
      *
      * @return string
      */
@@ -454,9 +468,10 @@ class QrCode
     }
 
     /**
-     * Set foreground color of the QR Code
+     * Set foreground color of the QR Code.
      *
-     * @param  array  $color_foreground RGB color
+     * @param array $color_foreground RGB color
+     *
      * @return QrCode
      */
     public function setForegroundColor($color_foreground)
@@ -471,7 +486,7 @@ class QrCode
     }
 
     /**
-     * Return foreground color of the QR Code
+     * Return foreground color of the QR Code.
      *
      * @return array
      */
@@ -481,9 +496,10 @@ class QrCode
     }
 
     /**
-     * Set background color of the QR Code
+     * Set background color of the QR Code.
      *
-     * @param  array  $color_background RGB color
+     * @param array $color_background RGB color
+     *
      * @return QrCode
      */
     public function setBackgroundColor($color_background)
@@ -498,7 +514,7 @@ class QrCode
     }
 
     /**
-     * Return background color of the QR Code
+     * Return background color of the QR Code.
      *
      * @return array
      */
@@ -508,7 +524,7 @@ class QrCode
     }
 
     /**
-     * Return the image resource
+     * Return the image resource.
      *
      * @return resource
      */
@@ -522,7 +538,7 @@ class QrCode
     }
 
     /**
-     * Return the data URI
+     * Return the data URI.
      *
      * @return string
      */
@@ -540,9 +556,10 @@ class QrCode
     }
 
     /**
-     * Render the QR Code then save it to given file name
+     * Render the QR Code then save it to given file name.
      *
-     * @param  string $filename File name of the QR Code
+     * @param string $filename File name of the QR Code
+     *
      * @return QrCode
      */
     public function save($filename)
@@ -556,9 +573,11 @@ class QrCode
      * Render the QR Code then save it to given file name or
      * output it to the browser when file name omitted.
      *
-     * @param  null|string                   $filename File name of the QR Code
-     * @param  null|string                   $format   Format of the file (png, jpeg, jpg, gif, wbmp)
+     * @param null|string $filename File name of the QR Code
+     * @param null|string $format   Format of the file (png, jpeg, jpg, gif, wbmp)
+     *
      * @throws ImageFunctionUnknownException
+     *
      * @return QrCode
      */
     public function render($filename = null, $format = 'png')
@@ -587,10 +606,12 @@ class QrCode
     }
 
     /**
-     * Create QR Code and return its content
+     * Create QR Code and return its content.
      *
-     * @param  string|null                   $format Image type (gif, png, wbmp, jpeg)
+     * @param string|null $format Image type (gif, png, wbmp, jpeg)
+     *
      * @throws ImageFunctionUnknownException
+     *
      * @return string
      */
     public function get($format = null)
