@@ -398,7 +398,7 @@ class QrCode
     /**
      * Set QR Code label (text).
      *
-     * @param int $string Label to print under QR code
+     * @param int $label Label to print under QR code
      *
      * @return QrCode
      */
