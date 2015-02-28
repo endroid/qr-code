@@ -11,6 +11,16 @@ Endroid QR Code
 
 This library helps you generate images containing a QR code.
 
+## Installation
+
+Use [Composer](https://getcomposer.org/) to install the library.
+
+``` bash
+$ composer require endroid/qrcode
+```
+
+## Usage
+
 ```php
 <?php
 
