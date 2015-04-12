@@ -17,7 +17,9 @@
         "ext-gd": "*"
     },
     "autoload": {
-        "psr-0": { "Endroid": "src/" }
+        "psr-4": {
+            "Endroid\\": "src/Endroid/"
+        }
     },
     "extra": {
         "branch-alias": {
