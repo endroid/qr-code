@@ -1,7 +1,7 @@
 Endroid QR Code
 ==============
 
-*By [endroid](http://endroid.nl/)*
+*By [endroid](http://endroid.nl/) - Based on QRcode Perl CGI & PHP scripts by Y. Swetake*
 
 [![Latest Stable Version](http://img.shields.io/packagist/v/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
 [![Build Status](http://img.shields.io/travis/endroid/QrCode.svg)](http://travis-ci.org/endroid/QrCode)
