@@ -1,14 +1,14 @@
 Endroid QR Code
 ==============
 
-*By [endroid](http://endroid.nl/) - Based on QRcode Perl CGI & PHP scripts by Y. Swetake*
+*By [endroid](http://endroid.nl/)*
 
 [![Latest Stable Version](http://img.shields.io/packagist/v/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
 [![Build Status](http://img.shields.io/travis/endroid/QrCode.svg)](http://travis-ci.org/endroid/QrCode)
 [![Total Downloads](http://img.shields.io/packagist/dt/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
 [![License](http://img.shields.io/packagist/l/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
 
-This library helps you generate images containing a QR code.
+This library helps you generate images containing a QR code. Based on QRcode Perl CGI & PHP scripts by Y. Swetake.
 
 ## Installation
 
