@@ -8,7 +8,7 @@ Endroid QR Code
 [![Total Downloads](http://img.shields.io/packagist/dt/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
 [![License](http://img.shields.io/packagist/l/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
 
-This library helps you generate images containing a QR code. Based on QRcode Perl CGI & PHP scripts by Y. Swetake.
+This library based on QRcode Perl CGI & PHP scripts by Y. Swetake helps you generate images containing a QR code.
 
 ## Installation
 
