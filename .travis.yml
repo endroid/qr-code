@@ -12,7 +12,7 @@ before_script:
   - wget -nc http://getcomposer.org/composer.phar
   - php composer.phar install --dev
 
-script: phpunit -c phpunit.xml.dist
+script: bin/phpunit -c phpunit.xml.dist
 
 notifications:
   email:

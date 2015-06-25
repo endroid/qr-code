@@ -16,10 +16,17 @@
         "php": ">=5.3.0",
         "ext-gd": "*"
     },
+    "require-dev": {
+        "fabpot/php-cs-fixer": "~1.9",
+        "phpunit/phpunit": "~4.7"
+    },
     "autoload": {
         "psr-4": {
-            "Endroid\\": "src/Endroid/"
+            "Endroid\\QrCode\\": [ "src/", "tests/" ]
         }
+    },
+    "config": {
+        "bin-dir": "bin"
     },
     "extra": {
         "branch-alias": {

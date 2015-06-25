@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit bootstrap="./vendor/autoload.php" colors="true">
+<phpunit bootstrap="vendor/autoload.php" colors="true">
     <testsuites>
-        <testsuite name="QR Code Test Suite">
-            <directory suffix="Test.php">./tests/Endroid/</directory>
+        <testsuite>
+            <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist>
-            <directory suffix=".php">./src/Endroid/</directory>
-        </whitelist>
-    </filter>
 </phpunit>

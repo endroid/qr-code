@@ -10,8 +10,9 @@
 namespace Endroid\Tests\QrCode;
 
 use Endroid\QrCode\QrCode;
+use PHPUnit_Framework_TestCase;
 
-class QrCodeTest extends \PHPUnit_Framework_TestCase
+class QrCodeTest extends PHPUnit_Framework_TestCase
 {
     public function testCreateQrCode()
     {

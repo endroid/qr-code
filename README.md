@@ -1,5 +1,5 @@
-Endroid QR Code
-==============
+QR Code
+=======
 
 *By [endroid](http://endroid.nl/)*
 
