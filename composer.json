@@ -18,7 +18,8 @@
     },
     "require-dev": {
         "fabpot/php-cs-fixer": "~1.9",
-        "phpunit/phpunit": "~4.7"
+        "phpunit/phpunit": "~4.7",
+        "symfony/var-dumper": "~2.7"
     },
     "autoload": {
         "psr-4": {
