@@ -19,11 +19,16 @@
     "require-dev": {
         "fabpot/php-cs-fixer": "~1.0",
         "phpunit/phpunit": "~4.0",
-        "symfony/var-dumper": "~2.3"
+        "symfony/var-dumper": "~2.3|~3.0"
     },
     "autoload": {
         "psr-4": {
-            "Endroid\\QrCode\\": [ "src/", "tests/" ]
+            "Endroid\\QrCode\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Endroid\\QrCode\\": "tests/"
         }
     },
     "config": {
