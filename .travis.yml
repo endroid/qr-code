@@ -9,10 +9,9 @@ php:
   - hhvm
   
 before_script:
-  - wget -nc http://getcomposer.org/composer.phar
-  - php composer.phar install --dev
+  - composer install --dev
 
-script: bin/phpunit -c phpunit.xml.dist
+script: phpunit -c phpunit.xml.dist
 
 notifications:
   email:
