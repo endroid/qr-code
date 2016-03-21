@@ -56,6 +56,9 @@ class QrCode
     /** @var boolean */
     protected $draw_quiet_zone = false;
 
+    /** @var boolean */
+    protected $draw_border = false;
+
     /** @var array */
     protected $color_foreground = array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0);
 
@@ -419,6 +422,29 @@ class QrCode
     public function getDrawQuietzone()
     {
         return $this->draw_quiet_zone;
+    }
+
+    /**
+     * Set draw border around QR Code
+     *
+     * @param boolean $draw_border State of border drawing
+     * @return QrCode
+     */
+    public function setDrawBorder($draw_border)
+    {
+        $this->draw_border = $draw_border;
+
+        return $this;
+    }
+
+    /**
+     * Return draw border around QR Code
+     *
+     * @return boolean
+     */
+    public function getDrawBorder()
+    {
+        return $this->draw_border;
     }
 
     /**
@@ -1267,6 +1293,13 @@ class QrCode
             imagecopyresampled($output_image, $base_image, $this->padding, $this->padding, 0, 0, $this->size, $this->size, $mib, $mib);
         } else {
             imagecopyresampled($output_image, $base_image, $this->padding, $this->padding, 4, 4, $this->size, $this->size, $mib - 8, $mib - 8);
+        }
+
+        if ($this->draw_border == true) {
+            $border_width = $this->padding;
+            $border_height = $this->size + $this->padding - 1;
+            $border_color = imagecolorallocate($output_image, 0, 0, 0);
+            imagerectangle($output_image, $border_width, $border_width, $border_height, $border_height, $border_color);
         }
 
         $imagecolorset_function = new ReflectionFunction('imagecolorset');
