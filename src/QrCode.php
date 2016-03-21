@@ -53,6 +53,9 @@ class QrCode
     /** @var int */
     protected $padding = 16;
 
+    /** @var boolean */
+    protected $draw_quiet_zone = false;
+
     /** @var array */
     protected $color_foreground = array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0);
 
@@ -393,6 +396,29 @@ class QrCode
     public function getPadding()
     {
         return $this->padding;
+    }
+
+    /**
+     * Set draw required four-module wide margin
+     *
+     * @param boolean $draw_quiet_zone State of required four-module wide margin drawing
+     * @return QrCode
+     */
+    public function setDrawQuietzone($draw_quiet_zone)
+    {
+        $this->draw_quiet_zone = $draw_quiet_zone;
+
+        return $this;
+    }
+
+    /**
+     * Return draw required four-module wide margin
+     *
+     * @return boolean
+     */
+    public function getDrawQuietzone()
+    {
+        return $this->draw_quiet_zone;
     }
 
     /**
@@ -1237,7 +1263,11 @@ class QrCode
             ++$ii;
         }
 
-        imagecopyresampled($output_image, $base_image, $this->padding, $this->padding, 4, 4, $this->size, $this->size, $mib - 8, $mib - 8);
+        if ($this->draw_quiet_zone == true) {
+            imagecopyresampled($output_image, $base_image, $this->padding, $this->padding, 0, 0, $this->size, $this->size, $mib, $mib);
+        } else {
+            imagecopyresampled($output_image, $base_image, $this->padding, $this->padding, 4, 4, $this->size, $this->size, $mib - 8, $mib - 8);
+        }
 
         $imagecolorset_function = new ReflectionFunction('imagecolorset');
         $allow_alpha = $imagecolorset_function->getNumberOfParameters() == 6;
