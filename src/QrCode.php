@@ -446,7 +446,7 @@ class QrCode
      * @param boolean $draw_quiet_zone State of required four-module wide margin drawing
      * @return QrCode
      */
-    public function setDrawQuietzone($draw_quiet_zone)
+    public function setDrawQuietZone($draw_quiet_zone)
     {
         $this->draw_quiet_zone = $draw_quiet_zone;
 
@@ -458,7 +458,7 @@ class QrCode
      *
      * @return boolean
      */
-    public function getDrawQuietzone()
+    public function getDrawQuietZone()
     {
         return $this->draw_quiet_zone;
     }
