@@ -44,6 +44,39 @@ class QrCode
     /** @const string Image type wbmp */
     const IMAGE_TYPE_WBMP = 'wbmp';
 
+    /** @const int Horizontal label alignment to the center of image */
+    const LABEL_HALIGN_CENTER = 0;
+
+    /** @const int Horizontal label alignment to the left side of image */
+    const LABEL_HALIGN_LEFT = 1;
+
+    /** @const int Horizontal label alignment to the left border of QR Code */
+    const LABEL_HALIGN_LEFT_BORDER = 2;
+
+    /** @const int Horizontal label alignment to the left side of QR Code */
+    const LABEL_HALIGN_LEFT_CODE = 3;
+
+    /** @const int Horizontal label alignment to the right side of image */
+    const LABEL_HALIGN_RIGHT = 4;
+
+    /** @const int Horizontal label alignment to the right border of QR Code */
+    const LABEL_HALIGN_RIGHT_BORDER = 5;
+
+    /** @const int Horizontal label alignment to the right side of QR Code */
+    const LABEL_HALIGN_RIGHT_CODE = 6;
+
+    /** @const int Vertical label alignment to the top */
+    const LABEL_VALIGN_TOP = 1;
+
+    /** @const int Vertical label alignment to the top and hide border */
+    const LABEL_VALIGN_TOP_NO_BORDER = 2;
+
+    /** @const int Vertical label alignment to the middle*/
+    const LABEL_VALIGN_MIDDLE = 3;
+
+    /** @const int Vertical label alignment to the bottom */
+    const LABEL_VALIGN_BOTTOM = 4;
+
     /** @var string */
     protected $text = '';
 
@@ -52,6 +85,12 @@ class QrCode
 
     /** @var int */
     protected $padding = 16;
+
+    /** @var boolean */
+    protected $draw_quiet_zone = false;
+
+    /** @var boolean */
+    protected $draw_border = false;
 
     /** @var array */
     protected $color_foreground = array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0);
@@ -67,6 +106,12 @@ class QrCode
 
     /** @var string */
     protected $label_font_path = '';
+
+    /** @var int */
+    protected $label_halign = self::LABEL_HALIGN_CENTER;
+
+    /** @var int */
+    protected $label_valign = self::LABEL_VALIGN_MIDDLE;
 
     /** @var resource */
     protected $image = null;
@@ -396,6 +441,52 @@ class QrCode
     }
 
     /**
+     * Set draw required four-module wide margin
+     *
+     * @param boolean $draw_quiet_zone State of required four-module wide margin drawing
+     * @return QrCode
+     */
+    public function setDrawQuietZone($draw_quiet_zone)
+    {
+        $this->draw_quiet_zone = $draw_quiet_zone;
+
+        return $this;
+    }
+
+    /**
+     * Return draw required four-module wide margin
+     *
+     * @return boolean
+     */
+    public function getDrawQuietZone()
+    {
+        return $this->draw_quiet_zone;
+    }
+
+    /**
+     * Set draw border around QR Code
+     *
+     * @param boolean $draw_border State of border drawing
+     * @return QrCode
+     */
+    public function setDrawBorder($draw_border)
+    {
+        $this->draw_border = $draw_border;
+
+        return $this;
+    }
+
+    /**
+     * Return draw border around QR Code
+     *
+     * @return boolean
+     */
+    public function getDrawBorder()
+    {
+        return $this->draw_border;
+    }
+
+    /**
      * Set QR Code label (text).
      *
      * @param int $label Label to print under QR code
@@ -465,6 +556,51 @@ class QrCode
     public function getLabelFontPath()
     {
         return $this->label_font_path;
+    }
+
+    /**
+     * Set label horizontal alignment
+     *
+     * @param int $label_halign Label horizontal alignment
+     * @return QrCode
+     */
+    public function setLabelHalign($label_halign)
+    {
+        $this->label_halign = $label_halign;
+
+        return $this;
+    }
+
+    /**
+     * Return label horizontal alignment
+     *
+     * @return int
+     */
+    public function getLabelHalign()
+    {
+        return $this->label_halign;
+    }
+
+    /**
+     * Set label vertical alignment
+     *
+     * @param int $label_valign Label vertical alignment
+     * @return QrCode
+     */
+    public function setLabelValign($label_valign)
+    {
+        $this->label_valign = $label_valign;
+        return $this;
+    }
+
+    /**
+     * Return label vertical alignment
+     *
+     * @return int
+     */
+    public function getLabelValign()
+    {
+        return $this->label_valign;
     }
 
     /**
@@ -1200,22 +1336,25 @@ class QrCode
             $font_box = imagettfbbox($this->label_font_size, 0, $this->label_font_path, $this->label);
             $label_width = (int) $font_box[2] - (int) $font_box[0];
             $label_height = (int) $font_box[0] - (int) $font_box[7];
-            $image_height += $label_height + $this->padding;
+
+            if ($this->label_valign == self::LABEL_VALIGN_MIDDLE) {
+                $image_height += $label_height + $this->padding;
+
+            } else {
+                $image_height += $label_height;
+            }
         }
 
         $output_image = imagecreate($image_width, $image_height);
         imagecolorallocate($output_image, 255, 255, 255);
 
-        if (!empty($this->label)) {
-            $font_x = floor($image_width - $label_width) / 2;
-            $font_y = $image_height - $this->padding;
-            $color = imagecolorallocate($output_image, 0, 0, 0);
-            imagettftext($output_image, $this->label_font_size, 0, $font_x, $font_y, $color, $this->label_font_path, $this->label);
-        }
-
         $image_path = $image_path.'/qrv'.$qrcode_version.'.png';
 
         $base_image = imagecreatefrompng($image_path);
+        $code_size = $this->size;
+        $module_size = function($size = 1) use ($code_size, $base_image) {
+            return round($code_size / imagesx($base_image) * $size);
+        };
 
         $col[1] = imagecolorallocate($base_image, 0, 0, 0);
         $col[0] = imagecolorallocate($base_image, 255, 255, 255);
@@ -1237,7 +1376,83 @@ class QrCode
             ++$ii;
         }
 
-        imagecopyresampled($output_image, $base_image, $this->padding, $this->padding, 4, 4, $this->size, $this->size, $mib - 8, $mib - 8);
+        if ($this->draw_quiet_zone == true) {
+            imagecopyresampled($output_image, $base_image, $this->padding, $this->padding, 0, 0, $this->size, $this->size, $mib, $mib);
+        } else {
+            imagecopyresampled($output_image, $base_image, $this->padding, $this->padding, 4, 4, $this->size, $this->size, $mib - 8, $mib - 8);
+        }
+
+        if ($this->draw_border == true) {
+            $border_width = $this->padding;
+            $border_height = $this->size + $this->padding - 1;
+            $border_color = imagecolorallocate($output_image, 0, 0, 0);
+            imagerectangle($output_image, $border_width, $border_width, $border_height, $border_height, $border_color);
+        }
+
+        if (!empty($this->label)) {
+            // Label horizontal alignment
+            switch ($this->label_halign) {
+                case self::LABEL_HALIGN_LEFT:
+                    $font_x = 0;
+                    break;
+
+                case self::LABEL_HALIGN_LEFT_BORDER:
+                    $font_x = $this->padding;
+                    break;
+
+                case self::LABEL_HALIGN_LEFT_CODE:
+                    if ($this->draw_quiet_zone == true) {
+                        $font_x = $this->padding + $module_size(4);
+                    } else {
+                        $font_x = $this->padding;
+                    }
+                    break;
+
+                case self::LABEL_HALIGN_RIGHT:
+                    $font_x = $this->size + ($this->padding * 2) - $label_width;
+                    break;
+
+                case self::LABEL_HALIGN_RIGHT_BORDER:
+                    $font_x = $this->size + $this->padding - $label_width;
+                    break;
+
+                case self::LABEL_HALIGN_RIGHT_CODE:
+                    if ($this->draw_quiet_zone == true) {
+                        $font_x = $this->size + $this->padding - $label_width - $module_size(4);
+                    } else {
+                        $font_x = $this->size + $this->padding - $label_width;
+                    }
+                    break;
+
+                default:
+                    $font_x = floor($image_width - $label_width) / 2;
+            }
+
+            // Label vertical alignment
+            switch ($this->label_valign) {
+                case self::LABEL_VALIGN_TOP_NO_BORDER:
+                    $font_y = $image_height - $this->padding - 1;
+                    break;
+
+                case self::LABEL_VALIGN_BOTTOM:
+                    $font_y = $image_height;
+                    break;
+
+                default:
+                    $font_y = $image_height - $this->padding;
+            }
+
+            $label_bg_x1 =  $font_x - $module_size(2);
+            $label_bg_y1 =  $font_y - $label_height;
+            $label_bg_x2 =  $font_x + $label_width + $module_size(2);
+            $label_bg_y2 =  $font_y;
+
+            $color = imagecolorallocate($output_image, 0, 0, 0);
+            $label_bg_color = imagecolorallocate($output_image, 255, 255, 255);
+
+            imagefilledrectangle($output_image, $label_bg_x1, $label_bg_y1, $label_bg_x2, $label_bg_y2, $label_bg_color);
+            imagettftext($output_image, $this->label_font_size, 0, $font_x, $font_y, $color, $this->label_font_path, $this->label);
+        }
 
         $imagecolorset_function = new ReflectionFunction('imagecolorset');
         $allow_alpha = $imagecolorset_function->getNumberOfParameters() == 6;
