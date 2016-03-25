@@ -86,10 +86,10 @@ class QrCode
     /** @var int */
     protected $padding = 16;
 
-    /** @var boolean */
+    /** @var bool */
     protected $draw_quiet_zone = false;
 
-    /** @var boolean */
+    /** @var bool */
     protected $draw_border = false;
 
     /** @var array */
@@ -441,9 +441,10 @@ class QrCode
     }
 
     /**
-     * Set draw required four-module wide margin
+     * Set draw required four-module wide margin.
      *
-     * @param boolean $draw_quiet_zone State of required four-module wide margin drawing
+     * @param bool $draw_quiet_zone State of required four-module wide margin drawing
+     *
      * @return QrCode
      */
     public function setDrawQuietZone($draw_quiet_zone)
@@ -454,9 +455,9 @@ class QrCode
     }
 
     /**
-     * Return draw required four-module wide margin
+     * Return draw required four-module wide margin.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDrawQuietZone()
     {
@@ -464,9 +465,10 @@ class QrCode
     }
 
     /**
-     * Set draw border around QR Code
+     * Set draw border around QR Code.
      *
-     * @param boolean $draw_border State of border drawing
+     * @param bool $draw_border State of border drawing
+     *
      * @return QrCode
      */
     public function setDrawBorder($draw_border)
@@ -477,9 +479,9 @@ class QrCode
     }
 
     /**
-     * Return draw border around QR Code
+     * Return draw border around QR Code.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDrawBorder()
     {
@@ -559,9 +561,10 @@ class QrCode
     }
 
     /**
-     * Set label horizontal alignment
+     * Set label horizontal alignment.
      *
      * @param int $label_halign Label horizontal alignment
+     *
      * @return QrCode
      */
     public function setLabelHalign($label_halign)
@@ -572,7 +575,7 @@ class QrCode
     }
 
     /**
-     * Return label horizontal alignment
+     * Return label horizontal alignment.
      *
      * @return int
      */
@@ -582,19 +585,21 @@ class QrCode
     }
 
     /**
-     * Set label vertical alignment
+     * Set label vertical alignment.
      *
      * @param int $label_valign Label vertical alignment
+     *
      * @return QrCode
      */
     public function setLabelValign($label_valign)
     {
         $this->label_valign = $label_valign;
+
         return $this;
     }
 
     /**
-     * Return label vertical alignment
+     * Return label vertical alignment.
      *
      * @return int
      */
@@ -1339,7 +1344,6 @@ class QrCode
 
             if ($this->label_valign == self::LABEL_VALIGN_MIDDLE) {
                 $image_height += $label_height + $this->padding;
-
             } else {
                 $image_height += $label_height;
             }
@@ -1352,7 +1356,7 @@ class QrCode
 
         $base_image = imagecreatefrompng($image_path);
         $code_size = $this->size;
-        $module_size = function($size = 1) use ($code_size, $base_image) {
+        $module_size = function ($size = 1) use ($code_size, $base_image) {
             return round($code_size / imagesx($base_image) * $size);
         };
 
@@ -1442,10 +1446,10 @@ class QrCode
                     $font_y = $image_height - $this->padding;
             }
 
-            $label_bg_x1 =  $font_x - $module_size(2);
-            $label_bg_y1 =  $font_y - $label_height;
-            $label_bg_x2 =  $font_x + $label_width + $module_size(2);
-            $label_bg_y2 =  $font_y;
+            $label_bg_x1 = $font_x - $module_size(2);
+            $label_bg_y1 = $font_y - $label_height;
+            $label_bg_x2 = $font_x + $label_width + $module_size(2);
+            $label_bg_y2 = $font_y;
 
             $color = imagecolorallocate($output_image, 0, 0, 0);
             $label_bg_color = imagecolorallocate($output_image, 255, 255, 255);
