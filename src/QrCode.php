@@ -10,6 +10,7 @@
 namespace Endroid\QrCode;
 
 use Endroid\QrCode\Exceptions\DataDoesntExistsException;
+use Endroid\QrCode\Exceptions\FreeTypeLibraryMissingException;
 use Endroid\QrCode\Exceptions\VersionTooLargeException;
 use Endroid\QrCode\Exceptions\ImageSizeTooLargeException;
 use Endroid\QrCode\Exceptions\ImageFunctionUnknownException;
@@ -1338,6 +1339,9 @@ class QrCode
         $image_height = $this->size + $this->padding * 2;
 
         if (!empty($this->label)) {
+            if (!function_exists('imagettfbbox')) {
+                throw new FreeTypeLibraryMissingException('Missing function "imagettfbbox". Did you install the FreeType library?');
+            }
             $font_box = imagettfbbox($this->label_font_size, 0, $this->label_font_path, $this->label);
             $label_width = (int) $font_box[2] - (int) $font_box[0];
             $label_height = (int) $font_box[0] - (int) $font_box[7];
