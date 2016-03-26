@@ -11,6 +11,7 @@ namespace Endroid\QrCode;
 
 use Endroid\QrCode\Exceptions\DataDoesntExistsException;
 use Endroid\QrCode\Exceptions\FreeTypeLibraryMissingException;
+use Endroid\QrCode\Exceptions\ImageFunctionFailedException;
 use Endroid\QrCode\Exceptions\VersionTooLargeException;
 use Endroid\QrCode\Exceptions\ImageSizeTooLargeException;
 use Endroid\QrCode\Exceptions\ImageFunctionUnknownException;
@@ -719,6 +720,7 @@ class QrCode
      * @param null|string $format   Format of the file (png, jpeg, jpg, gif, wbmp)
      *
      * @throws ImageFunctionUnknownException
+     * @throws ImageFunctionFailedException
      *
      * @return QrCode
      */
@@ -739,9 +741,13 @@ class QrCode
         }
 
         if ($filename === null) {
-            call_user_func('image'.$format, $this->image);
+            $success = call_user_func('image'.$format, $this->image);
         } else {
-            call_user_func_array('image'.$format, array($this->image, $filename));
+            $success = call_user_func_array('image'.$format, array($this->image, $filename));
+        }
+
+        if ($success === false) {
+            throw new ImageFunctionFailedException('QRCode: function image'.$format.' failed.');
         }
 
         return $this;
@@ -753,6 +759,7 @@ class QrCode
      * @param string|null $format Image type (gif, png, wbmp, jpeg)
      *
      * @throws ImageFunctionUnknownException
+     * @throws ImageFunctionFailedException
      *
      * @return string
      */
@@ -773,7 +780,11 @@ class QrCode
         }
 
         ob_start();
-        call_user_func('image'.$format, $this->image);
+        $success = call_user_func('image'.$format, $this->image);
+
+        if ($success === false) {
+            throw new ImageFunctionFailedException('QRCode: function image'.$format.' failed.');
+        }
 
         return ob_get_clean();
     }
@@ -815,7 +826,7 @@ class QrCode
         }
         $data_length = strlen($qrcode_data_string);
         if ($data_length <= 0) {
-            throw new DataDoesntExistsException('QRCode: Data does not exists.');
+            throw new DataDoesntExistsException('QRCode: data does not exists.');
         }
         $data_counter = 0;
         if ($qrcode_structureappend_n > 1
@@ -1076,7 +1087,7 @@ class QrCode
                 $data_bits[$data_counter] = $max_data_bits - $total_data_bits;
             } else {
                 if ($total_data_bits > $max_data_bits) {
-                    throw new \OverflowException('QRCode : Overflow error');
+                    throw new \OverflowException('QRCode: overflow error');
                 }
             }
         }
@@ -1331,7 +1342,7 @@ class QrCode
         if ($this->size == 0) {
             $this->size = $mib * $qrcode_module_size;
             if ($this->size > 1480) {
-                throw new ImageSizeTooLargeException('QRCode : Image size too large');
+                throw new ImageSizeTooLargeException('QRCode: image size too large');
             }
         }
 
@@ -1340,7 +1351,7 @@ class QrCode
 
         if (!empty($this->label)) {
             if (!function_exists('imagettfbbox')) {
-                throw new FreeTypeLibraryMissingException('Missing function "imagettfbbox". Did you install the FreeType library?');
+                throw new FreeTypeLibraryMissingException('QRCode: missing function "imagettfbbox". Did you install the FreeType library?');
             }
             $font_box = imagettfbbox($this->label_font_size, 0, $this->label_font_path, $this->label);
             $label_width = (int) $font_box[2] - (int) $font_box[0];
