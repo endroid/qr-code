@@ -826,7 +826,7 @@ class QrCode
         }
         $data_length = strlen($qrcode_data_string);
         if ($data_length <= 0) {
-            throw new DataDoesntExistsException('QRCode: data does not exists.');
+            throw new DataDoesntExistsException('QRCode: data does not exist.');
         }
         $data_counter = 0;
         if ($qrcode_structureappend_n > 1
