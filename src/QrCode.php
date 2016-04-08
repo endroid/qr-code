@@ -694,7 +694,6 @@ class QrCode
         ob_start();
         call_user_func('image'.$this->image_type, $this->image);
         $contents = ob_get_clean();
-        ob_end_flush();
 
         return 'data:image/'.$this->image_type.';base64,'.base64_encode($contents);
     }
@@ -788,7 +787,6 @@ class QrCode
         }
 
         $content = ob_get_clean();
-        ob_end_flush();
 
         return $content;
     }
