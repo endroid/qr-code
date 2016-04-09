@@ -80,6 +80,11 @@ class QrCode
     const LABEL_VALIGN_BOTTOM = 4;
 
     /** @var string */
+    protected $logo = NULL;
+
+    protected $logo_size = 48;
+
+    /** @var string */
     protected $text = '';
 
     /** @var int */
@@ -368,6 +373,37 @@ class QrCode
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * Set logo in QR Code.
+     *
+     * @param string $logo Logo Path
+     * @throws Exceptions\DataDoesntExistsException
+     * @return QrCode
+     */
+    public function setLogo($logo)
+    {
+        if(!file_exists($logo)){
+            throw new DataDoesntExistsException("$logo file does not exist");
+        }
+        
+        $this->logo = $logo;
+        return $this;
+    }
+
+    /**
+     * Set logo size in QR Code(default 48).
+     *
+     * @param int $logo_size Logo Size
+     *
+     * @return QrCode
+     */
+    public function setLogoSize($logo_size)
+    {
+        $this->logo_size = $logo_size;
+
+        return $this;
     }
 
     /**
@@ -1496,6 +1532,24 @@ class QrCode
             }
         }
 
+        if(!empty($this->logo))
+        {
+            $logo_image = call_user_func('imagecreatefrom'.$this->image_type, $this->logo);
+            if(!$logo_image){
+                throw new ImageFunctionFailedException('imagecreatefrom'.$this->image_type . ' ' . $this->logo . 'failed' );
+            }
+            $src_w = imagesx($logo_image);
+            $src_h = imagesy($logo_image);
+
+            $dst_x = ($image_width - $this->logo_size) / 2;
+            $dst_y = ($this->size + $this->padding * 2 - $this->logo_size) / 2;
+
+            $successful = imagecopyresampled($output_image, $logo_image, $dst_x, $dst_y, 0, 0, $this->logo_size, $this->logo_size, $src_w, $src_h);
+            if(!$successful){
+                throw new ImageFunctionFailedException('add logo [image'.$this->format.'] failed.');
+            }
+            imagedestroy($logo_image);
+        }
         $this->image = $output_image;
     }
 }
