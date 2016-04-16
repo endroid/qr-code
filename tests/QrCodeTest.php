@@ -47,6 +47,20 @@ class QrCodeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests if a valid image string is returned.
+     *
+     * @throws ImageFunctionFailedException
+     * @throws ImageFunctionUnknownException
+     */
+    public function testGetQrCodeWithLogoString()
+    {
+        $qrCode = $this->createQrCodeWithLogo();
+        $imageString = $qrCode->get('png');
+
+        $this->assertTrue(is_string($imageString));
+    }
+
+    /**
      * Returns a QR code.
      */
     protected function getQrCode()
@@ -68,6 +82,17 @@ class QrCodeTest extends PHPUnit_Framework_TestCase
         $qrCode = new QrCode();
         $qrCode->setText('Life is too short to be generating QR codes');
         $qrCode->setSize(300);
+
+        return $qrCode;
+    }
+
+    protected function createQrCodeWithLogo()
+    {
+        $qrCode = new QrCode();
+        $qrCode->setText('Life is too short to be generating QR codes')
+        ->setSize(300)
+        ->setLogo(dirname(__DIR__) . '/assets/image/logo.png')
+        ->setLogoSize(60);
 
         return $qrCode;
     }
