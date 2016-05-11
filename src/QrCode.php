@@ -1534,6 +1534,10 @@ class QrCode
 
         if(!empty($this->logo))
         {
+            $output_image_org = $output_image;
+            $output_image = imagecreatetruecolor($image_width, $image_height);
+            imagecopy($output_image, $output_image_org, 0, 0, 0, 0, $image_width, $image_height);
+
             $logo_image = call_user_func('imagecreatefrom'.$this->image_type, $this->logo);
             if(!$logo_image){
                 throw new ImageFunctionFailedException('imagecreatefrom'.$this->image_type . ' ' . $this->logo . 'failed' );
