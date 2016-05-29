@@ -91,7 +91,7 @@ class QrCodeTest extends PHPUnit_Framework_TestCase
         $qrCode = new QrCode();
         $qrCode->setText('Life is too short to be generating QR codes')
         ->setSize(300)
-        ->setLogo(dirname(__DIR__) . '/assets/image/logo.png')
+        ->setLogo(dirname(__DIR__).'/assets/image/logo.png')
         ->setLogoSize(60);
 
         return $qrCode;
