@@ -101,6 +101,7 @@ class QrCodeFactory
             'error_correction_level' => null,
             'foreground_color' => null,
             'background_color' => null,
+            'padding' => null,
             'label' => null,
             'label_font_size' => null,
             'label_font_path' => null,
