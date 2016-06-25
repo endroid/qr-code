@@ -12,6 +12,7 @@ namespace Endroid\QrCode;
 use Endroid\QrCode\Exceptions\DataDoesntExistsException;
 use Endroid\QrCode\Exceptions\FreeTypeLibraryMissingException;
 use Endroid\QrCode\Exceptions\ImageFunctionFailedException;
+use Endroid\QrCode\Exceptions\ImageTypeInvalidException;
 use Endroid\QrCode\Exceptions\VersionTooLargeException;
 use Endroid\QrCode\Exceptions\ImageSizeTooLargeException;
 use Endroid\QrCode\Exceptions\ImageFunctionUnknownException;
@@ -289,12 +290,16 @@ class QrCode
      * @param string $image_type Image type
      *
      * @return QrCode
+     *
+     * @throws ImageTypeInvalidException
      */
     public function setImageType($image_type)
     {
-        if (in_array($image_type, $this->image_types_available)) {
-            $this->image_type = $image_type;
+        if (!in_array($image_type, $this->image_types_available)) {
+            throw new ImageTypeInvalidException('QRCode: image type '.$image_type.' is invalid.');
         }
+
+        $this->image_type = $image_type;
 
         return $this;
     }
@@ -790,6 +795,18 @@ class QrCode
         }
 
         return $this;
+    }
+
+    /**
+     * Returns the content type corresponding to the image type.
+     *
+     * @return string
+     */
+    public function getContentType()
+    {
+        $contentType = 'image/'.$this->image_type;
+
+        return $contentType;
     }
 
     /**
