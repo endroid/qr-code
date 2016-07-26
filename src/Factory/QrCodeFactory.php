@@ -109,4 +109,14 @@ class QrCodeFactory
 
         return $options;
     }
+
+    /**
+     * Returns the current defaults.
+     *
+     * @return array
+     */
+    public function getDefaultOptions()
+    {
+        return $this->optionsResolver->resolve();
+    }
 }
