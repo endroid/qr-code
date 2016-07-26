@@ -61,6 +61,24 @@ class QrCodeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * For https://github.com/endroid/QrCode/issues/49
+     */
+    public function testRenderHttpAddress()
+    {
+        $qrCode = new QrCode();
+        $qrCode
+            ->setText('http://www.example.com/it/it/contact/qr/hit/id/1  ')
+            ->setExtension('png')
+            ->setSize(300)
+            ->setPadding(10)
+            ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
+            ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
+            ->setErrorCorrection(QrCode::LEVEL_MEDIUM);
+
+        $qrCode->save('php://output');
+    }
+
+    /**
      * Returns a QR code.
      */
     protected function getQrCode()
@@ -86,6 +104,11 @@ class QrCodeTest extends PHPUnit_Framework_TestCase
         return $qrCode;
     }
 
+    /**
+     * Creates a QR code with a logo.
+     *
+     * @return QrCode
+     */
     protected function createQrCodeWithLogo()
     {
         $qrCode = new QrCode();
