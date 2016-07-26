@@ -75,7 +75,7 @@ class QrCodeTest extends PHPUnit_Framework_TestCase
             ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
             ->setErrorCorrection(QrCode::LEVEL_MEDIUM);
 
-        $qrCode->save('php://output');
+        $qrCode->get('png');
     }
 
     /**
