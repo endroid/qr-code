@@ -61,7 +61,7 @@ class QrCodeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * For https://github.com/endroid/QrCode/issues/49
+     * For https://github.com/endroid/QrCode/issues/49.
      */
     public function testRenderHttpAddress()
     {
