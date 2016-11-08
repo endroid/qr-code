@@ -48,7 +48,7 @@ $response = new Response($qrCode->get(), 200, array('Content-Type' => $qrCode->g
 
 ```
 
-![QR Code](http://endroid.nl/qrcode/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png)
+![QR Code](http://endroid.nl/qrcode/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png?label=Scan%20the%20code)
 
 ## Symfony
 
