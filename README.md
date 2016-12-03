@@ -23,7 +23,7 @@ Then, require the vendor/autoload.php file to enable the autoloading mechanism
 provided by Composer. Otherwise, your application won't be able to find the
 classes of this library.
 
-Of course you can also download the library and create and use your own autoloader.
+Of course you can also download the library and build your own autoloader.
 
 ## Usage
 
