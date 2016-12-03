@@ -47,6 +47,9 @@ $qrCode
 header('Content-Type: '.$qrCode->getContentType());
 $qrCode->render();
 
+// save it to a file
+$qrCode->save('qrcode.png');
+
 // or create a response object
 $response = new Response($qrCode->get(), 200, array('Content-Type' => $qrCode->getContentType()));
 ```
