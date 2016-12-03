@@ -19,11 +19,15 @@ Use [Composer](https://getcomposer.org/) to install the library.
 $ composer require endroid/qrcode
 ```
 
+Then, require the vendor/autoload.php file to enable the autoloading mechanism
+provided by Composer. Otherwise, your application won't be able to find the
+classes of this library.
+
+Of course you can also download the library and create and use your own autoloader.
+
 ## Usage
 
 ```php
-<?php
-
 use Endroid\QrCode\QrCode;
 
 $qrCode = new QrCode();
@@ -45,7 +49,6 @@ $qrCode->render();
 
 // or create a response object
 $response = new Response($qrCode->get(), 200, array('Content-Type' => $qrCode->getContentType()));
-
 ```
 
 ![QR Code](http://endroid.nl/qrcode/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png?label=Scan%20the%20code)
