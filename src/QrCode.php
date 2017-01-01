@@ -101,10 +101,10 @@ class QrCode
     protected $draw_border = false;
 
     /** @var array */
-    protected $color_foreground = array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0);
+    protected $color_foreground = ['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0];
 
     /** @var array */
-    protected $color_background = array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0);
+    protected $color_background = ['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0];
 
     /** @var string */
     protected $label = '';
@@ -131,12 +131,12 @@ class QrCode
     protected $error_correction = self::LEVEL_MEDIUM;
 
     /** @var array */
-    protected $error_corrections_available = array(
+    protected $error_corrections_available = [
         self::LEVEL_LOW,
         self::LEVEL_MEDIUM,
         self::LEVEL_QUARTILE,
         self::LEVEL_HIGH,
-    );
+    ];
 
     /** @var int */
     protected $module_size;
@@ -145,12 +145,12 @@ class QrCode
     protected $image_type = self::IMAGE_TYPE_PNG;
 
     /** @var array */
-    protected $image_types_available = array(
+    protected $image_types_available = [
         self::IMAGE_TYPE_GIF,
         self::IMAGE_TYPE_PNG,
         self::IMAGE_TYPE_JPEG,
         self::IMAGE_TYPE_WBMP,
-    );
+    ];
 
     /** @var string */
     protected $image_path;
@@ -787,7 +787,7 @@ class QrCode
         if ($filename === null) {
             $success = call_user_func('image'.$format, $this->image);
         } else {
-            $success = call_user_func_array('image'.$format, array($this->image, $filename));
+            $success = call_user_func_array('image'.$format, [$this->image, $filename]);
         }
 
         if ($success === false) {
@@ -924,9 +924,9 @@ class QrCode
             if (preg_match("/[^0-9A-Z \$\*\%\+\.\/\:\-]/", $qrcode_data_string) != 0) {
                 /*  --- 8bit byte mode */
 
-                $codeword_num_plus = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                $codeword_num_plus = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, );
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8];
 
                 $data_value[$data_counter] = 4;
                 ++$data_counter;
@@ -945,9 +945,9 @@ class QrCode
             } else {
                 /* ---- alphanumeric mode */
 
-                $codeword_num_plus = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                $codeword_num_plus = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, );
+        4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4];
 
                 $data_value[$data_counter] = 2;
                 ++$data_counter;
@@ -955,12 +955,12 @@ class QrCode
                 $data_bits[$data_counter] = 9;  /* #version 1-9 */
                 $codeword_num_counter_value = $data_counter;
 
-                $alphanumeric_character_hash = array('0' => 0, '1' => 1, '2' => 2, '3' => 3, '4' => 4,
+                $alphanumeric_character_hash = ['0' => 0, '1' => 1, '2' => 2, '3' => 3, '4' => 4,
         '5' => 5, '6' => 6, '7' => 7, '8' => 8, '9' => 9, 'A' => 10, 'B' => 11, 'C' => 12, 'D' => 13, 'E' => 14,
         'F' => 15, 'G' => 16, 'H' => 17, 'I' => 18, 'J' => 19, 'K' => 20, 'L' => 21, 'M' => 22, 'N' => 23,
         'O' => 24, 'P' => 25, 'Q' => 26, 'R' => 27, 'S' => 28, 'T' => 29, 'U' => 30, 'V' => 31,
         'W' => 32, 'X' => 33, 'Y' => 34, 'Z' => 35, ' ' => 36, '$' => 37, '%' => 38, '*' => 39,
-        '+' => 40, '-' => 41, '.' => 42, '/' => 43, ':' => 44, );
+        '+' => 40, '-' => 41, '.' => 42, '/' => 43, ':' => 44];
 
                 $i = 0;
                 ++$data_counter;
@@ -979,9 +979,9 @@ class QrCode
         } else {
             /* ---- numeric mode */
 
-            $codeword_num_plus = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            $codeword_num_plus = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, );
+        4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4];
 
             $data_value[$data_counter] = 1;
             ++$data_counter;
@@ -1017,14 +1017,16 @@ class QrCode
             ++$i;
         }
 
-        $ecc_character_hash = array('L' => '1',
-        'l' => '1',
-        'M' => '0',
-        'm' => '0',
-        'Q' => '3',
-        'q' => '3',
-        'H' => '2',
-        'h' => '2', );
+        $ecc_character_hash = [
+            'L' => '1',
+            'l' => '1',
+            'M' => '0',
+            'm' => '0',
+            'Q' => '3',
+            'q' => '3',
+            'H' => '2',
+            'h' => '2',
+        ];
 
         if (!is_numeric($qrcode_error_correct)) {
             $ec = @$ecc_character_hash[$qrcode_error_correct];
@@ -1038,27 +1040,27 @@ class QrCode
 
         $max_data_bits = 0;
 
-        $max_data_bits_array = array(
-        0, 128, 224, 352, 512, 688, 864, 992, 1232, 1456, 1728,
-        2032, 2320, 2672, 2920, 3320, 3624, 4056, 4504, 5016, 5352,
-        5712, 6256, 6880, 7312, 8000, 8496, 9024, 9544, 10136, 10984,
-        11640, 12328, 13048, 13800, 14496, 15312, 15936, 16816, 17728, 18672,
+        $max_data_bits_array = [
+            0, 128, 224, 352, 512, 688, 864, 992, 1232, 1456, 1728,
+            2032, 2320, 2672, 2920, 3320, 3624, 4056, 4504, 5016, 5352,
+            5712, 6256, 6880, 7312, 8000, 8496, 9024, 9544, 10136, 10984,
+            11640, 12328, 13048, 13800, 14496, 15312, 15936, 16816, 17728, 18672,
 
-        152, 272, 440, 640, 864, 1088, 1248, 1552, 1856, 2192,
-        2592, 2960, 3424, 3688, 4184, 4712, 5176, 5768, 6360, 6888,
-        7456, 8048, 8752, 9392, 10208, 10960, 11744, 12248, 13048, 13880,
-        14744, 15640, 16568, 17528, 18448, 19472, 20528, 21616, 22496, 23648,
+            152, 272, 440, 640, 864, 1088, 1248, 1552, 1856, 2192,
+            2592, 2960, 3424, 3688, 4184, 4712, 5176, 5768, 6360, 6888,
+            7456, 8048, 8752, 9392, 10208, 10960, 11744, 12248, 13048, 13880,
+            14744, 15640, 16568, 17528, 18448, 19472, 20528, 21616, 22496, 23648,
 
-        72, 128, 208, 288, 368, 480, 528, 688, 800, 976,
-        1120, 1264, 1440, 1576, 1784, 2024, 2264, 2504, 2728, 3080,
-        3248, 3536, 3712, 4112, 4304, 4768, 5024, 5288, 5608, 5960,
-        6344, 6760, 7208, 7688, 7888, 8432, 8768, 9136, 9776, 10208,
+            72, 128, 208, 288, 368, 480, 528, 688, 800, 976,
+            1120, 1264, 1440, 1576, 1784, 2024, 2264, 2504, 2728, 3080,
+            3248, 3536, 3712, 4112, 4304, 4768, 5024, 5288, 5608, 5960,
+            6344, 6760, 7208, 7688, 7888, 8432, 8768, 9136, 9776, 10208,
 
-        104, 176, 272, 384, 496, 608, 704, 880, 1056, 1232,
-        1440, 1648, 1952, 2088, 2360, 2600, 2936, 3176, 3560, 3880,
-        4096, 4544, 4912, 5312, 5744, 6032, 6464, 6968, 7288, 7880,
-        8264, 8920, 9368, 9848, 10288, 10832, 11408, 12016, 12656, 13328,
-        );
+            104, 176, 272, 384, 496, 608, 704, 880, 1056, 1232,
+            1440, 1648, 1952, 2088, 2360, 2600, 2936, 3176, 3560, 3880,
+            4096, 4544, 4912, 5312, 5744, 6032, 6464, 6968, 7288, 7880,
+            8264, 8920, 9368, 9848, 10288, 10832, 11408, 12016, 12656, 13328
+        ];
         if (!is_numeric($qrcode_version)) {
             $qrcode_version = 0;
         }
@@ -1085,16 +1087,16 @@ class QrCode
         $total_data_bits += $codeword_num_plus[$qrcode_version];
         $data_bits[$codeword_num_counter_value] += $codeword_num_plus[$qrcode_version];
 
-        $max_codewords_array = array(0, 26, 44, 70, 100, 134, 172, 196, 242,
+        $max_codewords_array = [0, 26, 44, 70, 100, 134, 172, 196, 242,
         292, 346, 404, 466, 532, 581, 655, 733, 815, 901, 991, 1085, 1156,
         1258, 1364, 1474, 1588, 1706, 1828, 1921, 2051, 2185, 2323, 2465,
-        2611, 2761, 2876, 3034, 3196, 3362, 3532, 3706, );
+        2611, 2761, 2876, 3034, 3196, 3362, 3532, 3706];
 
         $max_codewords = $max_codewords_array[$qrcode_version];
         $max_modules_1side = 17 + ($qrcode_version << 2);
 
-        $matrix_remain_bit = array(0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3,
-        4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, );
+        $matrix_remain_bit = [0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3,
+        4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0];
 
         /* ---- read version ECC data file */
 
@@ -1119,15 +1121,15 @@ class QrCode
         $format_information_x2 = unpack('C*', $fi_x);
         $format_information_y2 = unpack('C*', $fi_y);
 
-        $format_information_x1 = array(0, 1, 2, 3, 4, 5, 7, 8, 8, 8, 8, 8, 8, 8, 8);
-        $format_information_y1 = array(8, 8, 8, 8, 8, 8, 8, 8, 7, 5, 4, 3, 2, 1, 0);
+        $format_information_x1 = [0, 1, 2, 3, 4, 5, 7, 8, 8, 8, 8, 8, 8, 8, 8];
+        $format_information_y1 = [8, 8, 8, 8, 8, 8, 8, 8, 7, 5, 4, 3, 2, 1, 0];
 
         $max_data_codewords = ($max_data_bits >> 3);
 
         $filename = $path.'/rsc'.$rs_ecc_codewords.'.dat';
         $fp0 = fopen($filename, 'rb');
         $i = 0;
-        $rs_cal_table_array = array();
+        $rs_cal_table_array = [];
         while ($i < 256) {
             $rs_cal_table_array[$i] = fread($fp0, $rs_ecc_codewords);
             ++$i;
@@ -1264,7 +1266,7 @@ class QrCode
         }
 
         /* ---- flash matrix */
-        $matrix_content = array();
+        $matrix_content = [];
         $i = 0;
         while ($i < $max_modules_1side) {
             $j = 0;
@@ -1317,7 +1319,7 @@ class QrCode
         $mask_number = 0;
         while ($i < 8) {
             $demerit_n1 = 0;
-            $ptn_temp = array();
+            $ptn_temp = [];
             $bit = 1 << $i;
             $bit_r = (~$bit) & 255;
             $bit_mask = str_repeat(chr($bit), $all_matrix);
@@ -1348,14 +1350,14 @@ class QrCode
             foreach ($ptn_temp[0] as $str_temp) {
                 $demerit_n2 += (strlen($str_temp) - 1);
             }
-            $ptn_temp = array();
+            $ptn_temp = [];
             preg_match_all($n2_search2, $ver_or, $ptn_temp);
             foreach ($ptn_temp[0] as $str_temp) {
                 $demerit_n2 += (strlen($str_temp) - 1);
             }
             $demerit_n2 *= 3;
 
-            $ptn_temp = array();
+            $ptn_temp = [];
 
             preg_match_all($n1_search, $hor, $ptn_temp);
             foreach ($ptn_temp[0] as $str_temp) {
@@ -1377,7 +1379,7 @@ class QrCode
         # --- format information
 
         $format_information_value = (($ec << 3) | $mask_number);
-        $format_information_array = array('101010000010010', '101000100100101',
+        $format_information_array = ['101010000010010', '101000100100101',
         '101111001111100', '101101101001011', '100010111111001', '100000011001110',
         '100111110010111', '100101010100000', '111011111000100', '111001011110011',
         '111110110101010', '111100010011101', '110011000101111', '110001100011000',
@@ -1385,7 +1387,7 @@ class QrCode
         '001110011100111', '001100111010000', '000011101100010', '000001001010101',
         '000110100001100', '000100000111011', '011010101011111', '011000001101000',
         '011111100110001', '011101000000110', '010010010110100', '010000110000011',
-        '010111011011010', '010101111101101', );
+        '010111011011010', '010101111101101'];
         $i = 0;
         while ($i < 15) {
             $content = substr($format_information_array[$format_information_value], $i, 1);

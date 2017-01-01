@@ -71,8 +71,8 @@ class QrCodeTest extends PHPUnit_Framework_TestCase
             ->setExtension('png')
             ->setSize(300)
             ->setPadding(10)
-            ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
-            ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
+            ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0])
+            ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
             ->setErrorCorrection(QrCode::LEVEL_MEDIUM);
 
         $qrCode->get('png');

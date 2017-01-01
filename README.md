@@ -30,8 +30,8 @@ $qrCode
     ->setSize(300)
     ->setPadding(10)
     ->setErrorCorrection('high')
-    ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
-    ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
+    ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
+    ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0])
     ->setLabel('Scan the code')
     ->setLabelFontSize(16)
     ->setImageType(QrCode::IMAGE_TYPE_PNG)
@@ -45,7 +45,7 @@ $qrCode->render();
 $qrCode->save('qrcode.png');
 
 // or create a response object
-$response = new Response($qrCode->get(), 200, array('Content-Type' => $qrCode->getContentType()));
+$response = new Response($qrCode->get(), 200, ['Content-Type' => $qrCode->getContentType()]);
 ```
 
 ![QR Code](http://endroid.nl/qrcode/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png?label=Scan%20the%20code)

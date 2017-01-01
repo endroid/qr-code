@@ -24,7 +24,7 @@ class QrCodeFactory
      *
      * @param array $defaults
      */
-    public function __construct(array $defaults = array())
+    public function __construct(array $defaults = [])
     {
         $defaults = array_merge($this->getAvailableOptions(), $defaults);
         $this->optionsResolver = new OptionsResolver();
@@ -38,7 +38,7 @@ class QrCodeFactory
      *
      * @return QrCode
      */
-    public function createQrCode(array $options = array())
+    public function createQrCode(array $options = [])
     {
         $options = $this->optionsResolver->resolve($options);
 
@@ -94,7 +94,7 @@ class QrCodeFactory
      */
     public function getAvailableOptions()
     {
-        $options = array(
+        $options = [
             'text' => null,
             'size' => null,
             'extension' => null,
@@ -105,7 +105,7 @@ class QrCodeFactory
             'label' => null,
             'label_font_size' => null,
             'label_font_path' => null,
-        );
+        ];
 
         return $options;
     }
