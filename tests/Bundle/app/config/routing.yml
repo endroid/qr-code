@@ -1,0 +1,4 @@
+EndroidQrCodeBundle:
+    resource: "@EndroidQrCodeBundle/Controller/"
+    type: annotation
+    prefix: /qrcode

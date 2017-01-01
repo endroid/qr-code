@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="vendor/autoload.php" colors="true">
+<phpunit bootstrap="tests/Bundle/app/bootstrap.php" colors="true">
     <testsuites>
         <testsuite>
             <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <server name="KERNEL_DIR" value="tests/Bundle/app" />
+    </php>
 </phpunit>

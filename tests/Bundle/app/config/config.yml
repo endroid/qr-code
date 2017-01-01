@@ -1,0 +1,6 @@
+framework:
+    test: ~
+    secret: ThisTokenIsNotSoSecretChangeIt
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
