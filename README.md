@@ -19,12 +19,6 @@ Use [Composer](https://getcomposer.org/) to install the library.
 $ composer require endroid/qrcode
 ```
 
-Then, require the vendor/autoload.php file to enable the autoloading mechanism
-provided by Composer. Otherwise, your application won't be able to find the
-classes of this library.
-
-Of course you can also download the library and build your own autoloader.
-
 ## Usage
 
 ```php
