@@ -61,7 +61,7 @@ public function registerBundles()
 {
     $bundles = [
         // ...
-        new Endroid\CmSms\Bundle\EndroidCmSmsBundle(),
+        new Endroid\QrCode\Bundle\EndroidQrCodeBundle(),
     ];
 }
 ```
@@ -81,10 +81,10 @@ endroid_qr_code:
     label_font_size: 16
 ```
 
-Now you can retrieve the client as follows.
+Now you can retrieve the factory as follows.
 
 ```php
-$client = $this->get('endroid.cm_sms.client');
+$client = $this->get('endroid.qrcode.factory');
 ```
 
 Add the following section to your routing to be able to handle QR code URLs.
