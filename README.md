@@ -84,7 +84,8 @@ endroid_qr_code:
 Now you can retrieve the factory as follows.
 
 ```php
-$client = $this->get('endroid.qrcode.factory');
+$factory = $this->get('endroid.qrcode.factory');
+$factory->createQrCode();
 ```
 
 Add the following section to your routing to be able to handle QR code URLs.
