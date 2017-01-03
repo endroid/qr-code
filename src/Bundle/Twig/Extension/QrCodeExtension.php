@@ -86,7 +86,7 @@ class QrCodeExtension extends Twig_Extension implements ContainerAwareInterface
      */
     protected function getQrCodeFactory()
     {
-        return $this->container->get('endroid_qrcode.factory');
+        return $this->container->get('endroid.qrcode.factory');
     }
 
     /**
