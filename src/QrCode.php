@@ -1397,7 +1397,9 @@ class QrCode
             ++$i;
         }
 
-        $mib = $max_modules_1side + 8;
+        $mib = $max_modules_1side;
+        if ($this->draw_quiet_zone)
+            $mib += 8;
 
         if ($this->size == 0) {
             $this->size = $mib * $qrcode_module_size;
@@ -1458,7 +1460,7 @@ class QrCode
         if ($this->draw_quiet_zone == true) {
             imagecopyresampled($output_image, $base_image, $this->padding, $this->padding, 0, 0, $this->size, $this->size, $mib, $mib);
         } else {
-            imagecopyresampled($output_image, $base_image, $this->padding, $this->padding, 4, 4, $this->size, $this->size, $mib - 8, $mib - 8);
+            imagecopyresampled($output_image, $base_image, $this->padding, $this->padding, 4, 4, $this->size, $this->size, $mib, $mib);
         }
 
         if ($this->draw_border == true) {
