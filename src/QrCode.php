@@ -1,20 +1,3 @@
-Skip to content
-This repository
-Search
-Pull requests
-Issues
-Gist
- @he426100
- Watch 62
-  Unstar 724
-  Fork 155 endroid/QrCode
- Code  Issues 7  Pull requests 0  Projects 0  Wiki  Pulse  Graphs
-Branch: master Find file Copy pathQrCode/src/QrCode.php
-657768b  on 5 Jan
-@gseric gseric Fixes handling of $draw_quiet_zone parameter
-6 contributors @endroid @smurfy @marcosgdf @ice6 @gseric @githubjeka
-RawBlameHistory     
-Executable File  1583 lines (1322 sloc)  45.9 KB
 <?php
 /*
  * (c) Jeroen van den Enden <info@endroid.nl>
@@ -1320,7 +1303,7 @@ class QrCode
             $output_image_org = $output_image;
             $output_image = imagecreatetruecolor($image_width, $image_height);
             imagecopy($output_image, $output_image_org, 0, 0, 0, 0, $image_width, $image_height);
-			$image_info = getimagesize ( $this->logo );
+	    $image_info = getimagesize ( $this->logo );
             if ($image_info !== false) {
                 $image_type = strtolower ( substr ( image_type_to_extension ( $image_info [2] ), 1 ) );
                 $logo_image = call_user_func('imagecreatefrom'.$image_type, $this->logo);
@@ -1343,5 +1326,3 @@ class QrCode
         $this->image = $output_image;
     }
 }
-Contact GitHub API Training Shop Blog About
-© 2017 GitHub, Inc. Terms Privacy Security Status Help
