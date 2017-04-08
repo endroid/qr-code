@@ -26,6 +26,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('label')->end()
                     ->integerNode('label_font_size')->end()
                     ->scalarNode('label_font_path')->end()
+                    ->scalarNode('encoding')->defaultValue('UTF-8')->end()
                     ->scalarNode('error_correction_level')
                         ->validate()
                             ->ifTrue(function ($value) {

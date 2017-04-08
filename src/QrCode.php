@@ -49,7 +49,7 @@ class QrCode
     /**
      * @var string
      */
-    private $encoding = Encoder::DEFAULT_BYTE_MODE_ECODING;
+    private $encoding = 'UTF-8';
 
     /**
      * @var int
@@ -145,6 +145,14 @@ class QrCode
         $this->backgroundColor = $backgroundColor;
 
         return $this;
+    }
+
+    /**
+     * @param string $encoding
+     */
+    public function setEncoding($encoding)
+    {
+        $this->encoding = $encoding;
     }
 
     /**

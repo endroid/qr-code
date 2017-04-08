@@ -28,6 +28,8 @@ class QrCodeTest extends PHPUnit_Framework_TestCase
             'Tiny',
             'This one has spaces',
             'http://this.is.an/url?with=query&string=attached',
+            '{"i":"serialized.data","v":1,"t":1,"d":"4AEPc9XuIQ0OjsZoSRWp9DRWlN6UyDvuMlyOYy8XjOw="}',
+            'Spëci&al ch@ract3rs',
         ];
 
         foreach ($messages as $message) {

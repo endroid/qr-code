@@ -56,6 +56,10 @@ class QrCodeFactory
             $qrCode->setQuietZone($options['quiet_zone']);
         }
 
+        if (isset($options['encoding']) && !is_null($options['encoding'])) {
+            $qrCode->setEncoding($options['encoding']);
+        }
+
         if (isset($options['error_correction_level']) && !is_null($options['error_correction_level'])) {
             $qrCode->setErrorCorrectionLevel($options['error_correction_level']);
         }
@@ -69,15 +73,7 @@ class QrCodeFactory
         }
 
         if (isset($options['label']) && !is_null($options['label'])) {
-            $qrCode->setLabel($options['label']);
-        }
-
-        if (isset($options['label_font_size']) && !is_null($options['label_font_size'])) {
-            $qrCode->setLabelFontSize($options['label_font_size']);
-        }
-
-        if (isset($options['label_font_path']) && !is_null($options['label_font_path'])) {
-            $qrCode->setLabelFontPath($options['label_font_path']);
+            $qrCode->setLabel($options['label'], $options['label_font_size'], $options['label_font_path']);
         }
 
         return $qrCode;
@@ -93,6 +89,7 @@ class QrCodeFactory
         $options = [
             'text' => null,
             'size' => null,
+            'encoding' => null,
             'error_correction_level' => null,
             'foreground_color' => null,
             'background_color' => null,
