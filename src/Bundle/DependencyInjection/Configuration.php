@@ -22,15 +22,14 @@ class Configuration implements ConfigurationInterface
             ->root('endroid_qr_code')
                 ->children()
                     ->integerNode('size')->min(0)->defaultValue(200)->end()
-                    ->integerNode('padding')->min(0)->end()
+                    ->integerNode('quiet_zone')->min(0)->end()
                     ->scalarNode('label')->end()
                     ->integerNode('label_font_size')->end()
                     ->scalarNode('label_font_path')->end()
-                    ->scalarNode('extension')->end()
                     ->scalarNode('error_correction_level')
                         ->validate()
                             ->ifTrue(function ($value) {
-                                return !defined('Endroid\QrCode\QrCode::LEVEL_'.strtoupper($value));
+                                return !defined('BaconQrCode\Common\ErrorCorrectionLevel::'.strtoupper($value));
                             })
                             ->thenInvalid('Invalid error correction level "%s"')
                         ->end()

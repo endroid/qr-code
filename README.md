@@ -28,8 +28,8 @@ $qrCode = new QrCode();
 $qrCode
     ->setText('Life is too short to be generating QR codes')
     ->setSize(300)
-    ->setPadding(10)
-    ->setErrorCorrection('high')
+    ->setQuietZone(2)
+    ->setErrorCorrectionLevel('H')
     ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
     ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0])
     ->setLabel('Scan the code')
@@ -72,9 +72,8 @@ Alpha channel available range is [0, 127] in foreground and background colors.
 ```yaml
 endroid_qr_code:
     size: 100
-    padding: 10
-    extension: gif
-    error_correction_level: high
+    quiet_zone: 2
+    error_correction_level: H
     foreground_color: { r: 0, g: 0, b: 0, a: 0 }
     background_color: { r: 255, g: 255, b: 255, a: 0 }
     label: 'My label'
@@ -104,7 +103,7 @@ the QR code text to the url as mounted, followed by .png, .jpg or .gif.
 ## Twig extension
 
 The bundle also provides a Twig extension for quickly generating QR code urls.
-Optional parameters are extension, size, padding and errorCorrectionLevel. When
+Optional parameters are extension, size, quiet zone and errorCorrectionLevel. When
 a parameter is omitted, the value in the bundle configuration is used.
 
 ``` twig
@@ -117,7 +116,7 @@ You can also use the data URI helper to embed the QR code within your HTML
 instead of requiring a separate HTTP request to load your image.
 
 ``` twig
-<img src="{{ qrcode_data_uri(message, { size: 200, padding: 10 }) }}" />
+<img src="{{ qrcode_data_uri(message, { size: 200, quiet_zone: 2 }) }}" />
 ```
 
 ## Versioning
