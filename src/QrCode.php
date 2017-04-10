@@ -10,16 +10,23 @@
 namespace Endroid\QrCode;
 
 use BaconQrCode\Common\ErrorCorrectionLevel;
-use BaconQrCode\Encoder\Encoder;
+use BaconQrCode\Renderer\Image\Eps;
 use BaconQrCode\Renderer\Image\Png;
 use BaconQrCode\Renderer\Image\Svg;
 use BaconQrCode\Writer;
 use Endroid\QrCode\Exception\InvalidErrorCorrectionLevelException;
+use Endroid\QrCode\Exception\InvalidTypeException;
 use Endroid\QrCode\Exception\InvalidLabelFontPathException;
 
 class QrCode
 {
-    const DEFAULT_FONT_PATH = __DIR__.'/../font/open_sans.ttf';
+    const DEFAULT_FONT_PATH = __DIR__ . '/../font/open_sans.ttf';
+
+    const TYPE_BINARY = 'binary';
+    const TYPE_DATA_URI = 'data_uri';
+    const TYPE_EPS = 'eps';
+    const TYPE_PNG = 'png';
+    const TYPE_SVG = 'svg';
 
     /**
      * @var string
@@ -70,6 +77,39 @@ class QrCode
      * @var string
      */
     private $labelFontPath;
+
+    /**
+     * @var array
+     */
+    private static $types = [
+        self::TYPE_BINARY,
+        self::TYPE_DATA_URI,
+        self::TYPE_EPS,
+        self::TYPE_PNG,
+        self::TYPE_SVG,
+    ];
+
+    /**
+     * @var array
+     */
+    private static $contentTypes = [
+        self::TYPE_BINARY => 'text/plain',
+        self::TYPE_DATA_URI => 'text/plain',
+        self::TYPE_EPS => 'image/eps',
+        self::TYPE_PNG => 'image/png',
+        self::TYPE_SVG => 'image/svg+xml'
+    ];
+
+    /**
+     * @var array
+     */
+    private static $extensions = [
+        'txt' => self::TYPE_BINARY,
+        'bin' => self::TYPE_BINARY,
+        'eps' => self::TYPE_EPS,
+        'png' => self::TYPE_PNG,
+        'svg' => self::TYPE_SVG,
+    ];
 
     /**
      * QrCode constructor.
@@ -149,19 +189,25 @@ class QrCode
 
     /**
      * @param string $encoding
+     * @return $this
      */
     public function setEncoding($encoding)
     {
         $this->encoding = $encoding;
+
+        return $this;
     }
 
     /**
      * @param int $errorCorrectionLevel
+     * @return $this
      * @throws InvalidErrorCorrectionLevelException
      */
     public function setErrorCorrectionLevel($errorCorrectionLevel)
     {
         $this->errorCorrectionLevel = $errorCorrectionLevel;
+
+        return $this;
     }
 
     /**
@@ -175,7 +221,7 @@ class QrCode
         $labelFontPath = realpath($labelFontPath);
 
         if (!file_exists($labelFontPath)) {
-            throw new InvalidLabelFontPathException('Invalid label font path: '.$labelFontPath);
+            throw new InvalidLabelFontPathException('Invalid label font path: ' . $labelFontPath);
         }
 
         $this->label = $label;
@@ -184,43 +230,158 @@ class QrCode
     }
 
     /**
+     * @param string $typeOrPath
      * @return string
      */
-    public function getPngData()
+    public function write($typeOrPath)
+    {
+        $type = $typeOrPath;
+        $path = null;
+
+        if (!$this->isValidType($type)) {
+            $path = $typeOrPath;
+            $type = $this->getTypeByPath($path);
+        }
+
+        return $this->{'write'.str_replace('_', '', ucwords($type, '_'))}($path);
+    }
+
+    /**
+     * @param string $type
+     * @return string
+     * @throws InvalidTypeException
+     */
+    public function getContentType($type)
+    {
+        if (!$this->isValidType($type)) {
+            throw new InvalidTypeException('Invalid type "'.$type.'"');
+        }
+
+        return self::$contentTypes[$type];
+    }
+
+    /**
+     * @param string $type
+     * @return bool
+     */
+    public static function isValidType($type)
+    {
+        return in_array($type, self::$types);
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    public static function getTypeByPath($path)
+    {
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+
+        return self::getTypeByExtension($extension);
+    }
+
+    /**
+     * @param string $extension
+     * @return string
+     * @throws InvalidTypeException
+     */
+    public static function getTypeByExtension($extension)
+    {
+        if (isset(self::$extensions[$extension])) {
+            return self::$extensions[$extension];
+        }
+
+        throw new InvalidTypeException('Incompatible extension "'.$extension.'"');
+    }
+
+    /**
+     * @param string|null $path
+     * @return string
+     */
+    public function writeBinary($path = null)
+    {
+        $data = '0001010101'; // Not implemented yet
+
+        if (!is_null($path)) {
+            file_put_contents($path, $data);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param string|null $path
+     * @return string
+     */
+    public function writeEps($path = null)
+    {
+        $renderer = new Eps();
+        $renderer->setWidth($this->size);
+        $renderer->setHeight($this->size);
+        $renderer->setMargin($this->quietZone);
+        $writer = new Writer($renderer);
+        $data = $writer->writeString($this->text, $this->encoding, $this->errorCorrectionLevel);
+
+        if (!is_null($path)) {
+            file_put_contents($path, $data);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param string|null $path
+     * @return string
+     */
+    public function writePng($path = null)
     {
         $renderer = new Png();
         $renderer->setWidth($this->size);
         $renderer->setHeight($this->size);
         $renderer->setMargin($this->quietZone);
         $writer = new Writer($renderer);
-        $pngData = $writer->writeString($this->text, $this->encoding, $this->errorCorrectionLevel);
+        $data = $writer->writeString($this->text, $this->encoding, $this->errorCorrectionLevel);
 
-        return $pngData;
+        if (!is_null($path)) {
+            file_put_contents($path, $data);
+        }
+
+        return $data;
     }
 
     /**
+     * @param string|null $path
      * @return string
      */
-    public function getSvgData()
+    public function writeSvg($path = null)
     {
         $renderer = new Svg();
         $renderer->setWidth($this->size);
         $renderer->setHeight($this->size);
         $renderer->setMargin($this->quietZone);
         $writer = new Writer($renderer);
-        $svgData = $writer->writeString($this->text, $this->encoding, $this->errorCorrectionLevel);
+        $data = $writer->writeString($this->text, $this->encoding, $this->errorCorrectionLevel);
 
-        return $svgData;
+        if (!is_null($path)) {
+            file_put_contents($path, $data);
+        }
+
+        return $data;
     }
 
     /**
+     * @param string|null $path
      * @return string
      */
-    public function getPngDataUri()
+    public function writeUri($path = null)
     {
-        $pngData = $this->getPngData();
-        $pngDataUri = 'data:image/png;base64,'.base64_encode($pngData);
+        $data = $this->writePng();
+        $data = 'data:image/png;base64,'.base64_encode($data);
 
-        return $pngDataUri;
+        if (!is_null($path)) {
+            file_put_contents($path, $data);
+        }
+
+        return $data;
     }
 }

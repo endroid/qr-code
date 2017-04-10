@@ -9,7 +9,7 @@ QR Code
 [![Monthly Downloads](http://img.shields.io/packagist/dm/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
 [![License](http://img.shields.io/packagist/l/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
 
-This library based on QRcode Perl CGI & PHP scripts by Y. Swetake helps you generate images containing a QR code.
+This library helps you generate QR codes.
 
 ## Installation
 
@@ -24,28 +24,33 @@ $ composer require endroid/qrcode
 ```php
 use Endroid\QrCode\QrCode;
 
-$qrCode = new QrCode();
+// Create a QR code
+$qrCode = new QrCode('Life is too short to be generating QR codes');
+$qrCode->setSize(300);
+
+// Advanced options
 $qrCode
-    ->setText('Life is too short to be generating QR codes')
-    ->setSize(300)
     ->setQuietZone(2)
     ->setErrorCorrectionLevel('H')
     ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
     ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0])
-    ->setLabel('Scan the code')
-    ->setLabelFontSize(16)
-    ->setImageType(QrCode::IMAGE_TYPE_PNG)
+    ->setLabel('Scan the code', 16, __DIR__.'/../font/open_sans.ttf')
+    ->setLogo(__DIR__.'/../logo/endroid.png', 50)
 ;
 
-// now we can directly output the qrcode
-header('Content-Type: '.$qrCode->getContentType());
-$qrCode->render();
+// now we can output the QR code
+header('Content-Type: '.$qrCode->getContentType(QrCode::TYPE_PNG));
+$qrCode->write(QrCode::TYPE_PNG);
 
-// save it to a file
-$qrCode->save('qrcode.png');
+// save it to a file (uses type guessing)
+$qrCode->write(__DIR__.'/qrcode.png');
 
-// or create a response object
-$response = new Response($qrCode->get(), 200, ['Content-Type' => $qrCode->getContentType()]);
+// create a response object
+$response = new Response(
+    $qrCode->write(QrCode::TYPE_SVG),
+    Response::HTTP_OK,
+    ['Content-Type' => $qrCode->getContentType(QrCode::TYPE_SVG)])
+;
 ```
 
 ![QR Code](http://endroid.nl/qrcode/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png?label=Scan%20the%20code)
@@ -76,7 +81,7 @@ endroid_qr_code:
     error_correction_level: H
     foreground_color: { r: 0, g: 0, b: 0, a: 0 }
     background_color: { r: 255, g: 255, b: 255, a: 0 }
-    label: 'My label'
+    label: 'Scan the code'
     label_font_size: 16
 ```
 

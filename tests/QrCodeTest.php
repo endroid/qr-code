@@ -37,6 +37,23 @@ class QrCodeTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    public function testWriteQrCode()
+    {
+        $qrCode = new QrCode('QrCode');
+
+        $binData = $qrCode->writeBinary();
+        $this->assertTrue(is_string($binData));
+
+        $epsData = $qrCode->writeEps();
+        $this->assertTrue(is_string($epsData));
+
+        $pngData = $qrCode->writePng();
+        $this->assertTrue(is_string($pngData));
+
+        $svgData = $qrCode->writeSvg();
+        $this->assertTrue(is_string($svgData));
+    }
+
     protected function readQrCode($message)
     {
         $qrCode = new QrCode($message);
