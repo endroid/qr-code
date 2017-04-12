@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.6",
         "ext-gd": "*",
         "symfony/options-resolver": "^2.3|^3.0",
         "bacon/bacon-qr-code": "^1.0"
