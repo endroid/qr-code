@@ -66,7 +66,7 @@ class QrCodeExtension extends Twig_Extension implements ContainerAwareInterface
         $qrCode = $this->getQrCodeFactory()->createQrCode($options);
         $qrCode->setText($text);
 
-        return $qrCode->getDataUri();
+        return $qrCode->writeUri();
     }
 
     /**
