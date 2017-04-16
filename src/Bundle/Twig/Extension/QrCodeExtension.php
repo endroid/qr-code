@@ -11,6 +11,7 @@ namespace Endroid\QrCode\Bundle\Twig\Extension;
 
 use Endroid\QrCode\Factory\QrCodeFactory;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Twig_Extension;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -27,6 +28,7 @@ class QrCodeExtension extends Twig_Extension implements ContainerAwareInterface
     {
         return [
             new Twig_SimpleFunction('qrcode_url', [$this, 'qrcodeUrlFunction']),
+            new Twig_SimpleFunction('qrcode_path', [$this, 'qrcodePathFunction']),
             new Twig_SimpleFunction('qrcode_data_uri', [$this, 'qrcodeDataUriFunction']),
         ];
     }
@@ -41,16 +43,20 @@ class QrCodeExtension extends Twig_Extension implements ContainerAwareInterface
      */
     public function qrcodeUrlFunction($text, array $options = [])
     {
-        $params = $options;
-        $params['text'] = $text;
+        return $this->getQrCodeReference($text, $options, UrlGeneratorInterface::ABSOLUTE_URL);
+    }
 
-        // Extension is a mandatory route parameter: if not set retrieve from defaults
-        if (!isset($params['extension'])) {
-            $defaultOptions = $this->getQrCodeFactory()->getDefaultOptions();
-            $params['extension'] = $defaultOptions['extension'];
-        }
-
-        return $this->getRouter()->generate('endroid_qrcode', $params);
+    /**
+     * Creates the QR code path corresponding to the given message.
+     *
+     * @param string $text
+     * @param array  $options
+     *
+     * @return string
+     */
+    public function qrcodePathFunction($text, array $options = [])
+    {
+        return $this->getQrCodeReference($text, $options, UrlGeneratorInterface::ABSOLUTE_PATH);
     }
 
     /**
@@ -67,6 +73,29 @@ class QrCodeExtension extends Twig_Extension implements ContainerAwareInterface
         $qrCode->setText($text);
 
         return $qrCode->getDataUri();
+    }
+
+    /**
+     * Creates the QR code reference (URL or path) corresponding to the given message.
+     *
+     * @param string $text
+     * @param array  $options
+     * @param int $referenceType
+     *
+     * @return string
+     */
+    protected function getQrCodeReference($text, array $options, $referenceType)
+    {
+        $params = $options;
+        $params['text'] = $text;
+
+        // Extension is a mandatory route parameter: if not set retrieve from defaults
+        if (!isset($params['extension'])) {
+            $defaultOptions = $this->getQrCodeFactory()->getDefaultOptions();
+            $params['extension'] = $defaultOptions['extension'];
+        }
+
+        return $this->getRouter()->generate('endroid_qrcode', $params, $referenceType);
     }
 
     /**
