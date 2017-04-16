@@ -9,9 +9,9 @@
 
 namespace Endroid\QrCode\Tests\Bundle;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class EndroidQrCodeBundleTest extends PHPUnit_Framework_TestCase
+class EndroidQrCodeBundleTest extends TestCase
 {
     public function testNoTestsYet()
     {

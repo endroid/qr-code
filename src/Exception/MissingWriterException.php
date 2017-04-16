@@ -9,7 +9,6 @@
 
 namespace Endroid\QrCode\Exception;
 
-class InvalidTypeException extends QrCodeException
+class MissingWriterException extends QrCodeException
 {
-
 }

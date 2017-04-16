@@ -10,23 +10,24 @@
 namespace Endroid\QrCode;
 
 use BaconQrCode\Common\ErrorCorrectionLevel;
-use BaconQrCode\Renderer\Image\Eps;
-use BaconQrCode\Renderer\Image\Png;
-use BaconQrCode\Renderer\Image\Svg;
-use BaconQrCode\Writer;
 use Endroid\QrCode\Exception\InvalidErrorCorrectionLevelException;
-use Endroid\QrCode\Exception\InvalidTypeException;
 use Endroid\QrCode\Exception\InvalidLabelFontPathException;
+use Endroid\QrCode\Exception\MissingWriterException;
+use Endroid\QrCode\Writer\BinaryWriter;
+use Endroid\QrCode\Writer\DataUriWriter;
+use Endroid\QrCode\Writer\EpsWriter;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
+use Endroid\QrCode\Writer\WriterInterface;
 
 class QrCode
 {
     const DEFAULT_FONT_PATH = __DIR__ . '/../font/open_sans.ttf';
 
-    const TYPE_BINARY = 'binary';
-    const TYPE_DATA_URI = 'data_uri';
-    const TYPE_EPS = 'eps';
-    const TYPE_PNG = 'png';
-    const TYPE_SVG = 'svg';
+    /**
+     * @var WriterInterface[]
+     */
+    private $writers;
 
     /**
      * @var string
@@ -46,12 +47,22 @@ class QrCode
     /**
      * @var array
      */
-    private $foregroundColor = ['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0];
+    private $foregroundColor = [
+        'r' => 0,
+        'g' => 0,
+        'b' => 0,
+        'a' => 0
+    ];
 
     /**
      * @var array
      */
-    private $backgroundColor = ['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0];
+    private $backgroundColor = [
+        'r' => 255,
+        'g' => 255,
+        'b' => 255,
+        'a' => 0
+    ];
 
     /**
      * @var string
@@ -79,49 +90,35 @@ class QrCode
     private $labelFontPath;
 
     /**
-     * @var array
-     */
-    private static $types = [
-        self::TYPE_BINARY,
-        self::TYPE_DATA_URI,
-        self::TYPE_EPS,
-        self::TYPE_PNG,
-        self::TYPE_SVG,
-    ];
-
-    /**
-     * @var array
-     */
-    private static $contentTypes = [
-        self::TYPE_BINARY => 'text/plain',
-        self::TYPE_DATA_URI => 'text/plain',
-        self::TYPE_EPS => 'image/eps',
-        self::TYPE_PNG => 'image/png',
-        self::TYPE_SVG => 'image/svg+xml'
-    ];
-
-    /**
-     * @var array
-     */
-    private static $extensions = [
-        'txt' => self::TYPE_BINARY,
-        'bin' => self::TYPE_BINARY,
-        'eps' => self::TYPE_EPS,
-        'png' => self::TYPE_PNG,
-        'svg' => self::TYPE_SVG,
-    ];
-
-    /**
-     * QrCode constructor.
      * @param string $text
-     * @param int $size
-     * @param int $quietZone
      */
-    public function __construct($text = '', $size = 200, $quietZone = 2)
+    public function __construct($text = '')
     {
+        $this->writers = [];
+        $this->writersByExtension = [];
+
         $this->text = $text;
-        $this->size = $size;
-        $this->quietZone = $quietZone;
+
+        $this->registerBuiltInWriters();
+    }
+
+    protected function registerBuiltInWriters()
+    {
+        $this->registerWriter(new BinaryWriter($this));
+        $this->registerWriter(new DataUriWriter($this));
+        $this->registerWriter(new EpsWriter($this));
+        $this->registerWriter(new PngWriter($this));
+        $this->registerWriter(new SvgWriter($this));
+    }
+
+    /**
+     * @param WriterInterface $writer
+     */
+    public function registerWriter(WriterInterface $writer)
+    {
+        if (!isset($this->writers[get_class($writer)])) {
+            $this->writers[get_class($writer)] = $writer;
+        }
     }
 
     /**
@@ -136,6 +133,14 @@ class QrCode
     }
 
     /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
      * @param int $size
      * @return $this
      */
@@ -147,6 +152,14 @@ class QrCode
     }
 
     /**
+     * @return int
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
+
+    /**
      * @param int $quietZone
      * @return $this
      */
@@ -155,6 +168,14 @@ class QrCode
         $this->quietZone = $quietZone;
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuietZone()
+    {
+        return $this->quietZone;
     }
 
     /**
@@ -173,6 +194,14 @@ class QrCode
     }
 
     /**
+     * @return array
+     */
+    public function getForegroundColor()
+    {
+        return $this->foregroundColor;
+    }
+
+    /**
      * @param array $backgroundColor
      * @return $this
      */
@@ -188,6 +217,14 @@ class QrCode
     }
 
     /**
+     * @return array
+     */
+    public function getBackgroundColor()
+    {
+        return $this->backgroundColor;
+    }
+
+    /**
      * @param string $encoding
      * @return $this
      */
@@ -196,6 +233,14 @@ class QrCode
         $this->encoding = $encoding;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEncoding()
+    {
+        return $this->encoding;
     }
 
     /**
@@ -208,6 +253,14 @@ class QrCode
         $this->errorCorrectionLevel = $errorCorrectionLevel;
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getErrorCorrectionLevel()
+    {
+        return $this->errorCorrectionLevel;
     }
 
     /**
@@ -230,158 +283,87 @@ class QrCode
     }
 
     /**
-     * @param string $typeOrPath
      * @return string
      */
-    public function write($typeOrPath)
+    public function getLabel()
     {
-        $type = $typeOrPath;
-        $path = null;
-
-        if (!$this->isValidType($type)) {
-            $path = $typeOrPath;
-            $type = $this->getTypeByPath($path);
-        }
-
-        return $this->{'write'.str_replace('_', '', ucwords($type, '_'))}($path);
+        return $this->label;
     }
 
     /**
-     * @param string $type
+     * @param string $writerClass
      * @return string
-     * @throws InvalidTypeException
+     * @throws MissingWriterException
      */
-    public function getContentType($type)
+    public function getContentType($writerClass)
     {
-        if (!$this->isValidType($type)) {
-            throw new InvalidTypeException('Invalid type "'.$type.'"');
-        }
+        $this->assertValidWriterClass($writerClass);
 
-        return self::$contentTypes[$type];
+        return $this->writers[$writerClass]->getContentType();
     }
 
     /**
-     * @param string $type
-     * @return bool
+     * @param string $writerClass
+     * @throws MissingWriterException
      */
-    public static function isValidType($type)
+    protected function assertValidWriterClass($writerClass)
     {
-        return in_array($type, self::$types);
+        if (!isset($this->writers[$writerClass])) {
+            throw new MissingWriterException('Invalid writer "'.$writerClass.'"');
+        }
+    }
+
+    /**
+     * @param string $writerClass
+     * @return string
+     */
+    public function writeString($writerClass)
+    {
+        $this->assertValidWriterClass($writerClass);
+
+        return $this->writers[$writerClass]->writeString();
     }
 
     /**
      * @param string $path
-     * @return string
+     * @param string $writerClass
      */
-    public static function getTypeByPath($path)
+    public function writeFile($path, $writerClass = null)
+    {
+        $writer = $this->getWriterByPath($path);
+
+        if ($writerClass !== null) {
+            $this->assertValidWriterClass($writerClass);
+            $writer = $this->writers[$writerClass];
+        }
+
+        return $writer->writeFile($path);
+    }
+
+    /**
+     * @param string $path
+     * @return WriterInterface
+     */
+    public function getWriterByPath($path)
     {
         $extension = pathinfo($path, PATHINFO_EXTENSION);
 
-        return self::getTypeByExtension($extension);
+        return $this->getWriterByExtension($extension);
     }
 
     /**
      * @param string $extension
-     * @return string
-     * @throws InvalidTypeException
+     * @return WriterInterface
+     * @throws MissingWriterException
      */
-    public static function getTypeByExtension($extension)
+    public function getWriterByExtension($extension)
     {
-        if (isset(self::$extensions[$extension])) {
-            return self::$extensions[$extension];
+        foreach ($this->writers as $writer) {
+            if (in_array($extension, $writer->getSupportedExtensions())) {
+                return $writer;
+            }
         }
 
-        throw new InvalidTypeException('Incompatible extension "'.$extension.'"');
-    }
-
-    /**
-     * @param string|null $path
-     * @return string
-     */
-    public function writeBinary($path = null)
-    {
-        $data = '0001010101'; // Not implemented yet
-
-        if (!is_null($path)) {
-            file_put_contents($path, $data);
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param string|null $path
-     * @return string
-     */
-    public function writeEps($path = null)
-    {
-        $renderer = new Eps();
-        $renderer->setWidth($this->size);
-        $renderer->setHeight($this->size);
-        $renderer->setMargin($this->quietZone);
-        $writer = new Writer($renderer);
-        $data = $writer->writeString($this->text, $this->encoding, $this->errorCorrectionLevel);
-
-        if (!is_null($path)) {
-            file_put_contents($path, $data);
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param string|null $path
-     * @return string
-     */
-    public function writePng($path = null)
-    {
-        $renderer = new Png();
-        $renderer->setWidth($this->size);
-        $renderer->setHeight($this->size);
-        $renderer->setMargin($this->quietZone);
-        $writer = new Writer($renderer);
-        $data = $writer->writeString($this->text, $this->encoding, $this->errorCorrectionLevel);
-
-        if (!is_null($path)) {
-            file_put_contents($path, $data);
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param string|null $path
-     * @return string
-     */
-    public function writeSvg($path = null)
-    {
-        $renderer = new Svg();
-        $renderer->setWidth($this->size);
-        $renderer->setHeight($this->size);
-        $renderer->setMargin($this->quietZone);
-        $writer = new Writer($renderer);
-        $data = $writer->writeString($this->text, $this->encoding, $this->errorCorrectionLevel);
-
-        if (!is_null($path)) {
-            file_put_contents($path, $data);
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param string|null $path
-     * @return string
-     */
-    public function writeUri($path = null)
-    {
-        $data = $this->writePng();
-        $data = 'data:image/png;base64,'.base64_encode($data);
-
-        if (!is_null($path)) {
-            file_put_contents($path, $data);
-        }
-
-        return $data;
+        throw new MissingWriterException('Missing writer for extension "'.$extension.'"');
     }
 }

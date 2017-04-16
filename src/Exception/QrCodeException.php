@@ -13,5 +13,4 @@ use Exception;
 
 abstract class QrCodeException extends Exception
 {
-
 }

@@ -10,19 +10,17 @@
 namespace Endroid\QrCode\Tests;
 
 use Endroid\QrCode\QrCode;
-use PHPUnit_Framework_TestCase;
+use Endroid\QrCode\Writer\BinaryWriter;
+use Endroid\QrCode\Writer\DataUriWriter;
+use Endroid\QrCode\Writer\EpsWriter;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
+use PHPUnit\Framework\TestCase;
 use QrReader;
 
-class QrCodeTest extends PHPUnit_Framework_TestCase
+class QrCodeTest extends TestCase
 {
-    public function testCreateQrCode()
-    {
-        $qrCode = new QrCode('QrCode');
-
-        $this->assertTrue($qrCode instanceof QrCode);
-    }
-
-    public function testReadQrCodes()
+    public function testReadable()
     {
         $messages = [
             'Tiny',
@@ -33,7 +31,12 @@ class QrCodeTest extends PHPUnit_Framework_TestCase
         ];
 
         foreach ($messages as $message) {
-            $this->readQrCode($message);
+            $qrCode = new QrCode($message);
+            $pngData = $qrCode->writeString(PngWriter::class);
+
+            $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
+            $text = $reader->text();
+            $this->assertTrue($text === $message);
         }
     }
 
@@ -41,100 +44,42 @@ class QrCodeTest extends PHPUnit_Framework_TestCase
     {
         $qrCode = new QrCode('QrCode');
 
-        $binData = $qrCode->writeBinary();
+        $binData = $qrCode->writeString(BinaryWriter::class);
         $this->assertTrue(is_string($binData));
 
-        $epsData = $qrCode->writeEps();
+        $dataUriData = $qrCode->writeString(DataUriWriter::class);
+        $this->assertTrue(strpos($dataUriData, 'data:image/png;base64') === 0);
+
+        $epsData = $qrCode->writeString(EpsWriter::class);
         $this->assertTrue(is_string($epsData));
 
-        $pngData = $qrCode->writePng();
+        $pngData = $qrCode->writeString(PngWriter::class);
         $this->assertTrue(is_string($pngData));
 
-        $svgData = $qrCode->writeSvg();
+        $svgData = $qrCode->writeString(SvgWriter::class);
         $this->assertTrue(is_string($svgData));
-    }
-
-    protected function readQrCode($message)
-    {
-        $qrCode = new QrCode($message);
-
-        $pngData = $qrCode->getPngData();
-        $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $text = $reader->text();
-
-        $this->assertTrue($text === $message);
     }
 
     public function testSetSize()
     {
         $size = 400;
-        
+
         $qrCode = new QrCode('QrCode');
         $qrCode->setSize($size);
 
-        $pngData = $qrCode->getPngData();
+        $pngData = $qrCode->writeString(PngWriter::class);
         $image = imagecreatefromstring($pngData);
 
         $this->assertTrue(imagesx($image) === $size);
         $this->assertTrue(imagesy($image) === $size);
     }
 
-    public function testGetPngDataUri()
+    public function testSetLabel()
     {
         $qrCode = new QrCode('QrCode');
+        $qrCode->setSize(300);
+        $qrCode->setLabel('Scan the code', 60, QrCode::DEFAULT_FONT_PATH);
 
-        $dataUri = $qrCode->getPngDataUri();
-
-        $this->assertTrue(strpos($dataUri,'data:image/png;base64') === 0);
+        $pngData = $qrCode->writeString(PngWriter::class);
     }
-
-
-//
-//    /**
-//     * Tests if a valid image string is returned.
-//     *
-//     * @throws ImageFunctionFailedException
-//     * @throws ImageFunctionUnknownException
-//     */
-//    public function testGetQrCodeWithLogoString()
-//    {
-//        $qrCode = $this->createQrCodeWithLogo();
-//        $imageString = $qrCode->get('png');
-//
-//        $this->assertTrue(is_string($imageString));
-//    }
-//
-//    /**
-//     * For https://github.com/endroid/QrCode/issues/49.
-//     */
-//    public function testRenderHttpAddress()
-//    {
-//        $qrCode = new QrCode();
-//        $qrCode
-//            ->setText('http://www.example.com/it/it/contact/qr/hit/id/1  ')
-//            ->setExtension('png')
-//            ->setSize(300)
-//            ->setPadding(10)
-//            ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0])
-//            ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
-//            ->setErrorCorrection(QrCode::LEVEL_MEDIUM);
-//
-//        $qrCode->get('png');
-//    }
-//
-//    /**
-//     * Creates a QR code with a logo.
-//     *
-//     * @return QrCode
-//     */
-//    protected function createQrCodeWithLogo()
-//    {
-//        $qrCode = new QrCode();
-//        $qrCode->setText('Life is too short to be generating QR codes')
-//        ->setSize(300)
-//        ->setLogo(dirname(__DIR__).'/assets/image/logo.png')
-//        ->setLogoSize(60);
-//
-//        return $qrCode;
-//    }
 }

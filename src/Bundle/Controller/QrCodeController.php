@@ -10,7 +10,6 @@
 namespace Endroid\QrCode\Bundle\Controller;
 
 use Endroid\QrCode\Factory\QrCodeFactory;
-use Endroid\QrCode\QrCode;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 class QrCodeController extends Controller
 {
     /**
-     * @Route("/{text}.{extension}", name="endroid_qrcode", requirements={"text"="[\w\W]+", "extension"="bin|eps|png|svg"})
+     * @Route("/{text}.{extension}", name="endroid_qrcode", requirements={"text"="[\w\W]+"})
      *
      * @param Request $request
      * @param string $text
@@ -34,16 +33,17 @@ class QrCodeController extends Controller
         $options = $request->query->all();
         $options['text'] = $text;
 
-        $qrCode = $this->getQrCodeFactory()->createQrCode($options);
+        $qrCode = $this->getQrCodeFactory()->create($options);
+        $writer = $qrCode->getWriterByExtension($extension);
 
-        $type = QrCode::getTypeByExtension($extension);
-
-        return new Response($qrCode->write($type), 200, ['Content-Type' => $qrCode->getContentType($type)]);
+        return new Response(
+            $writer->writeString(),
+            Response::HTTP_OK,
+            ['Content-Type' => $writer->getContentType()]
+        );
     }
 
     /**
-     * Returns the QR code factory.
-     *
      * @return QrCodeFactory
      */
     protected function getQrCodeFactory()

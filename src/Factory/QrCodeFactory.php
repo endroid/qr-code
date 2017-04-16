@@ -20,8 +20,6 @@ class QrCodeFactory
     protected $optionsResolver;
 
     /**
-     * Creates a new instance.
-     *
      * @param array $defaults
      */
     public function __construct(array $defaults = [])
@@ -32,13 +30,10 @@ class QrCodeFactory
     }
 
     /**
-     * Creates a QR code.
-     *
      * @param array $options
-     *
      * @return QrCode
      */
-    public function createQrCode(array $options = [])
+    public function create(array $options = [])
     {
         $options = $this->optionsResolver->resolve($options);
 
@@ -58,8 +53,6 @@ class QrCodeFactory
     }
 
     /**
-     * Returns all available options.
-     *
      * @return array
      */
     public function getAvailableOptions()
@@ -81,8 +74,6 @@ class QrCodeFactory
     }
 
     /**
-     * Returns the current defaults.
-     *
      * @return array
      */
     public function getDefaultOptions()

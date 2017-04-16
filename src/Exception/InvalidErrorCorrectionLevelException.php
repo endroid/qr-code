@@ -11,5 +11,4 @@ namespace Endroid\QrCode\Exception;
 
 class InvalidErrorCorrectionLevelException extends QrCodeException
 {
-
 }

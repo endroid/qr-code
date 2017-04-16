@@ -10,26 +10,26 @@
 namespace Endroid\QrCode\Tests\Bundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class QrCodeControllerTest extends WebTestCase
 {
-    /**
-     * Tests if the QR code generation route returns a success response.
-     */
     public function testCreateQrCode()
     {
-        $this->assertTrue(true);
+        $client = static::createClient();
 
-//        $client = static::createClient();
-//
-//        $client->request('GET', $client->getContainer()->get('router')->generate('endroid_qrcode', [
-//            'text' => 'Life is too short to be generating QR codes',
-//            'extension' => 'png',
-//            'size' => 150,
-//            'label' => 'Dit is een label',
-//            'label_font_size' => 16,
-//        ]));
-//
-//        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $client->request('GET', $client->getContainer()->get('router')->generate('endroid_qrcode', [
+            'text' => 'Life is too short to be generating QR codes',
+            'extension' => 'png',
+            'size' => 150,
+            'label' => 'Scan the code',
+            'label_font_size' => 16,
+        ]));
+
+        $response = $client->getResponse();
+        $image = imagecreatefromstring($response->getContent());
+
+        $this->assertTrue(imagesx($image) == 150);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 }
