@@ -67,9 +67,9 @@ class QrCode
     private $encoding = 'UTF-8';
 
     /**
-     * @var string
+     * @var ErrorCorrectionLevel
      */
-    private $errorCorrectionLevel = ErrorCorrectionLevel::LOW;
+    private $errorCorrectionLevel;
 
     /**
      * @var string
@@ -87,9 +87,9 @@ class QrCode
     private $labelFontPath = self::LABEL_FONT_PATH_DEFAULT;
 
     /**
-     * @var string
+     * @var LabelAlignment
      */
-    private $labelAlignment = LabelAlignment::CENTER;
+    private $labelAlignment;
 
     /**
      * @var array
@@ -125,6 +125,9 @@ class QrCode
         $this->writersByExtension = [];
 
         $this->text = $text;
+
+        $this->errorCorrectionLevel = new ErrorCorrectionLevel(ErrorCorrectionLevel::LOW);
+        $this->labelAlignment = new LabelAlignment(LabelAlignment::CENTER);
 
         $this->registerBuiltInWriters();
     }
@@ -263,12 +266,12 @@ class QrCode
     }
 
     /**
-     * @param ErrorCorrectionLevel $errorCorrectionLevel
+     * @param string $errorCorrectionLevel
      * @return $this
      */
-    public function setErrorCorrectionLevel(ErrorCorrectionLevel $errorCorrectionLevel)
+    public function setErrorCorrectionLevel($errorCorrectionLevel)
     {
-        $this->errorCorrectionLevel = $errorCorrectionLevel->getValue();
+        $this->errorCorrectionLevel = new ErrorCorrectionLevel($errorCorrectionLevel);
 
         return $this;
     }
@@ -278,18 +281,18 @@ class QrCode
      */
     public function getErrorCorrectionLevel()
     {
-        return $this->errorCorrectionLevel;
+        return $this->errorCorrectionLevel->getValue();
     }
 
     /**
      * @param string $label
      * @param int $labelFontSize
      * @param string $labelFontPath
-     * @param LabelAlignment $labelAlignment
+     * @param string $labelAlignment
      * @param array $labelMargin
      * @return $this
      */
-    public function setLabel($label, $labelFontSize = null, $labelFontPath = null, LabelAlignment $labelAlignment = null, $labelMargin = null)
+    public function setLabel($label, $labelFontSize = null, $labelFontPath = null, $labelAlignment = null, $labelMargin = null)
     {
         $this->label = $label;
 
@@ -306,7 +309,7 @@ class QrCode
         }
 
         if ($labelMargin !== null) {
-            $this->setLabelPadding($labelMargin);
+            $this->setLabelMargin($labelMargin);
         }
 
         return $this;
@@ -366,12 +369,12 @@ class QrCode
     }
 
     /**
-     * @param LabelAlignment $labelAlignment
+     * @param string $labelAlignment
      * @return $this
      */
-    public function setLabelAlignment(LabelAlignment $labelAlignment)
+    public function setLabelAlignment($labelAlignment)
     {
-        $this->labelAlignment = $labelAlignment;
+        $this->labelAlignment = new LabelAlignment($labelAlignment);
 
         return $this;
     }
@@ -381,7 +384,7 @@ class QrCode
      */
     public function getLabelAlignment()
     {
-        return $this->labelAlignment;
+        return $this->labelAlignment->getValue();
     }
 
     /**

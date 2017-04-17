@@ -97,18 +97,6 @@ class QrCodeFactory
         $optionsResolver
             ->setDefaults($this->defaultOptions)
             ->setDefined($this->definedOptions)
-            ->setNormalizer('error_correction_level', function (Options $options, $value) {
-                if ($value !== null) {
-                    $value = new ErrorCorrectionLevel($value);
-                }
-                return $value;
-            })
-            ->setNormalizer('label_alignment', function (Options $options, $value) {
-                if ($value !== null) {
-                    $value = new LabelAlignment($value);
-                }
-                return $value;
-            })
         ;
 
         return $optionsResolver;

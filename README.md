@@ -17,12 +17,14 @@ bundle for even faster integration.
 Use [Composer](https://getcomposer.org/) to install the library.
 
 ``` bash
-$ composer require endroid/qrcode
+$ composer require endroid/qrcode khanamiryan/qrcode-detector-decoder:dev-master
 ```
 
 ## Usage
 
 ```php
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\LabelAlignment;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
@@ -34,11 +36,14 @@ $qrCode->setSize(300);
 // Set advanced options
 $qrCode
     ->setQuietZone(2)
-    ->setErrorCorrectionLevel(QrCode::ERROR_CORRECTION_LEVEL_HIGH)
-    ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
-    ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0])
-    ->setLabel('Scan the code', 16, __DIR__.'/../font/open_sans.ttf')
-    ->setLogo(__DIR__.'/../logo/endroid.png', 50)
+    ->setEncoding('UTF-8')
+    ->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH)
+    ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0])
+    ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
+    ->setLabel('Scan the code', 16, __DIR__.'/../font/open_sans.ttf', LabelAlignment::CENTER)
+    ->setLogoPath(__DIR__.'/../logo/symfony.png')
+    ->setLogoSize(150)
+    ->setValidateResult(true)
 ;
 
 // Output the QR code
