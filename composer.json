@@ -18,7 +18,8 @@
         "symfony/options-resolver": "^3.0",
         "bacon/bacon-qr-code": "^1.0",
         "myclabs/php-enum": "^1.5",
-        "khanamiryan/qrcode-detector-decoder": "dev-master"
+        "khanamiryan/qrcode-detector-decoder": "dev-master",
+        "symfony/property-access": "^3.2"
     },
     "require-dev": {
         "symfony/browser-kit": "^3.0",
