@@ -16,7 +16,6 @@ use Endroid\QrCode\Writer\EpsWriter;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 use PHPUnit\Framework\TestCase;
-use QrReader;
 
 class QrCodeTest extends TestCase
 {
@@ -75,9 +74,26 @@ class QrCodeTest extends TestCase
     public function testSetLabel()
     {
         $qrCode = new QrCode('QrCode');
-        $qrCode->setSize(300);
-        $qrCode->setLabel('Scan the code', 60, QrCode::DEFAULT_FONT_PATH);
+        $qrCode
+            ->setSize(300)
+            ->setLabel('Scan the code', 15)
+        ;
 
         $pngData = $qrCode->writeString(PngWriter::class);
+        $this->assertTrue(is_string($pngData));
+    }
+
+    public function testSetLogo()
+    {
+        $qrCode = new QrCode('QrCode');
+        $qrCode
+            ->setSize(400)
+            ->setLogoPath(__DIR__.'/../logo/symfony.png')
+            ->setLogoSize(150)
+            ->setValidateResult(true);
+        ;
+
+        $pngData = $qrCode->writeString(PngWriter::class);
+        $this->assertTrue(is_string($pngData));
     }
 }
