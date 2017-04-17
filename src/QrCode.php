@@ -9,7 +9,6 @@
 
 namespace Endroid\QrCode;
 
-use BaconQrCode\Common\ErrorCorrectionLevel;
 use Endroid\QrCode\Exception\InvalidErrorCorrectionLevelException;
 use Endroid\QrCode\Exception\InvalidLabelFontPathException;
 use Endroid\QrCode\Exception\MissingWriterException;
@@ -22,6 +21,11 @@ use Endroid\QrCode\Writer\WriterInterface;
 
 class QrCode
 {
+    const ERROR_CORRECTION_LEVEL_LOW = 'L';
+    const ERROR_CORRECTION_LEVEL_MEDIUM = 'M';
+    const ERROR_CORRECTION_LEVEL_QUARTILE = 'Q';
+    const ERROR_CORRECTION_LEVEL_HIGH = 'H';
+
     const DEFAULT_FONT_PATH = __DIR__ . '/../font/open_sans.ttf';
 
     /**
@@ -72,7 +76,7 @@ class QrCode
     /**
      * @var int
      */
-    private $errorCorrectionLevel = ErrorCorrectionLevel::L;
+    private $errorCorrectionLevel = self::ERROR_CORRECTION_LEVEL_LOW;
 
     /**
      * @var string
@@ -250,9 +254,26 @@ class QrCode
      */
     public function setErrorCorrectionLevel($errorCorrectionLevel)
     {
+        if (!in_array($errorCorrectionLevel, $this->getAvailableErrorCorrectionLevels())) {
+            throw new InvalidErrorCorrectionLevelException('Invalid error correction level "'.$errorCorrectionLevel.'"');
+        }
+
         $this->errorCorrectionLevel = $errorCorrectionLevel;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAvailableErrorCorrectionLevels()
+    {
+        return [
+            self::ERROR_CORRECTION_LEVEL_LOW,
+            self::ERROR_CORRECTION_LEVEL_HIGH,
+            self::ERROR_CORRECTION_LEVEL_MEDIUM,
+            self::ERROR_CORRECTION_LEVEL_QUARTILE
+        ];
     }
 
     /**

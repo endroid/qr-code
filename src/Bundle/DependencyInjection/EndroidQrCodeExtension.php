@@ -28,10 +28,6 @@ class EndroidQrCodeExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        if (isset($config['error_correction_level'])) {
-            $config['error_correction_level'] = constant('BaconQrCode\Common\ErrorCorrectionLevel::'.strtoupper($config['error_correction_level']));
-        }
-
         $factoryDefinition = $container->getDefinition('endroid.qrcode.factory');
         $factoryDefinition->setArguments([$config]);
     }

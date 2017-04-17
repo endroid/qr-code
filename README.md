@@ -85,10 +85,10 @@ Alpha channel available range is [0, 127] in foreground and background colors.
 endroid_qr_code:
     size: 100
     quiet_zone: 2
-    encoding: 'UTF-8'
-    error_correction_level: high
     foreground_color: { r: 0, g: 0, b: 0, a: 0 }
     background_color: { r: 255, g: 255, b: 255, a: 0 }
+    encoding: 'UTF-8'
+    error_correction_level: H
     label: 'Scan the code'
     label_font_size: 16
 ```

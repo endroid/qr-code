@@ -27,7 +27,7 @@ class SvgWriter extends AbstractWriter
         $string = $writer->writeString(
             $this->qrCode->getText(),
             $this->qrCode->getEncoding(),
-            $this->qrCode->getErrorCorrectionLevel()
+            constant('BaconQrCode\Common\ErrorCorrectionLevel::'.strtoupper($this->qrCode->getErrorCorrectionLevel()))
         );
 
         return $string;

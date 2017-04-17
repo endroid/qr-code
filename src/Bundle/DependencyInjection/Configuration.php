@@ -9,6 +9,7 @@
 
 namespace Endroid\QrCode\Bundle\DependencyInjection;
 
+use Endroid\QrCode\QrCode;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -30,7 +31,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('error_correction_level')
                         ->validate()
                             ->ifTrue(function ($value) {
-                                return !defined('BaconQrCode\Common\ErrorCorrectionLevel::'.strtoupper($value));
+                                return !in_array($value, QrCode::getAvailableErrorCorrectionLevels());
                             })
                             ->thenInvalid('Invalid error correction level "%s"')
                         ->end()
