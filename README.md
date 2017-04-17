@@ -60,7 +60,7 @@ $writer = new DataUriWriter($qrCode);
 $dataUri = $writer->writeString();
 ```
 
-![QR Code](http://endroid.nl/qrcode/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png?label=Scan%20the%20code)
+![QR Code](https://endroid.nl/qrcode/Dit%20is%20een%20test.png)
 
 ## Symfony integration
 
