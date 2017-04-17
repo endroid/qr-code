@@ -12,7 +12,7 @@ namespace Endroid\QrCode\Writer;
 use BaconQrCode\Renderer\Image\Svg;
 use BaconQrCode\Writer;
 
-class SvgWriter extends AbstractWriter
+class SvgWriter extends AbstractBaconWriter
 {
     /**
      * {@inheritdoc}
@@ -23,11 +23,14 @@ class SvgWriter extends AbstractWriter
         $renderer->setWidth($this->qrCode->getSize());
         $renderer->setHeight($this->qrCode->getSize());
         $renderer->setMargin($this->qrCode->getQuietZone());
+        $renderer->setForegroundColor($this->convertColor($this->qrCode->getForegroundColor()));
+        $renderer->setBackgroundColor($this->convertColor($this->qrCode->getBackgroundColor()));
+
         $writer = new Writer($renderer);
         $string = $writer->writeString(
             $this->qrCode->getText(),
             $this->qrCode->getEncoding(),
-            constant('BaconQrCode\Common\ErrorCorrectionLevel::'.strtoupper($this->qrCode->getErrorCorrectionLevel()))
+            $this->convertErrorCorrectionLevel($this->qrCode->getErrorCorrectionLevel())
         );
 
         return $string;

@@ -9,6 +9,6 @@
 
 namespace Endroid\QrCode\Exception;
 
-class InvalidLabelFontPathException extends QrCodeException
+class InvalidPathException extends QrCodeException
 {
 }

@@ -9,24 +9,52 @@
 
 namespace Endroid\QrCode\Factory;
 
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\LabelAlignment;
 use Endroid\QrCode\QrCode;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class QrCodeFactory
 {
     /**
-     * @var OptionsResolver
+     * @var array
      */
-    protected $optionsResolver;
+    private $definedOptions = [
+        'text',
+        'size',
+        'quiet_zone',
+        'foreground_color',
+        'background_color',
+        'encoding',
+        'error_correction_level',
+        'label',
+        'label_font_size',
+        'label_font_path',
+        'label_alignment',
+        'label_margin',
+        'logo_path',
+        'logo_size',
+        'validate_result'
+    ];
 
     /**
-     * @param array $defaults
+     * @var array
      */
-    public function __construct(array $defaults = [])
+    private $defaultOptions;
+
+    /**
+     * @var OptionsResolver
+     */
+    private $optionsResolver;
+
+    /**
+     * @param array $defaultOptions
+     */
+    public function __construct(array $defaultOptions = [])
     {
-        $defaults = array_merge($this->getAvailableOptions(), $defaults);
-        $this->optionsResolver = new OptionsResolver();
-        $this->optionsResolver->setDefaults($defaults);
+        $this->defaultOptions = $defaultOptions;
     }
 
     /**
@@ -35,49 +63,54 @@ class QrCodeFactory
      */
     public function create(array $options = [])
     {
-        $options = $this->optionsResolver->resolve($options);
+        $options = $this->getOptionsResolver()->resolve($options);
+        $accessor = PropertyAccess::createPropertyAccessor();
 
-        $qrCode = new QrCode($options['text']);
-        $qrCode
-            ->setText($options['text'])
-            ->setSize($options['size'])
-            ->setQuietZone($options['quiet_zone'])
-            ->setForegroundColor($options['foreground_color'])
-            ->setBackgroundColor($options['background_color'])
-            ->setEncoding($options['encoding'])
-            ->setErrorCorrectionLevel($options['error_correction_level'])
-            ->setLabel($options['label'], $options['label_font_size'], $options['label_font_path'])
-        ;
+        $qrCode = new QrCode();
+        foreach ($this->definedOptions as $option) {
+            if (isset($options[$option])) {
+                $accessor->setValue($qrCode, $option, $options[$option]);
+            }
+        }
 
         return $qrCode;
     }
 
     /**
-     * @return array
+     * @return OptionsResolver
      */
-    public function getAvailableOptions()
+    private function getOptionsResolver()
     {
-        $options = [
-            'text' => null,
-            'size' => null,
-            'quiet_zone' => null,
-            'foreground_color' => null,
-            'background_color' => null,
-            'encoding' => null,
-            'error_correction_level' => null,
-            'label' => null,
-            'label_font_size' => null,
-            'label_font_path' => null,
-        ];
+        if (!$this->optionsResolver instanceof OptionsResolver) {
+            $this->optionsResolver = $this->createOptionsResolver();
+        }
 
-        return $options;
+        return $this->optionsResolver;
     }
 
     /**
-     * @return array
+     * @return OptionsResolver
      */
-    public function getDefaultOptions()
+    private function createOptionsResolver()
     {
-        return $this->optionsResolver->resolve();
+        $optionsResolver = new OptionsResolver();
+        $optionsResolver
+            ->setDefaults($this->defaultOptions)
+            ->setDefined($this->definedOptions)
+            ->setNormalizer('error_correction_level', function (Options $options, $value) {
+                if ($value !== null) {
+                    $value = new ErrorCorrectionLevel($value);
+                }
+                return $value;
+            })
+            ->setNormalizer('label_alignment', function (Options $options, $value) {
+                if ($value !== null) {
+                    $value = new LabelAlignment($value);
+                }
+                return $value;
+            })
+        ;
+
+        return $optionsResolver;
     }
 }

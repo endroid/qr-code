@@ -79,18 +79,22 @@ public function registerBundles()
 ```
 
 The default parameters can be overridden via the configuration.  
-Alpha channel available range is [0, 127] in foreground and background colors.
 
 ```yaml
 endroid_qr_code:
-    size: 100
+    size: 300
     quiet_zone: 2
-    foreground_color: { r: 0, g: 0, b: 0, a: 0 }
-    background_color: { r: 255, g: 255, b: 255, a: 0 }
-    encoding: 'UTF-8'
-    error_correction_level: H
-    label: 'Scan the code'
-    label_font_size: 16
+    foreground_color: { r: 0, g: 0, b: 0 }
+    background_color: { r: 255, g: 255, b: 255 }
+    error_correction_level: high
+    encoding: UTF-8
+    label: Scan the code
+    label_font_size: 20
+    label_alignment: left
+    label_margin: { b: 20 }
+    logo_path: '%kernel.root_dir%/../vendor/endroid/qrcode/logo/symfony.png'
+    logo_size: 150
+    validate_result: true
 ```
 
 Now you can retrieve the factory as follows and create a QR code.

@@ -9,8 +9,8 @@
 
 namespace Endroid\QrCode;
 
-use Endroid\QrCode\Exception\InvalidErrorCorrectionLevelException;
 use Endroid\QrCode\Exception\InvalidLabelFontPathException;
+use Endroid\QrCode\Exception\InvalidPathException;
 use Endroid\QrCode\Exception\MissingWriterException;
 use Endroid\QrCode\Writer\BinaryWriter;
 use Endroid\QrCode\Writer\DataUriWriter;
@@ -21,12 +21,7 @@ use Endroid\QrCode\Writer\WriterInterface;
 
 class QrCode
 {
-    const ERROR_CORRECTION_LEVEL_LOW = 'L';
-    const ERROR_CORRECTION_LEVEL_MEDIUM = 'M';
-    const ERROR_CORRECTION_LEVEL_QUARTILE = 'Q';
-    const ERROR_CORRECTION_LEVEL_HIGH = 'H';
-
-    const DEFAULT_FONT_PATH = __DIR__ . '/../font/open_sans.ttf';
+    const LABEL_FONT_PATH_DEFAULT = __DIR__ . '/../font/open_sans.ttf';
 
     /**
      * @var WriterInterface[]
@@ -54,8 +49,7 @@ class QrCode
     private $foregroundColor = [
         'r' => 0,
         'g' => 0,
-        'b' => 0,
-        'a' => 0
+        'b' => 0
     ];
 
     /**
@@ -64,8 +58,7 @@ class QrCode
     private $backgroundColor = [
         'r' => 255,
         'g' => 255,
-        'b' => 255,
-        'a' => 0
+        'b' => 255
     ];
 
     /**
@@ -74,9 +67,9 @@ class QrCode
     private $encoding = 'UTF-8';
 
     /**
-     * @var int
+     * @var string
      */
-    private $errorCorrectionLevel = self::ERROR_CORRECTION_LEVEL_LOW;
+    private $errorCorrectionLevel = ErrorCorrectionLevel::LOW;
 
     /**
      * @var string
@@ -86,12 +79,42 @@ class QrCode
     /**
      * @var int
      */
-    private $labelFontSize;
+    private $labelFontSize = 16;
 
     /**
      * @var string
      */
-    private $labelFontPath;
+    private $labelFontPath = self::LABEL_FONT_PATH_DEFAULT;
+
+    /**
+     * @var string
+     */
+    private $labelAlignment = LabelAlignment::CENTER;
+
+    /**
+     * @var array
+     */
+    private $labelMargin = [
+        't' => 0,
+        'r' => 0,
+        'b' => 0,
+        'l' => 0,
+    ];
+
+    /**
+     * @var string
+     */
+    private $logoPath;
+
+    /**
+     * @var int
+     */
+    private $logoSize;
+
+    /**
+     * @var bool
+     */
+    private $validateResult = false;
 
     /**
      * @param string $text
@@ -188,10 +211,6 @@ class QrCode
      */
     public function setForegroundColor($foregroundColor)
     {
-        if (!isset($foregroundColor['a'])) {
-            $foregroundColor['a'] = 0;
-        }
-
         $this->foregroundColor = $foregroundColor;
 
         return $this;
@@ -211,10 +230,6 @@ class QrCode
      */
     public function setBackgroundColor($backgroundColor)
     {
-        if (!isset($backgroundColor['a'])) {
-            $backgroundColor['a'] = 0;
-        }
-
         $this->backgroundColor = $backgroundColor;
 
         return $this;
@@ -248,36 +263,18 @@ class QrCode
     }
 
     /**
-     * @param int $errorCorrectionLevel
+     * @param ErrorCorrectionLevel $errorCorrectionLevel
      * @return $this
-     * @throws InvalidErrorCorrectionLevelException
      */
-    public function setErrorCorrectionLevel($errorCorrectionLevel)
+    public function setErrorCorrectionLevel(ErrorCorrectionLevel $errorCorrectionLevel)
     {
-        if (!in_array($errorCorrectionLevel, $this->getAvailableErrorCorrectionLevels())) {
-            throw new InvalidErrorCorrectionLevelException('Invalid error correction level "'.$errorCorrectionLevel.'"');
-        }
-
-        $this->errorCorrectionLevel = $errorCorrectionLevel;
+        $this->errorCorrectionLevel = $errorCorrectionLevel->getValue();
 
         return $this;
     }
 
     /**
-     * @return array
-     */
-    public static function getAvailableErrorCorrectionLevels()
-    {
-        return [
-            self::ERROR_CORRECTION_LEVEL_LOW,
-            self::ERROR_CORRECTION_LEVEL_HIGH,
-            self::ERROR_CORRECTION_LEVEL_MEDIUM,
-            self::ERROR_CORRECTION_LEVEL_QUARTILE
-        ];
-    }
-
-    /**
-     * @return int
+     * @return string
      */
     public function getErrorCorrectionLevel()
     {
@@ -288,19 +285,31 @@ class QrCode
      * @param string $label
      * @param int $labelFontSize
      * @param string $labelFontPath
-     * @throws InvalidLabelFontPathException
+     * @param LabelAlignment $labelAlignment
+     * @param array $labelMargin
+     * @return $this
      */
-    public function setLabel($label, $labelFontSize = 16, $labelFontPath = self::DEFAULT_FONT_PATH)
+    public function setLabel($label, $labelFontSize = null, $labelFontPath = null, LabelAlignment $labelAlignment = null, $labelMargin = null)
     {
-        $labelFontPath = realpath($labelFontPath);
+        $this->label = $label;
 
-        if (!file_exists($labelFontPath)) {
-            throw new InvalidLabelFontPathException('Invalid label font path: ' . $labelFontPath);
+        if ($labelFontSize !== null) {
+            $this->setLabelFontSize($labelFontSize);
         }
 
-        $this->label = $label;
-        $this->labelFontSize = $labelFontSize;
-        $this->labelFontPath = $labelFontPath;
+        if ($labelFontPath !== null) {
+            $this->setLabelFontPath($labelFontPath);
+        }
+
+        if ($labelAlignment !== null) {
+            $this->setLabelAlignment($labelAlignment);
+        }
+
+        if ($labelMargin !== null) {
+            $this->setLabelPadding($labelMargin);
+        }
+
+        return $this;
     }
 
     /**
@@ -309,6 +318,153 @@ class QrCode
     public function getLabel()
     {
         return $this->label;
+    }
+
+    /**
+     * @param int $labelFontSize
+     * @return $this
+     */
+    public function setLabelFontSize($labelFontSize)
+    {
+        $this->labelFontSize = $labelFontSize;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLabelFontSize()
+    {
+        return $this->labelFontSize;
+    }
+
+    /**
+     * @param string $labelFontPath
+     * @return $this
+     * @throws InvalidPathException
+     */
+    public function setLabelFontPath($labelFontPath)
+    {
+        $labelFontPath = realpath($labelFontPath);
+
+        if (!is_file($labelFontPath)) {
+            throw new InvalidPathException('Invalid label font path: ' . $labelFontPath);
+        }
+
+        $this->labelFontPath = $labelFontPath;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelFontPath()
+    {
+        return $this->labelFontPath;
+    }
+
+    /**
+     * @param LabelAlignment $labelAlignment
+     * @return $this
+     */
+    public function setLabelAlignment(LabelAlignment $labelAlignment)
+    {
+        $this->labelAlignment = $labelAlignment;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelAlignment()
+    {
+        return $this->labelAlignment;
+    }
+
+    /**
+     * @param array $labelMargin
+     * @return $this
+     */
+    public function setLabelMargin(array $labelMargin)
+    {
+        $this->labelMargin = array_merge($this->labelMargin, $labelMargin);
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLabelMargin()
+    {
+        return $this->labelMargin;
+    }
+
+    /**
+     * @param string $logoPath
+     * @return $this
+     * @throws InvalidPathException
+     */
+    public function setLogoPath($logoPath)
+    {
+        $logoPath = realpath($logoPath);
+
+        if (!is_file($logoPath)) {
+            throw new InvalidPathException('Invalid logo path: ' . $logoPath);
+        }
+
+        $this->logoPath = $logoPath;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogoPath()
+    {
+        return $this->logoPath;
+    }
+
+    /**
+     * @param int $logoSize
+     * @return $this
+     */
+    public function setLogoSize($logoSize)
+    {
+        $this->logoSize = $logoSize;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLogoSize()
+    {
+        return $this->logoSize;
+    }
+
+    /**
+     * @param bool $validateResult
+     * @return $this
+     */
+    public function setValidateResult($validateResult)
+    {
+        $this->validateResult = $validateResult;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getValidateResult()
+    {
+        return $this->validateResult;
     }
 
     /**

@@ -32,11 +32,9 @@ class QrCodeTest extends TestCase
 
         foreach ($messages as $message) {
             $qrCode = new QrCode($message);
+            $qrCode->setValidateResult(true);
             $pngData = $qrCode->writeString(PngWriter::class);
-
-            $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-            $text = $reader->text();
-            $this->assertTrue($text === $message);
+            $this->assertTrue(is_string($pngData));
         }
     }
 
