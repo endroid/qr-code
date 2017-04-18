@@ -28,6 +28,7 @@ use Endroid\QrCode\LabelAlignment;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
+use Symfony\Component\HttpFoundation\Response;
 
 // Create a QR code
 $qrCode = new QrCode('Life is too short to be generating QR codes');
