@@ -15,19 +15,20 @@
     "require": {
         "php": ">=5.6",
         "ext-gd": "*",
-        "symfony/options-resolver": "^3.0",
+        "symfony/options-resolver": "^2.7|^3.0",
         "bacon/bacon-qr-code": "^1.0",
         "myclabs/php-enum": "^1.5",
         "khanamiryan/qrcode-detector-decoder": "dev-master",
-        "symfony/property-access": "^3.2"
+        "symfony/property-access": "^2.7|^3.0"
     },
     "require-dev": {
-        "symfony/browser-kit": "^3.0",
-        "symfony/framework-bundle": "^3.0",
-        "symfony/http-kernel": "^3.0",
-        "symfony/yaml": "^3.0",
+        "symfony/browser-kit": "^2.7|^3.0",
+        "symfony/framework-bundle": "^2.7|^3.0",
+        "symfony/http-kernel": "^2.7|^3.0",
+        "symfony/yaml": "^2.7|^3.0",
+        "symfony/finder": "^2.7|^3.0",
         "sensio/framework-extra-bundle": "^3.0",
-        "phpunit/phpunit": "^5.0|^6.0"
+        "phpunit/phpunit": "^5.7|^6.0"
     },
     "autoload": {
         "psr-4": {
