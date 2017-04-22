@@ -46,7 +46,9 @@ class PngWriter extends AbstractBaconWriter
         if ($this->qrCode->getValidateResult()) {
             $reader = new QrReader($string, QrReader::SOURCE_TYPE_BLOB);
             if ($reader->text() !== $this->qrCode->getText()) {
-                throw new ValidationException('Validation reader read "'.$reader->text().'" instead of "'.$this->qrCode->getText().'"');
+                throw new ValidationException(
+                    'Built-in validation reader read "'.$reader->text().'" instead of "'.$this->qrCode->getText().'".
+                     Adjust your parameters to increase readability or disable built-in validation.');
             }
         }
 
