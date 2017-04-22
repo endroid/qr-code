@@ -22,7 +22,6 @@ class QrCodeFactory
      * @var array
      */
     private $definedOptions = [
-        'text',
         'size',
         'quiet_zone',
         'foreground_color',
@@ -58,15 +57,16 @@ class QrCodeFactory
     }
 
     /**
+     * @param string $text
      * @param array $options
      * @return QrCode
      */
-    public function create(array $options = [])
+    public function create($text = '', array $options = [])
     {
         $options = $this->getOptionsResolver()->resolve($options);
         $accessor = PropertyAccess::createPropertyAccessor();
 
-        $qrCode = new QrCode();
+        $qrCode = new QrCode($text);
         foreach ($this->definedOptions as $option) {
             if (isset($options[$option])) {
                 $accessor->setValue($qrCode, $option, $options[$option]);

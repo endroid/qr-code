@@ -31,9 +31,8 @@ class QrCodeController extends Controller
     public function generateAction(Request $request, $text, $extension)
     {
         $options = $request->query->all();
-        $options['text'] = $text;
 
-        $qrCode = $this->getQrCodeFactory()->create($options);
+        $qrCode = $this->getQrCodeFactory()->create($text, $options);
         $writer = $qrCode->getWriterByExtension($extension);
 
         return new Response(

@@ -84,7 +84,8 @@ public function registerBundles()
 }
 ```
 
-The default parameters can be overridden via the configuration.  
+The bundle makes use of a factory to create QR codes. The default parameters
+applied by the factory can optionally be overridden via the configuration.
 
 ```yaml
 endroid_qr_code:
@@ -92,22 +93,28 @@ endroid_qr_code:
     quiet_zone: 2
     foreground_color: { r: 0, g: 0, b: 0 }
     background_color: { r: 255, g: 255, b: 255 }
-    error_correction_level: high
+    error_correction_level: high # low, medium, quartile or high
     encoding: UTF-8
     label: Scan the code
     label_font_size: 20
-    label_alignment: left
+    label_alignment: left # left, center or right
     label_margin: { b: 20 }
     logo_path: '%kernel.root_dir%/../vendor/endroid/qrcode/logo/symfony.png'
     logo_size: 150
-    validate_result: true
+    validate_result: true # checks if the result is readable
 ```
 
-Now you can retrieve the factory as follows and create a QR code.
+The validate_result option uses a built-in reader to validate the resulting
+image. Please note that each QR code reader has its own reliability so this
+is not an absolute guarantee that the code will be readable by all readers.
+Also, if the built-in reader fails the Qr code might still be readable by an
+other reader. This setting just helps you guarantee a minimum level of quality.
+
+Now you can retrieve the factory from the service container and create a QR
+code. For instance in your controller this would look like this.
 
 ```php
-$factory = $this->get('endroid.qrcode.factory');
-$qrCode = $factory->create('Life is too short to be generating QR codes');
+$qrCode = $this->get('endroid.qrcode.factory')->create('Bladiebla');
 ```
 
 Add the following section to your routing to be able to handle QR code URLs.
