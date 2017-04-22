@@ -87,6 +87,8 @@ public function registerBundles()
 The default parameters can be overridden via the configuration.  
 
 ```yaml
+# config.yml
+
 endroid_qr_code:
     size: 300
     quiet_zone: 2
@@ -103,17 +105,31 @@ endroid_qr_code:
     validate_result: true
 ```
 
-Now you can retrieve the factory as follows and create a QR code.
+Now you can retrieve the factory in any controller and create a QR code as follows:
 
 ```php
 $factory = $this->get('endroid.qrcode.factory');
 $qrCode = $factory->create('Life is too short to be generating QR codes');
 ```
 
-Add the following section to your routing to be able to handle QR code URLs.
-This step can be skipped when you only use data URIs to display your images.
+To inject the factory into a service, use:
+``` yml
+# services.yml
+
+services:
+    your_service:
+        arguments:
+            - "@endroid.qrcode.factory"
+```
+In the constructor of the service class you can type-hint the argument with
+`\Endroid\QrCode\Factory\QrCodeFactory`
+
+To be able to handle QR code URLs, add the following section to your routing.
+This step can be skipped if you only use data URIs to display your images.
 
 ``` yml
+# routing.yml
+
 EndroidQrCodeBundle:
     resource: "@EndroidQrCodeBundle/Controller/"
     type:     annotation
