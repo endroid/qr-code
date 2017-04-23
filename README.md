@@ -130,10 +130,9 @@ the QR code text to the url followed by any of the supported extensions.
 
 ## Twig extension
 
-The bundle also provides a Twig extension for quickly generating a QR code URL,
-path or data URI. Optional parameters are `extension`, `size`, `quiet_zone` and
-`error_correction_level`. If a parameter is omitted, the value in the bundle
-configuration is used. The default extension is `.png`.
+The bundle provides a Twig extension for generating a QR code URL, path or data
+URI. You can use the second argument of any of these functions to override any
+defaults defined by the bundle or set via your configuration.
 
 ``` twig
 <img src="{{ qrcode_path(message) }}" />
