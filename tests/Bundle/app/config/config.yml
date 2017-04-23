@@ -1,6 +1,12 @@
 framework:
     test: ~
     secret: ThisTokenIsNotSoSecretChangeIt
+    templating:
+        engines: ['twig']
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
+
+twig:
+    paths:
+        '%kernel.root_dir%/Resources/views': __main__

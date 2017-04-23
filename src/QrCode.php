@@ -9,13 +9,13 @@
 
 namespace Endroid\QrCode;
 
-use Endroid\QrCode\Exception\InvalidLabelFontPathException;
 use Endroid\QrCode\Exception\InvalidPathException;
 use Endroid\QrCode\Exception\MissingWriterException;
 use Endroid\QrCode\Writer\BinaryWriter;
-use Endroid\QrCode\Writer\DataUriWriter;
 use Endroid\QrCode\Writer\EpsWriter;
+use Endroid\QrCode\Writer\PngDataUriWriter;
 use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgDataUriWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 use Endroid\QrCode\Writer\WriterInterface;
 
@@ -135,9 +135,10 @@ class QrCode
     protected function registerBuiltInWriters()
     {
         $this->registerWriter(new BinaryWriter($this));
-        $this->registerWriter(new DataUriWriter($this));
         $this->registerWriter(new EpsWriter($this));
+        $this->registerWriter(new PngDataUriWriter($this));
         $this->registerWriter(new PngWriter($this));
+        $this->registerWriter(new SvgDataUriWriter($this));
         $this->registerWriter(new SvgWriter($this));
     }
 

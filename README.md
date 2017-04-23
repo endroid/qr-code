@@ -62,8 +62,8 @@ $response = new Response(
 ;
 
 // Work via the writer
-$writer = new DataUriWriter($qrCode);
-$dataUri = $writer->writeString();
+$writer = new PngWriter($qrCode);
+$pngData = $writer->writeString();
 ```
 
 ![QR Code](http://endroid.nl/qrcode/Dit%20is%20een%20test.png)
@@ -112,7 +112,7 @@ Now you can retrieve the factory from the service container and create a QR
 code. For instance in your controller this would look like this.
 
 ```php
-$qrCode = $this->get('endroid.qrcode.factory')->create('Bladiebla', ['size' => 200]);
+$qrCode = $this->get('endroid.qrcode.factory')->create('QR Code', ['size' => 200]);
 ```
 
 Add the following section to your routing to be able to handle QR code URLs.
@@ -137,7 +137,7 @@ defaults defined by the bundle or set via your configuration.
 ``` twig
 <img src="{{ qrcode_path(message) }}" />
 <img src="{{ qrcode_url(message, { extension: 'svg' }) }}" />
-<img src="{{ qrcode_data_uri(message, { size: 150 }) }}" />
+<img src="{{ qrcode_data_uri(message, { extension: 'svg', size: 150 }) }}" />
 ```
 
 ## Versioning

@@ -11,9 +11,10 @@ namespace Endroid\QrCode\Tests;
 
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\BinaryWriter;
-use Endroid\QrCode\Writer\DataUriWriter;
 use Endroid\QrCode\Writer\EpsWriter;
+use Endroid\QrCode\Writer\PngDataUriWriter;
 use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgDataUriWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 use PHPUnit\Framework\TestCase;
 
@@ -44,14 +45,17 @@ class QrCodeTest extends TestCase
         $binData = $qrCode->writeString(BinaryWriter::class);
         $this->assertTrue(is_string($binData));
 
-        $dataUriData = $qrCode->writeString(DataUriWriter::class);
-        $this->assertTrue(strpos($dataUriData, 'data:image/png;base64') === 0);
-
         $epsData = $qrCode->writeString(EpsWriter::class);
         $this->assertTrue(is_string($epsData));
 
+        $pngDataUriData = $qrCode->writeString(PngDataUriWriter::class);
+        $this->assertTrue(strpos($pngDataUriData, 'data:image/png;base64') === 0);
+
         $pngData = $qrCode->writeString(PngWriter::class);
         $this->assertTrue(is_string($pngData));
+
+        $svgDataUriData = $qrCode->writeString(SvgDataUriWriter::class);
+        $this->assertTrue(strpos($svgDataUriData, 'data:image/svg+xml;base64') === 0);
 
         $svgData = $qrCode->writeString(SvgWriter::class);
         $this->assertTrue(is_string($svgData));

@@ -10,7 +10,8 @@
 namespace Endroid\QrCode\Twig\Extension;
 
 use Endroid\QrCode\Factory\QrCodeFactory;
-use Endroid\QrCode\Writer\DataUriWriter;
+use Endroid\QrCode\Writer\PngDataUriWriter;
+use Endroid\QrCode\Writer\SvgDataUriWriter;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Twig_Extension;
@@ -85,7 +86,7 @@ class QrCodeExtension extends Twig_Extension
             $options['extension'] = 'png';
         }
 
-        return $this->router->generate('endroid_qrcode', $options, $referenceType);
+        return $this->router->generate('endroid_qrcode_generate', $options, $referenceType);
     }
 
     /**
@@ -95,8 +96,15 @@ class QrCodeExtension extends Twig_Extension
      */
     public function qrcodeDataUriFunction($text, array $options = [])
     {
-        $qrCode = $this->qrCodeFactory->create($text, $options);
+        $extension = 'png';
+        if (isset($options['extension'])) {
+            $extension = $options['extension'];
+            unset($options['extension']);
+        }
 
-        return $qrCode->writeString(DataUriWriter::class);
+        $qrCode = $this->qrCodeFactory->create($text, $options);
+        $writer = $qrCode->getWriterByExtension($extension);
+
+        return $writer->writeString();
     }
 }

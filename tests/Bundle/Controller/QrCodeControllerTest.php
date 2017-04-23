@@ -14,11 +14,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class QrCodeControllerTest extends WebTestCase
 {
-    public function testCreateQrCode()
+    public function testGenerateAction()
     {
         $client = static::createClient();
-
-        $client->request('GET', $client->getContainer()->get('router')->generate('endroid_qrcode', [
+        $client->request('GET', $client->getContainer()->get('router')->generate('endroid_qrcode_generate', [
             'text' => 'Life is too short to be generating QR codes',
             'extension' => 'png',
             'size' => 150,
@@ -30,6 +29,16 @@ class QrCodeControllerTest extends WebTestCase
         $image = imagecreatefromstring($response->getContent());
 
         $this->assertTrue(imagesx($image) == 150);
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    public function testTwigFunctionsAction()
+    {
+        $client = static::createClient();
+        $client->request('GET', $client->getContainer()->get('router')->generate('endroid_qrcode_twig_functions'));
+
+        $response = $client->getResponse();
+
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 }

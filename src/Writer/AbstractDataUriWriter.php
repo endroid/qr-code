@@ -9,15 +9,15 @@
 
 namespace Endroid\QrCode\Writer;
 
-class DataUriWriter extends PngWriter
+abstract class AbstractDataUriWriter extends AbstractWriter
 {
     /**
      * {@inheritdoc}
      */
     public function writeString()
     {
-        $string = parent::writeString();
-        $string = 'data:image/png;base64,'.base64_encode($string);
+        $string = $this->qrCode->writeString($this->getInternalWriterClass());
+        $string = 'data:'.$this->qrCode->getContentType($this->getInternalWriterClass()).';base64,'.base64_encode($string);
 
         return $string;
     }
@@ -37,4 +37,9 @@ class DataUriWriter extends PngWriter
     {
         return [];
     }
+
+    /**
+     * @return WriterInterface
+     */
+    abstract public function getInternalWriterClass();
 }

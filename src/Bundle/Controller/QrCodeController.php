@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 class QrCodeController extends Controller
 {
     /**
-     * @Route("/{text}.{extension}", name="endroid_qrcode", requirements={"text"="[\w\W]+"})
+     * @Route("/{text}.{extension}", name="endroid_qrcode_generate", requirements={"text"="[\w\W]+"})
      *
      * @param Request $request
      * @param string $text
@@ -40,6 +40,18 @@ class QrCodeController extends Controller
             Response::HTTP_OK,
             ['Content-Type' => $writer->getContentType()]
         );
+    }
+
+    /**
+     * @Route("/twig", name="endroid_qrcode_twig_functions")
+     *
+     * @return Response
+     */
+    public function twigFunctionsAction()
+    {
+        return $this->render('twig_functions.html.twig', [
+            'message' => 'QR Code'
+        ]);
     }
 
     /**
