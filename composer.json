@@ -22,11 +22,13 @@
         "symfony/property-access": "^2.7|^3.0"
     },
     "require-dev": {
+        "symfony/asset": "^2.7|^3.0",
         "symfony/browser-kit": "^2.7|^3.0",
         "symfony/finder": "^2.7|^3.0",
         "symfony/framework-bundle": "^2.7|^3.0",
         "symfony/http-kernel": "^2.7|^3.0",
         "symfony/templating": "^2.7|^3.0",
+        "symfony/twig-bundle": "^2.7|^3.0",
         "symfony/yaml": "^2.7|^3.0",
         "sensio/framework-extra-bundle": "^3.0",
         "phpunit/phpunit": "^5.7|^6.0"
