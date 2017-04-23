@@ -95,8 +95,7 @@ class QrCodeExtension extends Twig_Extension
      */
     public function qrcodeDataUriFunction($text, array $options = [])
     {
-        $options['text'] = $text;
-        $qrCode = $this->qrCodeFactory->create($options);
+        $qrCode = $this->qrCodeFactory->create($text, $options);
 
         return $qrCode->writeString(DataUriWriter::class);
     }
