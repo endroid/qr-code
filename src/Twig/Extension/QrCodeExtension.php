@@ -9,7 +9,9 @@
 
 namespace Endroid\QrCode\Twig\Extension;
 
+use Endroid\QrCode\Exception\UnsupportedExtensionException;
 use Endroid\QrCode\Factory\QrCodeFactory;
+use Endroid\QrCode\Writer\AbstractDataUriWriter;
 use Endroid\QrCode\Writer\PngDataUriWriter;
 use Endroid\QrCode\Writer\SvgDataUriWriter;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -91,8 +93,9 @@ class QrCodeExtension extends Twig_Extension
 
     /**
      * @param string $text
-     * @param array  $options
+     * @param array $options
      * @return string
+     * @throws UnsupportedExtensionException
      */
     public function qrcodeDataUriFunction($text, array $options = [])
     {
@@ -103,8 +106,14 @@ class QrCodeExtension extends Twig_Extension
         }
 
         $qrCode = $this->qrCodeFactory->create($text, $options);
-        $writer = $qrCode->getWriterByExtension($extension);
+        $internalWriter = $qrCode->getWriterByExtension($extension);
 
-        return $writer->writeString();
+        foreach ($qrCode->getRegisteredWriters() as $writer) {
+            if ($writer instanceof AbstractDataUriWriter && $writer->getInternalWriterClass() == get_class($internalWriter)) {
+                return $writer->writeString();
+            }
+        }
+
+        throw new UnsupportedExtensionException('Extenstion '.$extension.' is not supported by any of the writers');
     }
 }

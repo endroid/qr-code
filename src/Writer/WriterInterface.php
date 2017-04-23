@@ -34,7 +34,8 @@ interface WriterInterface
     public function getContentType();
 
     /**
-     * @return array
+     * @param string $extension
+     * @return bool
      */
-    public function getSupportedExtensions();
+    public function supportsExtension($extension);
 }

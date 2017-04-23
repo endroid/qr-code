@@ -33,7 +33,7 @@ abstract class AbstractDataUriWriter extends AbstractWriter
     /**
      * {@inheritdoc}
      */
-    public function getSupportedExtensions()
+    protected function getSupportedExtensions()
     {
         return [];
     }

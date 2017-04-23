@@ -10,7 +10,8 @@
 namespace Endroid\QrCode;
 
 use Endroid\QrCode\Exception\InvalidPathException;
-use Endroid\QrCode\Exception\MissingWriterException;
+use Endroid\QrCode\Exception\InvalidWriterException;
+use Endroid\QrCode\Exception\UnsupportedExtensionException;
 use Endroid\QrCode\Writer\BinaryWriter;
 use Endroid\QrCode\Writer\EpsWriter;
 use Endroid\QrCode\Writer\PngDataUriWriter;
@@ -150,6 +151,14 @@ class QrCode
         if (!isset($this->writers[get_class($writer)])) {
             $this->writers[get_class($writer)] = $writer;
         }
+    }
+
+    /**
+     * @return WriterInterface[]
+     */
+    public function getRegisteredWriters()
+    {
+        return $this->writers;
     }
 
     /**
@@ -474,7 +483,7 @@ class QrCode
     /**
      * @param string $writerClass
      * @return string
-     * @throws MissingWriterException
+     * @throws InvalidWriterException
      */
     public function getContentType($writerClass)
     {
@@ -485,12 +494,12 @@ class QrCode
 
     /**
      * @param string $writerClass
-     * @throws MissingWriterException
+     * @throws InvalidWriterException
      */
     protected function assertValidWriterClass($writerClass)
     {
         if (!isset($this->writers[$writerClass])) {
-            throw new MissingWriterException('Invalid writer "'.$writerClass.'"');
+            throw new InvalidWriterException('Invalid writer "'.$writerClass.'"');
         }
     }
 
@@ -535,16 +544,16 @@ class QrCode
     /**
      * @param string $extension
      * @return WriterInterface
-     * @throws MissingWriterException
+     * @throws UnsupportedExtensionException
      */
     public function getWriterByExtension($extension)
     {
         foreach ($this->writers as $writer) {
-            if (in_array($extension, $writer->getSupportedExtensions())) {
+            if ($writer->supportsExtension($extension)) {
                 return $writer;
             }
         }
 
-        throw new MissingWriterException('Missing writer for extension "'.$extension.'"');
+        throw new UnsupportedExtensionException('Missing writer for extension "'.$extension.'"');
     }
 }

@@ -46,9 +46,18 @@ abstract class AbstractWriter implements WriterInterface
     abstract public function getContentType();
 
     /**
-     * {@inheritdoc}
+     * @param string $extension
+     * @return bool
      */
-    public function getSupportedExtensions()
+    public function supportsExtension($extension)
+    {
+        return in_array($extension, $this->getSupportedExtensions());
+    }
+
+    /**
+     * @return array
+     */
+    protected function getSupportedExtensions()
     {
         return [];
     }

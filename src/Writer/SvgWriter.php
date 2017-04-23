@@ -47,7 +47,7 @@ class SvgWriter extends AbstractBaconWriter
     /**
      * {@inheritdoc}
      */
-    public function getSupportedExtensions()
+    protected function getSupportedExtensions()
     {
         return ['svg'];
     }
