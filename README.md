@@ -116,6 +116,11 @@ code. For instance in your controller this would look like this.
 ```php
 $qrCode = $this->get('endroid.qrcode.factory')->create('Bladiebla');
 ```
+Additionally, you can set options like that:
+
+```php
+$qrCode = $this->get('endroid.qrcode.factory')->create('Bladiebla', array('size'=>200));
+```
 
 Add the following section to your routing to be able to handle QR code URLs.
 This step can be skipped when you only use data URIs to display your images.
