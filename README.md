@@ -10,7 +10,7 @@ QR Code
 [![License](http://img.shields.io/packagist/l/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
 
 This library helps you generate QR codes in an easy way and provides a Symfony
-bundle for even faster integration.
+bundle for rapid integration in your project.
 
 ## Installation
 
@@ -88,10 +88,7 @@ The bundle makes use of a factory to create QR codes. The default parameters
 applied by the factory can optionally be overridden via the configuration.
 
 ```yaml
-# config.yml
-
 endroid_qr_code:
-    # each line is optional and can be removed completely:
     size: 300
     quiet_zone: 2
     foreground_color: { r: 0, g: 0, b: 0 }
@@ -108,21 +105,14 @@ endroid_qr_code:
 ```
 
 The `validate_result` option uses a built-in reader to validate the resulting
-image. Please note that each QR code reader has its own reliability so this
-is not an absolute guarantee that the code will be readable by all readers.
-Also, if the built-in reader fails, the QR code might still be readable by
-another reader. This setting just helps you guarantee a minimum level of quality.
+image. This does not guarantee that the code will be readable by all readers
+but this helps you provide a minimum level of quality.
 
 Now you can retrieve the factory from the service container and create a QR
 code. For instance in your controller this would look like this.
 
 ```php
-$qrCode = $this->get('endroid.qrcode.factory')->create('Bladiebla');
-```
-Additionally, you can set options like that:
-
-```php
-$qrCode = $this->get('endroid.qrcode.factory')->create('Bladiebla', array('size'=>200));
+$qrCode = $this->get('endroid.qrcode.factory')->create('Bladiebla', ['size' => 200]);
 ```
 
 Add the following section to your routing to be able to handle QR code URLs.
