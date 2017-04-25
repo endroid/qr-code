@@ -17,7 +17,7 @@ bundle for rapid integration in your project.
 Use [Composer](https://getcomposer.org/) to install the library.
 
 ``` bash
-$ composer require endroid/qrcode khanamiryan/qrcode-detector-decoder:dev-master
+$ composer require endroid/qrcode
 ```
 
 ## Usage
