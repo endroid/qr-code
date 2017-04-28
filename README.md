@@ -41,8 +41,8 @@ $qrCode
     ->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH)
     ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0])
     ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
-    ->setLabel('Scan the code', 16, __DIR__.'/../font/open_sans.ttf', LabelAlignment::CENTER)
-    ->setLogoPath(__DIR__.'/../logo/symfony.png')
+    ->setLabel('Scan the code', 16, __DIR__.'/../assets/noto_sans.otf', LabelAlignment::CENTER)
+    ->setLogoPath(__DIR__.'/../assets/symfony.png')
     ->setLogoSize(150)
     ->setValidateResult(true)
 ;
@@ -99,7 +99,7 @@ endroid_qr_code:
     label_font_size: 20
     label_alignment: left # left, center or right
     label_margin: { b: 20 }
-    logo_path: '%kernel.root_dir%/../vendor/endroid/qrcode/logo/symfony.png'
+    logo_path: '%kernel.root_dir%/../vendor/endroid/qrcode/assets/symfony.png'
     logo_size: 150
     validate_result: true # checks if the result is readable
 ```
