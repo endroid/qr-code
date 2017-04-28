@@ -28,6 +28,7 @@ class QrCodeTest extends TestCase
             'http://this.is.an/url?with=query&string=attached',
             '{"i":"serialized.data","v":1,"t":1,"d":"4AEPc9XuIQ0OjsZoSRWp9DRWlN6UyDvuMlyOYy8XjOw="}',
             'Spëci&al ch@ract3rs',
+            '有限公司'
         ];
 
         foreach ($messages as $message) {
@@ -92,7 +93,7 @@ class QrCodeTest extends TestCase
         $qrCode = new QrCode('QrCode');
         $qrCode
             ->setSize(400)
-            ->setLogoPath(__DIR__.'/../logo/symfony.png')
+            ->setLogoPath(__DIR__.'/../assets/symfony.png')
             ->setLogoSize(150)
             ->setValidateResult(true);
         ;
