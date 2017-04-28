@@ -22,7 +22,7 @@ use Endroid\QrCode\Writer\WriterInterface;
 
 class QrCode
 {
-    const LABEL_FONT_PATH_DEFAULT = __DIR__ . '/../font/open_sans.ttf';
+    const LABEL_FONT_PATH_DEFAULT = __DIR__ . '/../assets/noto_sans.otf';
 
     /**
      * @var WriterInterface[]
@@ -96,10 +96,10 @@ class QrCode
      * @var array
      */
     private $labelMargin = [
-        't' => 0,
-        'r' => 0,
-        'b' => 0,
-        'l' => 0,
+        't' => 10,
+        'r' => 10,
+        'b' => 10,
+        'l' => 10,
     ];
 
     /**
