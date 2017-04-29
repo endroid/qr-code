@@ -54,7 +54,11 @@ class SvgWriter extends AbstractBaconWriter
         $xml->rect['width'] = $targetSize;
         $xml->rect['height'] = $targetSize;
 
-        $additionalWhitespace = (int) $xml->use['x'];
+        $additionalWhitespace = $targetSize;
+        foreach ($xml->use as $block) {
+            $additionalWhitespace = min($additionalWhitespace, (int) $block['x']);
+        }
+
         $sourceBlockSize = (int) $xml->defs->rect['width'];
         $blockCount = ($this->qrCode->getSize() - 2 * $additionalWhitespace) / $sourceBlockSize;
         $targetBlockSize = $this->qrCode->getSize() / $blockCount;
