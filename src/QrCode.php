@@ -27,27 +27,27 @@ class QrCode
     /**
      * @var WriterInterface[]
      */
-    private $writers;
+    protected $writers;
 
     /**
      * @var string
      */
-    private $text;
+    protected $text;
 
     /**
      * @var int
      */
-    private $size;
+    protected $size = 200;
 
     /**
      * @var int
      */
-    private $quietZone;
+    protected $margin = 10;
 
     /**
      * @var array
      */
-    private $foregroundColor = [
+    protected $foregroundColor = [
         'r' => 0,
         'g' => 0,
         'b' => 0
@@ -56,7 +56,7 @@ class QrCode
     /**
      * @var array
      */
-    private $backgroundColor = [
+    protected $backgroundColor = [
         'r' => 255,
         'g' => 255,
         'b' => 255
@@ -65,57 +65,57 @@ class QrCode
     /**
      * @var string
      */
-    private $encoding = 'UTF-8';
+    protected $encoding = 'UTF-8';
 
     /**
      * @var ErrorCorrectionLevel
      */
-    private $errorCorrectionLevel;
+    protected $errorCorrectionLevel;
 
     /**
      * @var string
      */
-    private $label;
+    protected $label;
 
     /**
      * @var int
      */
-    private $labelFontSize = 16;
+    protected $labelFontSize = 16;
 
     /**
      * @var string
      */
-    private $labelFontPath = self::LABEL_FONT_PATH_DEFAULT;
+    protected $labelFontPath = self::LABEL_FONT_PATH_DEFAULT;
 
     /**
      * @var LabelAlignment
      */
-    private $labelAlignment;
+    protected $labelAlignment;
 
     /**
      * @var array
      */
-    private $labelMargin = [
-        't' => 10,
-        'r' => 10,
+    protected $labelMargin = [
+        't' => 0,
+        'r' => 0,
         'b' => 10,
-        'l' => 10,
+        'l' => 0,
     ];
 
     /**
      * @var string
      */
-    private $logoPath;
+    protected $logoPath;
 
     /**
      * @var int
      */
-    private $logoSize;
+    protected $logoSize;
 
     /**
      * @var bool
      */
-    private $validateResult = false;
+    protected $validateResult = false;
 
     /**
      * @param string $text
@@ -200,12 +200,12 @@ class QrCode
     }
 
     /**
-     * @param int $quietZone
+     * @param int $margin
      * @return $this
      */
-    public function setQuietZone($quietZone)
+    public function setMargin($margin)
     {
-        $this->quietZone = $quietZone;
+        $this->margin = $margin;
 
         return $this;
     }
@@ -213,9 +213,9 @@ class QrCode
     /**
      * @return int
      */
-    public function getQuietZone()
+    public function getMargin()
     {
-        return $this->quietZone;
+        return $this->margin;
     }
 
     /**

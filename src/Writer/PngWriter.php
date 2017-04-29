@@ -25,7 +25,7 @@ class PngWriter extends AbstractBaconWriter
         $renderer = new Png();
         $renderer->setWidth($this->qrCode->getSize());
         $renderer->setHeight($this->qrCode->getSize());
-        $renderer->setMargin($this->qrCode->getQuietZone());
+        $renderer->setMargin(0);
         $renderer->setForegroundColor($this->convertColor($this->qrCode->getForegroundColor()));
         $renderer->setBackgroundColor($this->convertColor($this->qrCode->getBackgroundColor()));
 
@@ -36,12 +36,11 @@ class PngWriter extends AbstractBaconWriter
             $this->convertErrorCorrectionLevel($this->qrCode->getErrorCorrectionLevel())
         );
 
-        if ($this->qrCode->getLabel() !== null || $this->qrCode->getLogoPath() !== null) {
-            $image = imagecreatefromstring($string);
-            $image = $this->addLogo($image);
-            $image = $this->addLabel($image);
-            $string = $this->imageToString($image);
-        }
+        $image = imagecreatefromstring($string);
+        $image = $this->addMargin($image);
+        $image = $this->addLogo($image);
+        $image = $this->addLabel($image);
+        $string = $this->imageToString($image);
 
         if ($this->qrCode->getValidateResult()) {
             $reader = new QrReader($string, QrReader::SOURCE_TYPE_BLOB);
@@ -59,7 +58,49 @@ class PngWriter extends AbstractBaconWriter
      * @param resource $sourceImage
      * @return resource
      */
-    private function addLogo($sourceImage)
+    protected function addMargin($sourceImage)
+    {
+        $additionalWhitespace = $this->calculateAdditionalWhiteSpace($sourceImage);
+
+        $targetImage = imagecreatetruecolor($this->qrCode->getSize() + $this->qrCode->getMargin() * 2, $this->qrCode->getSize() + $this->qrCode->getMargin() * 2);
+        $backgroundColor = imagecolorallocate($targetImage, $this->qrCode->getBackgroundColor()['r'], $this->qrCode->getBackgroundColor()['g'], $this->qrCode->getBackgroundColor()['b']);
+        imagefill($targetImage, 0, 0, $backgroundColor);
+        imagecopyresampled($targetImage, $sourceImage, $this->qrCode->getMargin(), $this->qrCode->getMargin(), $additionalWhitespace, $additionalWhitespace, $this->qrCode->getSize(), $this->qrCode->getSize(), $this->qrCode->getSize() - 2 * $additionalWhitespace, $this->qrCode->getSize() - 2 * $additionalWhitespace);
+
+        return $targetImage;
+    }
+
+    /**
+     * @param resource $image
+     * @return int
+     */
+    protected function calculateAdditionalWhiteSpace($image)
+    {
+        $width = imagesx($image);
+        $height = imagesy($image);
+
+        $foregroundColor = $this->qrCode->getForegroundColor();
+        $foregroundColor = imagecolorallocate($image, $foregroundColor['r'], $foregroundColor['g'], $foregroundColor['b']);
+
+        $whitespace = $width;
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
+                $color = imagecolorat($image, $x, $y);
+                if ($color == $foregroundColor || $x == $whitespace) {
+                    $whitespace = min($whitespace, $x);
+                    break;
+                }
+            }
+        }
+
+        return $whitespace;
+    }
+
+    /**
+     * @param resource $sourceImage
+     * @return resource
+     */
+    protected function addLogo($sourceImage)
     {
         if ($this->qrCode->getLogoPath() === null) {
             return $sourceImage;
@@ -90,7 +131,7 @@ class PngWriter extends AbstractBaconWriter
      * @return resource
      * @throws MissingFunctionException
      */
-    private function addLabel($sourceImage)
+    protected function addLabel($sourceImage)
     {
         if ($this->qrCode->getLabel() === null) {
             return $sourceImage;
@@ -130,7 +171,7 @@ class PngWriter extends AbstractBaconWriter
      * @param resource $image
      * @return string
      */
-    private function imageToString($image)
+    protected function imageToString($image)
     {
         ob_start();
         imagepng($image);

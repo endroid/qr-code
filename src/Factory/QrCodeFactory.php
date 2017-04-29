@@ -21,9 +21,9 @@ class QrCodeFactory
     /**
      * @var array
      */
-    private $definedOptions = [
+    protected $definedOptions = [
         'size',
-        'quiet_zone',
+        'margin',
         'foreground_color',
         'background_color',
         'encoding',
@@ -41,12 +41,12 @@ class QrCodeFactory
     /**
      * @var array
      */
-    private $defaultOptions;
+    protected $defaultOptions;
 
     /**
      * @var OptionsResolver
      */
-    private $optionsResolver;
+    protected $optionsResolver;
 
     /**
      * @param array $defaultOptions
@@ -79,7 +79,7 @@ class QrCodeFactory
     /**
      * @return OptionsResolver
      */
-    private function getOptionsResolver()
+    protected function getOptionsResolver()
     {
         if (!$this->optionsResolver instanceof OptionsResolver) {
             $this->optionsResolver = $this->createOptionsResolver();
@@ -91,7 +91,7 @@ class QrCodeFactory
     /**
      * @return OptionsResolver
      */
-    private function createOptionsResolver()
+    protected function createOptionsResolver()
     {
         $optionsResolver = new OptionsResolver();
         $optionsResolver

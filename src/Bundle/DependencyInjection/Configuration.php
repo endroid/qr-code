@@ -25,8 +25,8 @@ class Configuration implements ConfigurationInterface
         $treeBuilder
             ->root('endroid_qr_code')
                 ->children()
-                    ->integerNode('size')->min(0)->defaultValue(200)->end()
-                    ->integerNode('quiet_zone')->min(0)->end()
+                    ->integerNode('size')->min(0)->end()
+                    ->integerNode('margin')->min(0)->end()
                     ->scalarNode('encoding')->defaultValue('UTF-8')->end()
                     ->scalarNode('error_correction_level')
                         ->validate()

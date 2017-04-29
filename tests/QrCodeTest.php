@@ -65,15 +65,17 @@ class QrCodeTest extends TestCase
     public function testSetSize()
     {
         $size = 400;
+        $margin = 10;
 
         $qrCode = new QrCode('QrCode');
         $qrCode->setSize($size);
+        $qrCode->setMargin($margin);
 
         $pngData = $qrCode->writeString(PngWriter::class);
         $image = imagecreatefromstring($pngData);
 
-        $this->assertTrue(imagesx($image) === $size);
-        $this->assertTrue(imagesy($image) === $size);
+        $this->assertTrue(imagesx($image) === $size + 2 * $margin);
+        $this->assertTrue(imagesy($image) === $size + 2 * $margin);
     }
 
     public function testSetLabel()

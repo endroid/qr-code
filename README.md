@@ -36,7 +36,7 @@ $qrCode->setSize(300);
 
 // Set advanced options
 $qrCode
-    ->setQuietZone(2)
+    ->setMargin(10)
     ->setEncoding('UTF-8')
     ->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH)
     ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0])
@@ -90,7 +90,7 @@ applied by the factory can optionally be overridden via the configuration.
 ```yaml
 endroid_qr_code:
     size: 300
-    quiet_zone: 2
+    margin: 10
     foreground_color: { r: 0, g: 0, b: 0 }
     background_color: { r: 255, g: 255, b: 255 }
     error_correction_level: high # low, medium, quartile or high

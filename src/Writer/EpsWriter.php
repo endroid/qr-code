@@ -23,7 +23,7 @@ class EpsWriter extends AbstractBaconWriter
         $renderer = new Eps();
         $renderer->setWidth($this->qrCode->getSize());
         $renderer->setHeight($this->qrCode->getSize());
-        $renderer->setMargin($this->qrCode->getQuietZone());
+        $renderer->setMargin(0);
         $renderer->setForegroundColor($this->convertColor($this->qrCode->getForegroundColor()));
         $renderer->setBackgroundColor($this->convertColor($this->qrCode->getBackgroundColor()));
 

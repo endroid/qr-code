@@ -24,12 +24,12 @@ class QrCodeExtension extends Twig_Extension
     /**
      * @var QrCodeFactory
      */
-    private $qrCodeFactory;
+    protected $qrCodeFactory;
 
     /**
      * @var RouterInterface
      */
-    private $router;
+    protected $router;
 
     /**
      * @param QrCodeFactory $qrCodeFactory
