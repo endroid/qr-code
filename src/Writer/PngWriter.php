@@ -63,6 +63,10 @@ class PngWriter extends AbstractBaconWriter
     {
         $additionalWhitespace = $this->calculateAdditionalWhiteSpace($sourceImage);
 
+        if ($additionalWhitespace == 0 && $this->qrCode->getMargin() == 0) {
+            return $sourceImage;
+        }
+
         $targetImage = imagecreatetruecolor($this->qrCode->getSize() + $this->qrCode->getMargin() * 2, $this->qrCode->getSize() + $this->qrCode->getMargin() * 2);
         $backgroundColor = imagecolorallocate($targetImage, $this->qrCode->getBackgroundColor()['r'], $this->qrCode->getBackgroundColor()['g'], $this->qrCode->getBackgroundColor()['b']);
         imagefill($targetImage, 0, 0, $backgroundColor);

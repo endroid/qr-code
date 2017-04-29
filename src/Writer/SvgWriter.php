@@ -11,6 +11,7 @@ namespace Endroid\QrCode\Writer;
 
 use BaconQrCode\Renderer\Image\Svg;
 use BaconQrCode\Writer;
+use SimpleXMLElement;
 
 class SvgWriter extends AbstractBaconWriter
 {
@@ -33,7 +34,40 @@ class SvgWriter extends AbstractBaconWriter
             $this->convertErrorCorrectionLevel($this->qrCode->getErrorCorrectionLevel())
         );
 
+        $string = $this->addMargin($string);
+
         return $string;
+    }
+
+    /**
+     * @param string $string
+     * @return string
+     */
+    protected function addMargin($string)
+    {
+        $targetSize = $this->qrCode->getSize() + $this->qrCode->getMargin() * 2;
+
+        $xml = new SimpleXMLElement($string);
+        $xml['width'] = $targetSize;
+        $xml['height'] = $targetSize;
+        $xml['viewBox'] = '0 0 '.$targetSize.' '.$targetSize;
+        $xml->rect['width'] = $targetSize;
+        $xml->rect['height'] = $targetSize;
+
+        $additionalWhitespace = (int) $xml->use['x'];
+        $sourceBlockSize = (int) $xml->defs->rect['width'];
+        $blockCount = ($this->qrCode->getSize() - 2 * $additionalWhitespace) / $sourceBlockSize;
+        $targetBlockSize = $this->qrCode->getSize() / $blockCount;
+
+        $xml->defs->rect['width'] = $targetBlockSize;
+        $xml->defs->rect['height'] = $targetBlockSize;
+
+        foreach ($xml->use as $block) {
+            $block['x'] = $this->qrCode->getMargin() + $targetBlockSize * ($block['x'] - $additionalWhitespace) / $sourceBlockSize;
+            $block['y'] = $this->qrCode->getMargin() + $targetBlockSize * ($block['y'] - $additionalWhitespace) / $sourceBlockSize;
+        }
+
+        return $xml->asXML();
     }
 
     /**
