@@ -97,9 +97,9 @@ class QrCode
      */
     protected $labelMargin = [
         't' => 0,
-        'r' => 0,
+        'r' => 10,
         'b' => 10,
-        'l' => 0,
+        'l' => 10,
     ];
 
     /**
@@ -127,7 +127,7 @@ class QrCode
 
         $this->text = $text;
 
-        $this->errorCorrectionLevel = new ErrorCorrectionLevel(ErrorCorrectionLevel::LOW);
+        $this->errorCorrectionLevel = new ErrorCorrectionLevel(ErrorCorrectionLevel::HIGH);
         $this->labelAlignment = new LabelAlignment(LabelAlignment::CENTER);
 
         $this->registerBuiltInWriters();

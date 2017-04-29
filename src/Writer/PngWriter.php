@@ -13,6 +13,7 @@ use BaconQrCode\Renderer\Image\Png;
 use BaconQrCode\Writer;
 use Endroid\QrCode\Exception\MissingFunctionException;
 use Endroid\QrCode\Exception\ValidationException;
+use Endroid\QrCode\LabelAlignment;
 use QrReader;
 
 class PngWriter extends AbstractBaconWriter
@@ -160,7 +161,18 @@ class PngWriter extends AbstractBaconWriter
         // Copy source image to target image
         imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $sourceWidth, $sourceHeight, $sourceWidth, $sourceHeight);
 
-        $labelX = intval($targetWidth / 2 - $labelBoxWidth / 2) + $labelMargin['l'];
+        switch ($this->qrCode->getLabelAlignment()) {
+            case LabelAlignment::LEFT:
+                $labelX = $labelMargin['l'];
+                break;
+            case LabelAlignment::RIGHT:
+                $labelX = $targetWidth - $labelBoxWidth - $labelMargin['r'];
+                break;
+            default:
+                $labelX = intval($targetWidth / 2 - $labelBoxWidth / 2);
+                break;
+        }
+
         $labelY = $targetHeight - $labelMargin['b'];
         imagettftext($targetImage, $this->qrCode->getLabelFontSize(), 0, $labelX, $labelY, $foregroundColor, $this->qrCode->getLabelFontPath(), $this->qrCode->getLabel());
 
