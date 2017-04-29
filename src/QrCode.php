@@ -37,7 +37,7 @@ class QrCode
     /**
      * @var int
      */
-    protected $size = 200;
+    protected $size = 300;
 
     /**
      * @var int
@@ -127,7 +127,7 @@ class QrCode
 
         $this->text = $text;
 
-        $this->errorCorrectionLevel = new ErrorCorrectionLevel(ErrorCorrectionLevel::HIGH);
+        $this->errorCorrectionLevel = new ErrorCorrectionLevel(ErrorCorrectionLevel::LOW);
         $this->labelAlignment = new LabelAlignment(LabelAlignment::CENTER);
 
         $this->registerBuiltInWriters();
