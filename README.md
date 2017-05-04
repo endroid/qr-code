@@ -49,7 +49,7 @@ $qrCode
 
 // Output the QR code
 header('Content-Type: '.$qrCode->getContentType(PngWriter::class));
-$qrCode->writeString(PngWriter::class);
+echo $qrCode->writeString(PngWriter::class);
 
 // Save it to a file (guesses writer by file extension)
 $qrCode->writeFile(__DIR__.'/qrcode.png');
