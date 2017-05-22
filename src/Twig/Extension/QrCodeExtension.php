@@ -116,4 +116,9 @@ class QrCodeExtension extends Twig_Extension
 
         throw new UnsupportedExtensionException('Extenstion '.$extension.' is not supported by any of the writers');
     }
+
+    public function getName()
+    {
+        return 'qrcode';
+    }
 }
