@@ -26,16 +26,15 @@ $ composer require endroid/qrcode
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\LabelAlignment;
 use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Writer\SvgWriter;
 use Symfony\Component\HttpFoundation\Response;
 
-// Create a QR code
+// Create a basic QR code
 $qrCode = new QrCode('Life is too short to be generating QR codes');
 $qrCode->setSize(300);
 
 // Set advanced options
 $qrCode
+    ->setWriterByName('png')
     ->setMargin(10)
     ->setEncoding('UTF-8')
     ->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH)
@@ -43,27 +42,19 @@ $qrCode
     ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
     ->setLabel('Scan the code', 16, __DIR__.'/../assets/noto_sans.otf', LabelAlignment::CENTER)
     ->setLogoPath(__DIR__.'/../assets/symfony.png')
-    ->setLogoSize(150)
+    ->setLogoWidth(150)
     ->setValidateResult(true)
 ;
 
-// Output the QR code
-header('Content-Type: '.$qrCode->getContentType(PngWriter::class));
-echo $qrCode->writeString(PngWriter::class);
+// Directly output the QR code
+header('Content-Type: '.$qrCode->getContentType());
+echo $qrCode->writeString();
 
-// Save it to a file (guesses writer by file extension)
+// Save it to a file
 $qrCode->writeFile(__DIR__.'/qrcode.png');
 
 // Create a response object
-$response = new Response(
-    $qrCode->writeString(SvgWriter::class),
-    Response::HTTP_OK,
-    ['Content-Type' => $qrCode->getContentType(SvgWriter::class)])
-;
-
-// Work via the writer
-$writer = new PngWriter($qrCode);
-$pngData = $writer->writeString();
+$response = new Response($qrCode->writeString(), Response::HTTP_OK, ['Content-Type' => $qrCode->getContentType()]);
 ```
 
 ![QR Code](http://endroid.nl/qrcode/Dit%20is%20een%20test.png)
@@ -89,6 +80,7 @@ applied by the factory can optionally be overridden via the configuration.
 
 ```yaml
 endroid_qr_code:
+    writer: 'png'
     size: 300
     margin: 10
     foreground_color: { r: 0, g: 0, b: 0 }
@@ -100,7 +92,7 @@ endroid_qr_code:
     label_alignment: left # left, center or right
     label_margin: { b: 20 }
     logo_path: '%kernel.root_dir%/../vendor/endroid/qrcode/assets/symfony.png'
-    logo_size: 150
+    logo_width: 150
     validate_result: true # checks if the result is readable
 ```
 
@@ -136,8 +128,8 @@ defaults defined by the bundle or set via your configuration.
 
 ``` twig
 <img src="{{ qrcode_path(message) }}" />
-<img src="{{ qrcode_url(message, { extension: 'svg' }) }}" />
-<img src="{{ qrcode_data_uri(message, { extension: 'svg', size: 150 }) }}" />
+<img src="{{ qrcode_url(message, { writer: 'eps' }) }}" />
+<img src="{{ qrcode_data_uri(message, { writer: 'svg', size: 150 }) }}" />
 ```
 
 ## Versioning

@@ -11,6 +11,7 @@ namespace Endroid\QrCode\Bundle\Controller;
 
 use Endroid\QrCode\Factory\QrCodeFactory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,25 +34,22 @@ class QrCodeController extends Controller
         $options = $request->query->all();
 
         $qrCode = $this->getQrCodeFactory()->create($text, $options);
-        $writer = $qrCode->getWriterByExtension($extension);
+        $qrCode->setWriterByExtension($extension);
 
-        return new Response(
-            $writer->writeString(),
-            Response::HTTP_OK,
-            ['Content-Type' => $writer->getContentType()]
-        );
+        return new Response($qrCode->writeString(), Response::HTTP_OK, ['Content-Type' => $qrCode->getContentType()]);
     }
 
     /**
      * @Route("/twig", name="endroid_qrcode_twig_functions")
+     * @Template()
      *
-     * @return Response
+     * @return array
      */
     public function twigFunctionsAction()
     {
-        return $this->render('twig_functions.html.twig', [
+        return [
             'message' => 'QR Code'
-        ]);
+        ];
     }
 
     /**

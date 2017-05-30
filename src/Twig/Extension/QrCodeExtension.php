@@ -13,7 +13,9 @@ use Endroid\QrCode\Exception\UnsupportedExtensionException;
 use Endroid\QrCode\Factory\QrCodeFactory;
 use Endroid\QrCode\Writer\AbstractDataUriWriter;
 use Endroid\QrCode\Writer\PngDataUriWriter;
+use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgDataUriWriter;
+use Endroid\QrCode\WriterRegistryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Twig_Extension;
@@ -34,6 +36,7 @@ class QrCodeExtension extends Twig_Extension
     /**
      * @param QrCodeFactory $qrCodeFactory
      * @param RouterInterface $router
+     * @param WriterRegistryInterface $writerRegistry
      */
     public function __construct(QrCodeFactory $qrCodeFactory, RouterInterface $router)
     {
@@ -82,11 +85,11 @@ class QrCodeExtension extends Twig_Extension
      */
     public function getQrCodeReference($text, array $options = [], $referenceType)
     {
-        $options['text'] = $text;
+        $qrCode = $this->qrCodeFactory->create($text, $options);
+        $supportedExtensions = $qrCode->getWriter()->getSupportedExtensions();
 
-        if (!isset($options['extension'])) {
-            $options['extension'] = 'png';
-        }
+        $options['text'] = $text;
+        $options['extension'] = current($supportedExtensions);
 
         return $this->router->generate('endroid_qrcode_generate', $options, $referenceType);
     }
@@ -99,24 +102,14 @@ class QrCodeExtension extends Twig_Extension
      */
     public function qrcodeDataUriFunction($text, array $options = [])
     {
-        $extension = 'png';
-        if (isset($options['extension'])) {
-            $extension = $options['extension'];
-            unset($options['extension']);
-        }
-
         $qrCode = $this->qrCodeFactory->create($text, $options);
-        $internalWriter = $qrCode->getWriterByExtension($extension);
 
-        foreach ($qrCode->getRegisteredWriters() as $writer) {
-            if ($writer instanceof AbstractDataUriWriter && $writer->getInternalWriterClass() == get_class($internalWriter)) {
-                return $writer->writeString();
-            }
-        }
-
-        throw new UnsupportedExtensionException('Extenstion '.$extension.' is not supported by any of the writers');
+        return $qrCode->writeDataUri();
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'qrcode';

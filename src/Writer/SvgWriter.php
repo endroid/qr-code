@@ -11,6 +11,7 @@ namespace Endroid\QrCode\Writer;
 
 use BaconQrCode\Renderer\Image\Svg;
 use BaconQrCode\Writer;
+use Endroid\QrCode\QrCodeInterface;
 use SimpleXMLElement;
 
 class SvgWriter extends AbstractBaconWriter
@@ -18,34 +19,32 @@ class SvgWriter extends AbstractBaconWriter
     /**
      * {@inheritdoc}
      */
-    public function writeString()
+    public function writeString(QrCodeInterface $qrCode)
     {
         $renderer = new Svg();
-        $renderer->setWidth($this->qrCode->getSize());
-        $renderer->setHeight($this->qrCode->getSize());
+        $renderer->setWidth($qrCode->getSize());
+        $renderer->setHeight($qrCode->getSize());
         $renderer->setMargin(0);
-        $renderer->setForegroundColor($this->convertColor($this->qrCode->getForegroundColor()));
-        $renderer->setBackgroundColor($this->convertColor($this->qrCode->getBackgroundColor()));
+        $renderer->setForegroundColor($this->convertColor($qrCode->getForegroundColor()));
+        $renderer->setBackgroundColor($this->convertColor($qrCode->getBackgroundColor()));
 
         $writer = new Writer($renderer);
-        $string = $writer->writeString(
-            $this->qrCode->getText(),
-            $this->qrCode->getEncoding(),
-            $this->convertErrorCorrectionLevel($this->qrCode->getErrorCorrectionLevel())
-        );
+        $string = $writer->writeString($qrCode->getText(), $qrCode->getEncoding(), $this->convertErrorCorrectionLevel($qrCode->getErrorCorrectionLevel()));
 
-        $string = $this->addMargin($string);
+        $string = $this->addMargin($string, $qrCode->getMargin(), $qrCode->getSize());
 
         return $string;
     }
 
     /**
      * @param string $string
+     * @param int $margin
+     * @param int $size
      * @return string
      */
-    protected function addMargin($string)
+    protected function addMargin($string, $margin, $size)
     {
-        $targetSize = $this->qrCode->getSize() + $this->qrCode->getMargin() * 2;
+        $targetSize = $size + $margin * 2;
 
         $xml = new SimpleXMLElement($string);
         $xml['width'] = $targetSize;
@@ -60,15 +59,15 @@ class SvgWriter extends AbstractBaconWriter
         }
 
         $sourceBlockSize = (int) $xml->defs->rect['width'];
-        $blockCount = ($this->qrCode->getSize() - 2 * $additionalWhitespace) / $sourceBlockSize;
-        $targetBlockSize = $this->qrCode->getSize() / $blockCount;
+        $blockCount = ($size - 2 * $additionalWhitespace) / $sourceBlockSize;
+        $targetBlockSize = $size / $blockCount;
 
         $xml->defs->rect['width'] = $targetBlockSize;
         $xml->defs->rect['height'] = $targetBlockSize;
 
         foreach ($xml->use as $block) {
-            $block['x'] = $this->qrCode->getMargin() + $targetBlockSize * ($block['x'] - $additionalWhitespace) / $sourceBlockSize;
-            $block['y'] = $this->qrCode->getMargin() + $targetBlockSize * ($block['y'] - $additionalWhitespace) / $sourceBlockSize;
+            $block['x'] = $margin + $targetBlockSize * ($block['x'] - $additionalWhitespace) / $sourceBlockSize;
+            $block['y'] = $margin + $targetBlockSize * ($block['y'] - $additionalWhitespace) / $sourceBlockSize;
         }
 
         return $xml->asXML();
@@ -77,7 +76,7 @@ class SvgWriter extends AbstractBaconWriter
     /**
      * {@inheritdoc}
      */
-    public function getContentType()
+    public static function getContentType()
     {
         return 'image/svg+xml';
     }
@@ -85,7 +84,7 @@ class SvgWriter extends AbstractBaconWriter
     /**
      * {@inheritdoc}
      */
-    protected function getSupportedExtensions()
+    public static function getSupportedExtensions()
     {
         return ['svg'];
     }

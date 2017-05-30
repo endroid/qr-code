@@ -9,15 +9,14 @@
 
 namespace Endroid\QrCode\Writer;
 
-use BaconQrCode\Renderer\Image\Png;
-use BaconQrCode\Writer;
+use Endroid\QrCode\QrCodeInterface;
 
 class BinaryWriter extends AbstractWriter
 {
     /**
      * {@inheritdoc}
      */
-    public function writeString()
+    public function writeString(QrCodeInterface $qrCode)
     {
         $string = '
             0001010101
@@ -38,7 +37,7 @@ class BinaryWriter extends AbstractWriter
     /**
      * {@inheritdoc}
      */
-    public function getContentType()
+    public static function getContentType()
     {
         return 'text/plain';
     }
@@ -46,7 +45,7 @@ class BinaryWriter extends AbstractWriter
     /**
      * {@inheritdoc}
      */
-    protected function getSupportedExtensions()
+    public static function getSupportedExtensions()
     {
         return ['bin', 'txt'];
     }

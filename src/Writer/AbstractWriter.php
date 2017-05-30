@@ -9,56 +9,55 @@
 
 namespace Endroid\QrCode\Writer;
 
-use Endroid\QrCode\QrCode;
+use Endroid\QrCode\QrCodeInterface;
+use ReflectionClass;
 
 abstract class AbstractWriter implements WriterInterface
 {
     /**
-     * @var QrCode
-     */
-    protected $qrCode;
-
-    /**
      * {@inheritdoc}
      */
-    public function __construct(QrCode $qrCode)
+    public function writeDataUri(QrCodeInterface $qrCode)
     {
-        $this->qrCode = $qrCode;
+        $dataUri = 'data:'.$this->getContentType().';base64,'.base64_encode($this->writeString($qrCode));
+
+        return $dataUri;
     }
 
     /**
      * {@inheritdoc}
      */
-    abstract public function writeString();
-
-    /**
-     * {@inheritdoc}
-     */
-    public function writeFile($path)
+    public function writeFile(QrCodeInterface $qrCode, $path)
     {
-        $string = $this->writeString();
+        $string = $this->writeString($qrCode);
         file_put_contents($path, $string);
     }
 
     /**
      * {@inheritdoc}
      */
-    abstract public function getContentType();
-
-    /**
-     * @param string $extension
-     * @return bool
-     */
-    public function supportsExtension($extension)
+    public static function supportsExtension($extension)
     {
-        return in_array($extension, $this->getSupportedExtensions());
+        return in_array($extension, static::getSupportedExtensions());
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
-    protected function getSupportedExtensions()
+    public static function getSupportedExtensions()
     {
         return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        $reflectionClass = new ReflectionClass($this);
+        $className = $reflectionClass->getShortName();
+        $name = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', str_replace('Writer', '', $className)));
+
+        return $name;
     }
 }
