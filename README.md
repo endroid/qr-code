@@ -37,13 +37,13 @@ $qrCode
     ->setWriterByName('png')
     ->setMargin(10)
     ->setEncoding('UTF-8')
-    ->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH)
+    ->setErrorCorrectionLevel(ErrorCorrectionLevel::LOW)
     ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0])
     ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
     ->setLabel('Scan the code', 16, __DIR__.'/../assets/noto_sans.otf', LabelAlignment::CENTER)
     ->setLogoPath(__DIR__.'/../assets/symfony.png')
     ->setLogoWidth(150)
-    ->setValidateResult(true)
+    ->setValidateResult(false)
 ;
 
 // Directly output the QR code
@@ -85,7 +85,7 @@ endroid_qr_code:
     margin: 10
     foreground_color: { r: 0, g: 0, b: 0 }
     background_color: { r: 255, g: 255, b: 255 }
-    error_correction_level: high # low, medium, quartile or high
+    error_correction_level: low # low, medium, quartile or high
     encoding: UTF-8
     label: Scan the code
     label_font_size: 20
@@ -93,7 +93,7 @@ endroid_qr_code:
     label_margin: { b: 20 }
     logo_path: '%kernel.root_dir%/../vendor/endroid/qrcode/assets/symfony.png'
     logo_width: 150
-    validate_result: true # checks if the result is readable
+    validate_result: false # checks if the result is readable
 ```
 
 The `validate_result` option uses a built-in reader to validate the resulting
