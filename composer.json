@@ -18,7 +18,8 @@
         "symfony/options-resolver": "^2.7|^3.0",
         "bacon/bacon-qr-code": "^1.0",
         "khanamiryan/qrcode-detector-decoder": "^0.0.1",
-        "symfony/property-access": "^2.7|^3.0"
+        "symfony/property-access": "^2.7|^3.0",
+        "myclabs/php-enum": "^1.5"
     },
     "require-dev": {
         "symfony/asset": "^2.7|^3.0",
