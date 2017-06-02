@@ -51,7 +51,7 @@ class QrCode implements QrCodeInterface
         'b' => 255
     ];
 
-    protected transparent = false;
+    protected $transparent = false;
     
     /**
      * @var string
