@@ -37,7 +37,7 @@ class PngWriter extends AbstractBaconWriter
         $string = $writer->writeString($qrCode->getText(), $qrCode->getEncoding(), $this->convertErrorCorrectionLevel($qrCode->getErrorCorrectionLevel()));
 
         $image = imagecreatefromstring($string);
-        $image = $this->addMargin($image, $qrCode->getMargin(), $qrCode->getSize(), $qrCode->getForegroundColor(), $qrCode->getBackgroundColor());
+        $image = $this->addMargin($image, $qrCode->getMargin(), $qrCode->getSize(), $qrCode->getForegroundColor(), $qrCode->getBackgroundColor(), $qrCode->getTransparent());
 
         if ($qrCode->getLogoPath()) {
             $image = $this->addLogo($image, $qrCode->getLogoPath(), $qrCode->getLogoWidth());
@@ -69,7 +69,7 @@ class PngWriter extends AbstractBaconWriter
      * @param int[] $backgroundColor
      * @return resource
      */
-    protected function addMargin($sourceImage, $margin, $size, array $foregroundColor, array $backgroundColor)
+    protected function addMargin($sourceImage, $margin, $size, array $foregroundColor, array $backgroundColor, $transparent = false)
     {
         $additionalWhitespace = $this->calculateAdditionalWhiteSpace($sourceImage, $foregroundColor);
 
@@ -80,8 +80,12 @@ class PngWriter extends AbstractBaconWriter
         $targetImage = imagecreatetruecolor($size + $margin * 2, $size + $margin * 2);
         $backgroundColor = imagecolorallocate($targetImage, $backgroundColor['r'], $backgroundColor['g'], $backgroundColor['b']);
         imagefill($targetImage, 0, 0, $backgroundColor);
-        imagecopyresampled($targetImage, $sourceImage, $margin, $margin, $additionalWhitespace, $additionalWhitespace, $size, $size, $size - 2 * $additionalWhitespace, $size - 2 * $additionalWhitespace);
-
+        if ($transparent){
+            imagecolortransparent($targetImage, $backgroundColor);
+            imagecopyresized($targetImage, $sourceImage, $margin, $margin, $additionalWhitespace, $additionalWhitespace, $size, $size, $size - 2 * $additionalWhitespace, $size - 2 * $additionalWhitespace);
+        } else {
+            imagecopyresampled($targetImage, $sourceImage, $margin, $margin, $additionalWhitespace, $additionalWhitespace, $size, $size, $size - 2 * $additionalWhitespace, $size - 2 * $additionalWhitespace);
+        }
         return $targetImage;
     }
 

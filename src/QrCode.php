@@ -51,6 +51,8 @@ class QrCode implements QrCodeInterface
         'b' => 255
     ];
 
+    protected $transparent = false;
+    
     /**
      * @var string
      */
@@ -224,6 +226,18 @@ class QrCode implements QrCodeInterface
         return $this->backgroundColor;
     }
 
+    public function getTransparent($transparent)
+    {
+        $this->transparent = $transparent;
+
+        return $this;
+    }
+
+    public function getTransparent()
+    {
+        return $this->transparent;
+    }
+    
     /**
      * @param string $encoding
      * @return $this
