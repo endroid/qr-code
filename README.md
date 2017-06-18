@@ -96,9 +96,12 @@ endroid_qr_code:
     validate_result: false # checks if the result is readable
 ```
 
-The `validate_result` option uses a built-in reader to validate the resulting
+The readability of a QR code is primarily determined by the size, the input
+length, the error correction level and any possible logo over the image. The
+`validate_result` option uses a built-in reader to validate the resulting
 image. This does not guarantee that the code will be readable by all readers
-but this helps you provide a minimum level of quality.
+but this helps you provide a minimum level of quality. Take note that the
+validator can consume quite an amount of resources and is disabled by default.
 
 Now you can retrieve the factory from the service container and create a QR
 code. For instance in your controller this would look like this.
