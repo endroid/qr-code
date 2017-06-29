@@ -16,8 +16,6 @@ use Endroid\QrCode\Writer\WriterInterface;
 
 class QrCode implements QrCodeInterface
 {
-    const LABEL_FONT_PATH_DEFAULT = __DIR__ . '/../assets/noto_sans.otf';
-
     /**
      * @var string
      */
@@ -84,7 +82,7 @@ class QrCode implements QrCodeInterface
     /**
      * @var string
      */
-    protected $labelFontPath = self::LABEL_FONT_PATH_DEFAULT;
+    protected $labelFontPath;
 
     /**
      * @var LabelAlignment
@@ -122,7 +120,7 @@ class QrCode implements QrCodeInterface
     public function __construct($text = '')
     {
         $this->text = $text;
-
+        $this->labelFontPath = __DIR__ . '/../assets/noto_sans.otf';
         $this->errorCorrectionLevel = new ErrorCorrectionLevel(ErrorCorrectionLevel::LOW);
         $this->labelAlignment = new LabelAlignment(LabelAlignment::CENTER);
 
