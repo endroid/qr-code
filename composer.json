@@ -17,7 +17,7 @@
         "ext-gd": "*",
         "symfony/options-resolver": "^2.7|^3.0",
         "bacon/bacon-qr-code": "^1.0",
-        "khanamiryan/qrcode-detector-decoder": "^0.0.1",
+        "khanamiryan/qrcode-detector-decoder": "^1.0",
         "symfony/property-access": "^2.7|^3.0",
         "myclabs/php-enum": "^1.5"
     },
