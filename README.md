@@ -61,7 +61,9 @@ $response = new Response($qrCode->writeString(), Response::HTTP_OK, ['Content-Ty
 
 ## Symfony integration
 
-Register the Symfony bundle in the kernel.
+When you use Symfony Flex, the bundle is automatically registered and the
+configuration and routes are automatically created when you installed the
+package. In other scenarios you can register the bundle as follows.
 
 ```php
 // app/AppKernel.php
