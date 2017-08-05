@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Endroid\QrCode\Bundle\Controller;
+namespace Endroid\QrCode\Bundle\QrCodeBundle\Controller;
 
 use Endroid\QrCode\Factory\QrCodeFactory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

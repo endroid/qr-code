@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Endroid\QrCode\Bundle\DependencyInjection;
+namespace Endroid\QrCode\Bundle\QrCodeBundle\DependencyInjection;
 
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\LabelAlignment;

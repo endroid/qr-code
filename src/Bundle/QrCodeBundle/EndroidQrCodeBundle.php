@@ -7,9 +7,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Endroid\QrCode\Bundle;
+namespace Endroid\QrCode\Bundle\QrCodeBundle;
 
-use Endroid\QrCode\Bundle\DependencyInjection\Compiler\WriterRegistryCompilerPass;
+use Endroid\QrCode\Bundle\QrCodeBundle\DependencyInjection\Compiler\WriterRegistryCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

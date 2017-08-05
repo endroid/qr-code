@@ -70,7 +70,7 @@ public function registerBundles()
 {
     $bundles = [
         // ...
-        new Endroid\QrCode\Bundle\EndroidQrCodeBundle(),
+        new Endroid\QrCode\Bundle\QrCodeBundle\EndroidQrCodeBundle(),
     ];
 }
 ```
@@ -79,7 +79,7 @@ The bundle makes use of a factory to create QR codes. The default parameters
 applied by the factory can optionally be overridden via the configuration.
 
 ```yaml
-endroid_qr_code:
+endroid_qrcode:
     writer: 'png'
     size: 300
     margin: 10

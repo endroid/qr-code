@@ -7,14 +7,8 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Endroid\QrCode\Bundle\DependencyInjection\Compiler;
+namespace Endroid\QrCode\Bundle\QrCodeBundle\DependencyInjection\Compiler;
 
-use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\LabelAlignment;
-use Endroid\QrCode\QrCode;
-use Predis\Response\Error;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
