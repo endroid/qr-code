@@ -3,7 +3,7 @@
     "description": "Endroid QR Code",
     "keywords": ["endroid", "qrcode", "qr", "code", "bundle", "symfony"],
     "homepage": "https://github.com/endroid/QrCode",
-    "type": "library",
+    "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
         {
