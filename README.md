@@ -20,7 +20,18 @@ Use [Composer](https://getcomposer.org/) to install the library.
 $ composer require endroid/qrcode
 ```
 
-## Usage
+## Basic usage
+
+```php
+use Endroid\QrCode\QrCode;
+
+$qrCode = new QrCode('Life is too short to be generating QR codes');
+
+header('Content-Type: '.$qrCode->getContentType());
+echo $qrCode->writeString();
+```
+
+## Advanced usage
 
 ```php
 use Endroid\QrCode\ErrorCorrectionLevel;
