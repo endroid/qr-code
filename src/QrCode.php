@@ -507,8 +507,6 @@ class QrCode implements QrCodeInterface
             }
         }
 
-        die;
-
         throw new UnsupportedExtensionException('Missing writer for extension "'.$extension.'"');
     }
 
