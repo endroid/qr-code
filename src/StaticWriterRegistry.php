@@ -14,7 +14,6 @@ use Endroid\QrCode\Writer\DebugWriter;
 use Endroid\QrCode\Writer\EpsWriter;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
-use Endroid\QrCode\Writer\WriterInterface;
 
 class StaticWriterRegistry extends WriterRegistry
 {

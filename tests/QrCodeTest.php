@@ -11,11 +11,6 @@ namespace Endroid\QrCode\Tests;
 
 use Endroid\QrCode\Factory\QrCodeFactory;
 use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Writer\BinaryWriter;
-use Endroid\QrCode\Writer\DebugWriter;
-use Endroid\QrCode\Writer\EpsWriter;
-use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Writer\SvgWriter;
 use PHPUnit\Framework\TestCase;
 
 class QrCodeTest extends TestCase
@@ -30,7 +25,7 @@ class QrCodeTest extends TestCase
             '11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
             '{"i":"serialized.data","v":1,"t":1,"d":"4AEPc9XuIQ0OjsZoSRWp9DRWlN6UyDvuMlyOYy8XjOw="}',
             'Spëci&al ch@ract3rs',
-            '有限公司'
+            '有限公司',
         ];
 
         foreach ($messages as $message) {
@@ -48,7 +43,7 @@ class QrCodeTest extends TestCase
         $qrCode = $qrCodeFactory->create('QR Code', [
             'writer' => 'png',
             'size' => 300,
-            'margin' => 10
+            'margin' => 10,
         ]);
 
         $pngData = $qrCode->writeString();
@@ -75,13 +70,13 @@ class QrCodeTest extends TestCase
         $pngData = $qrCode->writeString();
         $this->assertTrue(is_string($pngData));
         $pngDataUriData = $qrCode->writeDataUri();
-        $this->assertTrue(strpos($pngDataUriData, 'data:image/png;base64') === 0);
+        $this->assertTrue(0 === strpos($pngDataUriData, 'data:image/png;base64'));
 
         $qrCode->setWriterByName('svg');
         $svgData = $qrCode->writeString();
         $this->assertTrue(is_string($svgData));
         $svgDataUriData = $qrCode->writeDataUri();
-        $this->assertTrue(strpos($svgDataUriData, 'data:image/svg+xml;base64') === 0);
+        $this->assertTrue(0 === strpos($svgDataUriData, 'data:image/svg+xml;base64'));
     }
 
     public function testSetSize()
@@ -120,7 +115,6 @@ class QrCodeTest extends TestCase
             ->setLogoPath(__DIR__.'/../assets/symfony.png')
             ->setLogoWidth(150)
             ->setValidateResult(true);
-        ;
 
         $pngData = $qrCode->writeString();
         $this->assertTrue(is_string($pngData));

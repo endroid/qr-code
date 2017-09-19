@@ -15,12 +15,14 @@ interface WriterRegistryInterface
 {
     /**
      * @param WriterInterface $writer
+     *
      * @return $this
      */
     public function addWriter(WriterInterface $writer);
 
     /**
      * @param $name
+     *
      * @return WriterInterface
      */
     public function getWriter($name);

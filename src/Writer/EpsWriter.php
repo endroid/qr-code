@@ -36,8 +36,9 @@ class EpsWriter extends AbstractBaconWriter
     }
 
     /**
-     * @param string $string
+     * @param string          $string
      * @param QrCodeInterface $qrCode
+     *
      * @return string
      */
     protected function addMargin($string, QrCodeInterface $qrCode)
@@ -49,7 +50,7 @@ class EpsWriter extends AbstractBaconWriter
         $sourceBlockSize = 0;
         $additionalWhitespace = $qrCode->getSize();
         foreach ($lines as $line) {
-            if (preg_match('#[0-9]+ [0-9]+ [0-9]+ [0-9]+ F#i', $line) && strpos($line, $qrCode->getSize().' '.$qrCode->getSize().' F') === false) {
+            if (preg_match('#[0-9]+ [0-9]+ [0-9]+ [0-9]+ F#i', $line) && false === strpos($line, $qrCode->getSize().' '.$qrCode->getSize().' F')) {
                 $parts = explode(' ', $line);
                 $sourceBlockSize = $parts[2];
                 $additionalWhitespace = min($additionalWhitespace, $parts[0]);
@@ -60,9 +61,9 @@ class EpsWriter extends AbstractBaconWriter
         $targetBlockSize = $qrCode->getSize() / $blockCount;
 
         foreach ($lines as &$line) {
-            if (strpos($line, 'BoundingBox') !== false) {
+            if (false !== strpos($line, 'BoundingBox')) {
                 $line = '%%BoundingBox: 0 0 '.$targetSize.' '.$targetSize;
-            } elseif (strpos($line, $qrCode->getSize().' '.$qrCode->getSize().' F') !== false) {
+            } elseif (false !== strpos($line, $qrCode->getSize().' '.$qrCode->getSize().' F')) {
                 $line = '0 0 '.$targetSize.' '.$targetSize.' F';
             } elseif (preg_match('#[0-9]+ [0-9]+ [0-9]+ [0-9]+ F#i', $line)) {
                 $parts = explode(' ', $line);

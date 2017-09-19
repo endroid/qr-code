@@ -11,10 +11,6 @@ namespace Endroid\QrCode\Twig\Extension;
 
 use Endroid\QrCode\Exception\UnsupportedExtensionException;
 use Endroid\QrCode\Factory\QrCodeFactory;
-use Endroid\QrCode\Writer\AbstractDataUriWriter;
-use Endroid\QrCode\Writer\PngDataUriWriter;
-use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Writer\SvgDataUriWriter;
 use Endroid\QrCode\WriterRegistryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -34,8 +30,8 @@ class QrCodeExtension extends Twig_Extension
     protected $router;
 
     /**
-     * @param QrCodeFactory $qrCodeFactory
-     * @param RouterInterface $router
+     * @param QrCodeFactory           $qrCodeFactory
+     * @param RouterInterface         $router
      * @param WriterRegistryInterface $writerRegistry
      */
     public function __construct(QrCodeFactory $qrCodeFactory, RouterInterface $router)
@@ -70,6 +66,7 @@ class QrCodeExtension extends Twig_Extension
     /**
      * @param string $text
      * @param array  $options
+     *
      * @return string
      */
     public function qrCodePathFunction($text, array $options = [])
@@ -79,8 +76,9 @@ class QrCodeExtension extends Twig_Extension
 
     /**
      * @param string $text
-     * @param array $options
-     * @param int $referenceType
+     * @param array  $options
+     * @param int    $referenceType
+     *
      * @return string
      */
     public function getQrCodeReference($text, array $options = [], $referenceType)
@@ -96,8 +94,10 @@ class QrCodeExtension extends Twig_Extension
 
     /**
      * @param string $text
-     * @param array $options
+     * @param array  $options
+     *
      * @return string
+     *
      * @throws UnsupportedExtensionException
      */
     public function qrcodeDataUriFunction($text, array $options = [])

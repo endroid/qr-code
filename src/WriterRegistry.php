@@ -36,13 +36,14 @@ class WriterRegistry implements WriterRegistryInterface
     {
         $this->writers[$writer->getName()] = $writer;
 
-        if ($setAsDefault || count($this->writers) === 1) {
+        if ($setAsDefault || 1 === count($this->writers)) {
             $this->defaultWriter = $writer;
         }
     }
 
     /**
      * @param $name
+     *
      * @return WriterInterface
      */
     public function getWriter($name)
@@ -54,6 +55,7 @@ class WriterRegistry implements WriterRegistryInterface
 
     /**
      * @return WriterInterface
+     *
      * @throws InvalidWriterException
      */
     public function getDefaultWriter()
@@ -75,6 +77,7 @@ class WriterRegistry implements WriterRegistryInterface
 
     /**
      * @param string $writer
+     *
      * @throws InvalidWriterException
      */
     protected function assertValidWriter($writer)

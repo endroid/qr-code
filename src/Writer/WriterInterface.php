@@ -15,19 +15,21 @@ interface WriterInterface
 {
     /**
      * @param QrCodeInterface $qrCode
+     *
      * @return string
      */
     public function writeString(QrCodeInterface $qrCode);
 
     /**
      * @param QrCodeInterface $qrCode
+     *
      * @return string
      */
     public function writeDataUri(QrCodeInterface $qrCode);
 
     /**
      * @param QrCodeInterface $qrCode
-     * @param string $path
+     * @param string          $path
      */
     public function writeFile(QrCodeInterface $qrCode, $path);
 
@@ -38,6 +40,7 @@ interface WriterInterface
 
     /**
      * @param string $extension
+     *
      * @return bool
      */
     public static function supportsExtension($extension);

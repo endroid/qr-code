@@ -11,12 +11,10 @@ namespace Endroid\QrCode\Writer;
 
 use BaconQrCode\Renderer\Image\Png;
 use BaconQrCode\Writer;
-use Endroid\QrCode\ColorableQrCodeInterface;
 use Endroid\QrCode\Exception\MissingFunctionException;
 use Endroid\QrCode\Exception\ValidationException;
 use Endroid\QrCode\LabelAlignment;
 use Endroid\QrCode\QrCodeInterface;
-use Endroid\QrCode\ValidateableQrCodeInterface;
 use QrReader;
 
 class PngWriter extends AbstractBaconWriter
@@ -63,17 +61,18 @@ class PngWriter extends AbstractBaconWriter
 
     /**
      * @param resource $sourceImage
-     * @param int $margin
-     * @param int $size
-     * @param int[] $foregroundColor
-     * @param int[] $backgroundColor
+     * @param int      $margin
+     * @param int      $size
+     * @param int[]    $foregroundColor
+     * @param int[]    $backgroundColor
+     *
      * @return resource
      */
     protected function addMargin($sourceImage, $margin, $size, array $foregroundColor, array $backgroundColor)
     {
         $additionalWhitespace = $this->calculateAdditionalWhiteSpace($sourceImage, $foregroundColor);
 
-        if ($additionalWhitespace == 0 && $margin == 0) {
+        if (0 == $additionalWhitespace && 0 == $margin) {
             return $sourceImage;
         }
 
@@ -87,7 +86,8 @@ class PngWriter extends AbstractBaconWriter
 
     /**
      * @param resource $image
-     * @param int[] $foregroundColor
+     * @param int[]    $foregroundColor
+     *
      * @return int
      */
     protected function calculateAdditionalWhiteSpace($image, array $foregroundColor)
@@ -98,8 +98,8 @@ class PngWriter extends AbstractBaconWriter
         $foregroundColor = imagecolorallocate($image, $foregroundColor['r'], $foregroundColor['g'], $foregroundColor['b']);
 
         $whitespace = $width;
-        for ($y = 0; $y < $height; $y++) {
-            for ($x = 0; $x < $width; $x++) {
+        for ($y = 0; $y < $height; ++$y) {
+            for ($x = 0; $x < $width; ++$x) {
                 $color = imagecolorat($image, $x, $y);
                 if ($color == $foregroundColor || $x == $whitespace) {
                     $whitespace = min($whitespace, $x);
@@ -113,8 +113,9 @@ class PngWriter extends AbstractBaconWriter
 
     /**
      * @param resource $sourceImage
-     * @param string $logoPath
-     * @param int $logoWidth
+     * @param string   $logoPath
+     * @param int      $logoWidth
+     *
      * @return resource
      */
     protected function addLogo($sourceImage, $logoPath, $logoWidth = null)
@@ -124,7 +125,7 @@ class PngWriter extends AbstractBaconWriter
         $logoSourceHeight = imagesy($logoImage);
         $logoTargetWidth = $logoWidth;
 
-        if ($logoTargetWidth === null) {
+        if (null === $logoTargetWidth) {
             $logoTargetWidth = $logoSourceWidth;
             $logoTargetHeight = $logoSourceHeight;
         } else {
@@ -141,14 +142,16 @@ class PngWriter extends AbstractBaconWriter
 
     /**
      * @param resource $sourceImage
-     * @param string $label
-     * @param string $labelFontPath
-     * @param int $labelFontSize
-     * @param string $labelAlignment
-     * @param int[] $labelMargin
-     * @param int[] $foregroundColor
-     * @param int[] $backgroundColor
+     * @param string   $label
+     * @param string   $labelFontPath
+     * @param int      $labelFontSize
+     * @param string   $labelAlignment
+     * @param int[]    $labelMargin
+     * @param int[]    $foregroundColor
+     * @param int[]    $backgroundColor
+     *
      * @return resource
+     *
      * @throws MissingFunctionException
      */
     protected function addLabel($sourceImage, $label, $labelFontPath, $labelFontSize, $labelAlignment, $labelMargin, array $foregroundColor, array $backgroundColor)
@@ -195,6 +198,7 @@ class PngWriter extends AbstractBaconWriter
 
     /**
      * @param resource $image
+     *
      * @return string
      */
     protected function imageToString($image)

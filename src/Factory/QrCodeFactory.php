@@ -34,7 +34,7 @@ class QrCodeFactory
         'label_font_path',
         'label_alignment',
         'label_margin',
-        'validate_result'
+        'validate_result',
     ];
 
     /**
@@ -53,7 +53,7 @@ class QrCodeFactory
     protected $optionsResolver;
 
     /**
-     * @param array $defaultOptions
+     * @param array                   $defaultOptions
      * @param WriterRegistryInterface $writerRegistry
      */
     public function __construct(array $defaultOptions = [], WriterRegistryInterface $writerRegistry = null)
@@ -64,7 +64,8 @@ class QrCodeFactory
 
     /**
      * @param string $text
-     * @param array $options
+     * @param array  $options
+     *
      * @return QrCode
      */
     public function create($text = '', array $options = [])
@@ -80,7 +81,7 @@ class QrCodeFactory
 
         foreach ($this->definedOptions as $option) {
             if (isset($options[$option])) {
-                if ($option === 'writer') {
+                if ('writer' === $option) {
                     $options['writer_by_name'] = $options[$option];
                     $option = 'writer_by_name';
                 }

@@ -88,6 +88,7 @@ interface QrCodeInterface
 
     /**
      * @param WriterRegistryInterface $writerRegistry
+     *
      * @return mixed
      */
     public function setWriterRegistry(WriterRegistryInterface $writerRegistry);

@@ -29,7 +29,7 @@ class QrCodeControllerTest extends WebTestCase
         $response = $client->getResponse();
         $image = imagecreatefromstring($response->getContent());
 
-        $this->assertTrue(imagesx($image) == 220);
+        $this->assertTrue(220 == imagesx($image));
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 

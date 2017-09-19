@@ -11,7 +11,6 @@ namespace Endroid\QrCode\Bundle\QrCodeBundle\DependencyInjection;
 
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\LabelAlignment;
-use Endroid\QrCode\QrCode;
 use Predis\Response\Error;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

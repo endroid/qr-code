@@ -16,7 +16,7 @@ use Endroid\QrCode\Writer\WriterInterface;
 
 class QrCode implements QrCodeInterface
 {
-    const LABEL_FONT_PATH_DEFAULT = __DIR__ . '/../assets/noto_sans.otf';
+    const LABEL_FONT_PATH_DEFAULT = __DIR__.'/../assets/noto_sans.otf';
 
     /**
      * @var string
@@ -39,7 +39,7 @@ class QrCode implements QrCodeInterface
     protected $foregroundColor = [
         'r' => 0,
         'g' => 0,
-        'b' => 0
+        'b' => 0,
     ];
 
     /**
@@ -48,7 +48,7 @@ class QrCode implements QrCodeInterface
     protected $backgroundColor = [
         'r' => 255,
         'g' => 255,
-        'b' => 255
+        'b' => 255,
     ];
 
     /**
@@ -131,6 +131,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param string $text
+     *
      * @return $this
      */
     public function setText($text)
@@ -150,6 +151,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param int $size
+     *
      * @return $this
      */
     public function setSize($size)
@@ -169,6 +171,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param int $margin
+     *
      * @return $this
      */
     public function setMargin($margin)
@@ -188,6 +191,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param array $foregroundColor
+     *
      * @return $this
      */
     public function setForegroundColor($foregroundColor)
@@ -207,6 +211,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param array $backgroundColor
+     *
      * @return $this
      */
     public function setBackgroundColor($backgroundColor)
@@ -226,6 +231,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param string $encoding
+     *
      * @return $this
      */
     public function setEncoding($encoding)
@@ -245,6 +251,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param string $errorCorrectionLevel
+     *
      * @return $this
      */
     public function setErrorCorrectionLevel($errorCorrectionLevel)
@@ -264,7 +271,9 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param string $logoPath
+     *
      * @return $this
+     *
      * @throws InvalidPathException
      */
     public function setLogoPath($logoPath)
@@ -272,7 +281,7 @@ class QrCode implements QrCodeInterface
         $logoPath = realpath($logoPath);
 
         if (!is_file($logoPath)) {
-            throw new InvalidPathException('Invalid logo path: ' . $logoPath);
+            throw new InvalidPathException('Invalid logo path: '.$logoPath);
         }
 
         $this->logoPath = $logoPath;
@@ -290,6 +299,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param int $logoWidth
+     *
      * @return $this
      */
     public function setLogoWidth($logoWidth)
@@ -309,29 +319,30 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param string $label
-     * @param int $labelFontSize
+     * @param int    $labelFontSize
      * @param string $labelFontPath
      * @param string $labelAlignment
-     * @param array $labelMargin
+     * @param array  $labelMargin
+     *
      * @return $this
      */
     public function setLabel($label, $labelFontSize = null, $labelFontPath = null, $labelAlignment = null, $labelMargin = null)
     {
         $this->label = $label;
 
-        if ($labelFontSize !== null) {
+        if (null !== $labelFontSize) {
             $this->setLabelFontSize($labelFontSize);
         }
 
-        if ($labelFontPath !== null) {
+        if (null !== $labelFontPath) {
             $this->setLabelFontPath($labelFontPath);
         }
 
-        if ($labelAlignment !== null) {
+        if (null !== $labelAlignment) {
             $this->setLabelAlignment($labelAlignment);
         }
 
-        if ($labelMargin !== null) {
+        if (null !== $labelMargin) {
             $this->setLabelMargin($labelMargin);
         }
 
@@ -348,6 +359,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param int $labelFontSize
+     *
      * @return $this
      */
     public function setLabelFontSize($labelFontSize)
@@ -367,7 +379,9 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param string $labelFontPath
+     *
      * @return $this
+     *
      * @throws InvalidPathException
      */
     public function setLabelFontPath($labelFontPath)
@@ -375,7 +389,7 @@ class QrCode implements QrCodeInterface
         $labelFontPath = realpath($labelFontPath);
 
         if (!is_file($labelFontPath)) {
-            throw new InvalidPathException('Invalid label font path: ' . $labelFontPath);
+            throw new InvalidPathException('Invalid label font path: '.$labelFontPath);
         }
 
         $this->labelFontPath = $labelFontPath;
@@ -393,6 +407,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param string $labelAlignment
+     *
      * @return $this
      */
     public function setLabelAlignment($labelAlignment)
@@ -412,6 +427,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param int[] $labelMargin
+     *
      * @return $this
      */
     public function setLabelMargin(array $labelMargin)
@@ -431,6 +447,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param WriterRegistryInterface $writerRegistry
+     *
      * @return $this
      */
     public function setWriterRegistry(WriterRegistryInterface $writerRegistry)
@@ -442,6 +459,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param WriterInterface $writer
+     *
      * @return $this
      */
     public function setWriter(WriterInterface $writer)
@@ -453,6 +471,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param WriterInterface $name
+     *
      * @return WriterInterface
      */
     public function getWriter($name = null)
@@ -470,7 +489,9 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param string $name
+     *
      * @return $this
+     *
      * @throws InvalidWriterException
      */
     public function setWriterByName($name)
@@ -482,6 +503,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param string $path
+     *
      * @return $this
      */
     public function setWriterByPath($path)
@@ -495,7 +517,9 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param string $extension
+     *
      * @return $this
+     *
      * @throws UnsupportedExtensionException
      */
     public function setWriterByExtension($extension)
@@ -503,6 +527,7 @@ class QrCode implements QrCodeInterface
         foreach ($this->writerRegistry->getWriters() as $writer) {
             if ($writer->supportsExtension($extension)) {
                 $this->writer = $writer;
+
                 return $this;
             }
         }
@@ -512,6 +537,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @param bool $validateResult
+     *
      * @return $this
      */
     public function setValidateResult($validateResult)
@@ -555,6 +581,7 @@ class QrCode implements QrCodeInterface
 
     /**
      * @return string
+     *
      * @throws InvalidWriterException
      */
     public function getContentType()

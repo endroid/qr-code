@@ -15,6 +15,7 @@ abstract class AbstractBaconWriter extends AbstractWriter
 {
     /**
      * @param array $color
+     *
      * @return Rgb
      */
     protected function convertColor(array $color)
@@ -26,6 +27,7 @@ abstract class AbstractBaconWriter extends AbstractWriter
 
     /**
      * @param string $errorCorrectionLevel
+     *
      * @return string
      */
     protected function convertErrorCorrectionLevel($errorCorrectionLevel)

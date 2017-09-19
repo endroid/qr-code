@@ -38,8 +38,9 @@ class SvgWriter extends AbstractBaconWriter
 
     /**
      * @param string $string
-     * @param int $margin
-     * @param int $size
+     * @param int    $margin
+     * @param int    $size
+     *
      * @return string
      */
     protected function addMargin($string, $margin, $size)
