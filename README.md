@@ -83,7 +83,7 @@ public function registerBundles()
 {
     $bundles = [
         // ...
-        new Endroid\QrCode\Bundle\QrCodeBundle\EndroidQrCodeBundle(),
+        new Endroid\QrCode\Bundle\EndroidQrCodeBundle(),
     ];
 }
 ```
