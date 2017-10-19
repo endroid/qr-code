@@ -128,8 +128,7 @@ This step can be skipped if you only use data URIs to display your images.
 
 ``` yml
 EndroidQrCodeBundle:
-    resource: "@EndroidQrCodeBundle/Controller/"
-    type:     annotation
+    resource: "@EndroidQrCodeBundle/Resources/config/routing.yml"
     prefix:   /qrcode
 ```
 

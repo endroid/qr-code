@@ -1,4 +1,3 @@
 EndroidQrCodeBundle:
-    resource: "@EndroidQrCodeBundle/Controller/"
-    type: annotation
+    resource: "@EndroidQrCodeBundle/Resources/config/routing.yml"
     prefix: /qrcode
