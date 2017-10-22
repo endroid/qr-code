@@ -10,8 +10,6 @@
 namespace Endroid\QrCode\Bundle\QrCodeBundle\Controller;
 
 use Endroid\QrCode\Factory\QrCodeFactory;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,8 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 class QrCodeController extends Controller
 {
     /**
-     * @Route("/{text}.{extension}", name="endroid_qrcode_generate", requirements={"text"="[\w\W]+"})
-     *
      * @param Request $request
      * @param string  $text
      * @param string  $extension
@@ -41,16 +37,21 @@ class QrCodeController extends Controller
     }
 
     /**
-     * @Route("/twig", name="endroid_qrcode_twig_functions")
-     * @Template()
-     *
-     * @return array
+     * @return Response
      */
     public function twigFunctionsAction()
     {
-        return [
+        if (!$this->has('twig')) {
+            throw new \LogicException('You can not use the "@Template" annotation if the Twig Bundle is not available.');
+        }
+
+        $param = [
             'message' => 'QR Code',
         ];
+
+        $renderedView = $this->get('twig')->render('@EndroidQrCode/QrCode/twigFunctions.html.twig', $param);
+
+        return new Response($renderedView, Response::HTTP_OK);
     }
 
     /**

@@ -30,7 +30,6 @@
         "symfony/templating": "^2.7|^3.0",
         "symfony/twig-bundle": "^2.7|^3.0",
         "symfony/yaml": "^2.7|^3.0",
-        "sensio/framework-extra-bundle": "^3.0",
         "phpunit/phpunit": "^5.7|^6.0"
     },
     "autoload": {
