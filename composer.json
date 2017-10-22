@@ -15,22 +15,22 @@
     "require": {
         "php": ">=5.6",
         "ext-gd": "*",
-        "symfony/options-resolver": "^2.7|^3.0",
+        "symfony/options-resolver": ">=2.7",
         "bacon/bacon-qr-code": "^1.0.3",
         "khanamiryan/qrcode-detector-decoder": "^1.0",
-        "symfony/property-access": "^2.7|^3.0",
+        "symfony/property-access": ">=2.7",
         "myclabs/php-enum": "^1.5"
     },
     "require-dev": {
-        "symfony/asset": "^2.7|^3.0",
-        "symfony/browser-kit": "^2.7|^3.0",
-        "symfony/finder": "^2.7|^3.0",
-        "symfony/framework-bundle": "^2.7|^3.0",
-        "symfony/http-kernel": "^2.7|^3.0",
-        "symfony/templating": "^2.7|^3.0",
-        "symfony/twig-bundle": "^2.7|^3.0",
-        "symfony/yaml": "^2.7|^3.0",
-        "phpunit/phpunit": "^5.7|^6.0"
+        "symfony/asset": ">=2.7",
+        "symfony/browser-kit": ">=2.7",
+        "symfony/finder": ">=2.7",
+        "symfony/framework-bundle": ">=2.7",
+        "symfony/http-kernel": ">=2.7",
+        "symfony/templating": ">=2.7",
+        "symfony/twig-bundle": ">=2.7",
+        "symfony/yaml": ">=2.7",
+        "phpunit/phpunit": ">=5.7"
     },
     "autoload": {
         "psr-4": {
