@@ -17,9 +17,6 @@ use Endroid\QrCode\Writer\SvgWriter;
 
 class StaticWriterRegistry extends WriterRegistry
 {
-    /**
-     * {@inheritdoc}
-     */
     public function __construct()
     {
         parent::__construct();
@@ -27,16 +24,18 @@ class StaticWriterRegistry extends WriterRegistry
         $this->loadWriters();
     }
 
-    protected function loadWriters()
+    private function loadWriters(): void
     {
-        if (count($this->writers) > 0) {
+        if (count($this->getWriters()) > 0) {
             return;
         }
 
         $this->addWriter(new BinaryWriter());
         $this->addWriter(new DebugWriter());
         $this->addWriter(new EpsWriter());
-        $this->addWriter(new PngWriter(), true);
+        $this->addWriter(new PngWriter());
         $this->addWriter(new SvgWriter());
+
+        $this->setDefaultWriter('png');
     }
 }

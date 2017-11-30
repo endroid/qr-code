@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 class QrCodeTest extends TestCase
 {
-    public function testReadable()
+    public function testReadable(): void
     {
         $messages = [
             'Tiny',
@@ -37,7 +37,7 @@ class QrCodeTest extends TestCase
         }
     }
 
-    public function testFactory()
+    public function testFactory(): void
     {
         $qrCodeFactory = new QrCodeFactory();
         $qrCode = $qrCodeFactory->create('QR Code', [
@@ -50,7 +50,7 @@ class QrCodeTest extends TestCase
         $this->assertTrue(is_string($pngData));
     }
 
-    public function testWriteQrCode()
+    public function testWriteQrCode(): void
     {
         $qrCode = new QrCode('QrCode');
 
@@ -79,7 +79,7 @@ class QrCodeTest extends TestCase
         $this->assertTrue(0 === strpos($svgDataUriData, 'data:image/svg+xml;base64'));
     }
 
-    public function testSetSize()
+    public function testSetSize(): void
     {
         $size = 400;
         $margin = 10;
@@ -95,7 +95,7 @@ class QrCodeTest extends TestCase
         $this->assertTrue(imagesy($image) === $size + 2 * $margin);
     }
 
-    public function testSetLabel()
+    public function testSetLabel(): void
     {
         $qrCode = new QrCode('QrCode');
         $qrCode
@@ -107,12 +107,12 @@ class QrCodeTest extends TestCase
         $this->assertTrue(is_string($pngData));
     }
 
-    public function testSetLogo()
+    public function testSetLogo(): void
     {
         $qrCode = new QrCode('QrCode');
         $qrCode
             ->setSize(400)
-            ->setLogoPath(__DIR__.'/../assets/symfony.png')
+            ->setLogoPath(__DIR__.'/../assets/images/symfony.png')
             ->setLogoWidth(150)
             ->setValidateResult(true);
 

@@ -15,10 +15,7 @@ use Exception;
 
 class DebugWriter extends AbstractWriter
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function writeString(QrCodeInterface $qrCode)
+    public function writeString(QrCodeInterface $qrCode): string
     {
         $data = [];
 
@@ -48,11 +45,13 @@ class DebugWriter extends AbstractWriter
         return $string;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getContentType()
+    public static function getContentType(): string
     {
         return 'text/plain';
+    }
+
+    public function getName(): string
+    {
+        return 'debug';
     }
 }

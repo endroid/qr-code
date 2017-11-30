@@ -11,85 +11,20 @@ namespace Endroid\QrCode;
 
 interface QrCodeInterface
 {
-    /**
-     * @return string
-     */
-    public function getText();
-
-    /**
-     * @return int
-     */
-    public function getSize();
-
-    /**
-     * @return int
-     */
-    public function getMargin();
-
-    /**
-     * @return int[]
-     */
-    public function getForegroundColor();
-
-    /**
-     * @return int[]
-     */
-    public function getBackgroundColor();
-
-    /**
-     * @return string
-     */
-    public function getEncoding();
-
-    /**
-     * @return string
-     */
-    public function getErrorCorrectionLevel();
-
-    /**
-     * @return string
-     */
-    public function getLogoPath();
-
-    /**
-     * @return int
-     */
-    public function getLogoWidth();
-
-    /**
-     * @return string
-     */
-    public function getLabel();
-
-    /**
-     * @return string
-     */
-    public function getLabelFontPath();
-
-    /**
-     * @return int
-     */
-    public function getLabelFontSize();
-
-    /**
-     * @return string
-     */
-    public function getLabelAlignment();
-
-    /**
-     * @return int[]
-     */
-    public function getLabelMargin();
-
-    /**
-     * @return bool
-     */
-    public function getValidateResult();
-
-    /**
-     * @param WriterRegistryInterface $writerRegistry
-     *
-     * @return mixed
-     */
-    public function setWriterRegistry(WriterRegistryInterface $writerRegistry);
+    public function getText(): string;
+    public function getSize(): int;
+    public function getMargin(): int;
+    public function getForegroundColor(): array;
+    public function getBackgroundColor(): array;
+    public function getEncoding(): string;
+    public function getErrorCorrectionLevel(): string;
+    public function getLogoPath(): string;
+    public function getLogoWidth(): int;
+    public function getLabel(): string;
+    public function getLabelFontPath(): string;
+    public function getLabelFontSize(): int;
+    public function getLabelAlignment(): string;
+    public function getLabelMargin(): array;
+    public function getValidateResult(): bool;
+    public function setWriterRegistry(WriterRegistryInterface $writerRegistry): void;
 }

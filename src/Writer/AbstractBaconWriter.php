@@ -13,24 +13,14 @@ use BaconQrCode\Renderer\Color\Rgb;
 
 abstract class AbstractBaconWriter extends AbstractWriter
 {
-    /**
-     * @param array $color
-     *
-     * @return Rgb
-     */
-    protected function convertColor(array $color)
+    protected function convertColor(array $color): Rgb
     {
         $color = new Rgb($color['r'], $color['g'], $color['b']);
 
         return $color;
     }
 
-    /**
-     * @param string $errorCorrectionLevel
-     *
-     * @return string
-     */
-    protected function convertErrorCorrectionLevel($errorCorrectionLevel)
+    protected function convertErrorCorrectionLevel(string $errorCorrectionLevel): string
     {
         $name = strtoupper(substr($errorCorrectionLevel, 0, 1));
         $errorCorrectionLevel = constant('BaconQrCode\Common\ErrorCorrectionLevel::'.$name);

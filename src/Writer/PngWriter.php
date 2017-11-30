@@ -19,10 +19,7 @@ use QrReader;
 
 class PngWriter extends AbstractBaconWriter
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function writeString(QrCodeInterface $qrCode)
+    public function writeString(QrCodeInterface $qrCode): string
     {
         $renderer = new Png();
         $renderer->setWidth($qrCode->getSize());
@@ -59,16 +56,7 @@ class PngWriter extends AbstractBaconWriter
         return $string;
     }
 
-    /**
-     * @param resource $sourceImage
-     * @param int      $margin
-     * @param int      $size
-     * @param int[]    $foregroundColor
-     * @param int[]    $backgroundColor
-     *
-     * @return resource
-     */
-    protected function addMargin($sourceImage, $margin, $size, array $foregroundColor, array $backgroundColor)
+    protected function addMargin(resource $sourceImage, int $margin, int $size, array $foregroundColor, array $backgroundColor): resource
     {
         $additionalWhitespace = $this->calculateAdditionalWhiteSpace($sourceImage, $foregroundColor);
 
@@ -84,13 +72,7 @@ class PngWriter extends AbstractBaconWriter
         return $targetImage;
     }
 
-    /**
-     * @param resource $image
-     * @param int[]    $foregroundColor
-     *
-     * @return int
-     */
-    protected function calculateAdditionalWhiteSpace($image, array $foregroundColor)
+    protected function calculateAdditionalWhiteSpace(resource $image, array $foregroundColor): int
     {
         $width = imagesx($image);
         $height = imagesy($image);
@@ -111,14 +93,7 @@ class PngWriter extends AbstractBaconWriter
         return $whitespace;
     }
 
-    /**
-     * @param resource $sourceImage
-     * @param string   $logoPath
-     * @param int      $logoWidth
-     *
-     * @return resource
-     */
-    protected function addLogo($sourceImage, $logoPath, $logoWidth = null)
+    protected function addLogo(resource $sourceImage, string $logoPath, int $logoWidth = null): resource
     {
         $logoImage = imagecreatefromstring(file_get_contents($logoPath));
         $logoSourceWidth = imagesx($logoImage);
@@ -140,24 +115,10 @@ class PngWriter extends AbstractBaconWriter
         return $sourceImage;
     }
 
-    /**
-     * @param resource $sourceImage
-     * @param string   $label
-     * @param string   $labelFontPath
-     * @param int      $labelFontSize
-     * @param string   $labelAlignment
-     * @param int[]    $labelMargin
-     * @param int[]    $foregroundColor
-     * @param int[]    $backgroundColor
-     *
-     * @return resource
-     *
-     * @throws MissingFunctionException
-     */
-    protected function addLabel($sourceImage, $label, $labelFontPath, $labelFontSize, $labelAlignment, $labelMargin, array $foregroundColor, array $backgroundColor)
+    protected function addLabel(resource $sourceImage, string $label, string $labelFontPath, int $labelFontSize, string $labelAlignment, array $labelMargin, array $foregroundColor, array $backgroundColor): resource
     {
         if (!function_exists('imagettfbbox')) {
-            throw new MissingFunctionException('Missing function "imagettfbbox". Did you install the FreeType library?');
+            throw new MissingFunctionException('Missing function "imagettfbbox", please make sure you installed the FreeType library');
         }
 
         $labelBox = imagettfbbox($labelFontSize, 0, $labelFontPath, $label);
@@ -196,12 +157,7 @@ class PngWriter extends AbstractBaconWriter
         return $targetImage;
     }
 
-    /**
-     * @param resource $image
-     *
-     * @return string
-     */
-    protected function imageToString($image)
+    protected function imageToString(resource $image): string
     {
         ob_start();
         imagepng($image);
@@ -210,19 +166,18 @@ class PngWriter extends AbstractBaconWriter
         return $string;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getContentType()
+    public static function getContentType(): string
     {
         return 'image/png';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSupportedExtensions()
+    public static function getSupportedExtensions(): array
     {
         return ['png'];
+    }
+
+    public function getName():string
+    {
+        return 'png';
     }
 }

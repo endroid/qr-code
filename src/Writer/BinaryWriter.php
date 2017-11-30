@@ -13,10 +13,7 @@ use Endroid\QrCode\QrCodeInterface;
 
 class BinaryWriter extends AbstractWriter
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function writeString(QrCodeInterface $qrCode)
+    public function writeString(QrCodeInterface $qrCode): string
     {
         $string = '
             0001010101
@@ -34,19 +31,18 @@ class BinaryWriter extends AbstractWriter
         return $string;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getContentType()
+    public static function getContentType(): string
     {
         return 'text/plain';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSupportedExtensions()
+    public static function getSupportedExtensions(): array
     {
         return ['bin', 'txt'];
+    }
+
+    public function getName(): string
+    {
+        return 'binary';
     }
 }

@@ -15,10 +15,7 @@ use Endroid\QrCode\QrCodeInterface;
 
 class EpsWriter extends AbstractBaconWriter
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function writeString(QrCodeInterface $qrCode)
+    public function writeString(QrCodeInterface $qrCode): string
     {
         $renderer = new Eps();
         $renderer->setWidth($qrCode->getSize());
@@ -29,19 +26,12 @@ class EpsWriter extends AbstractBaconWriter
 
         $writer = new Writer($renderer);
         $string = $writer->writeString($qrCode->getText(), $qrCode->getEncoding(), $this->convertErrorCorrectionLevel($qrCode->getErrorCorrectionLevel()));
-
         $string = $this->addMargin($string, $qrCode);
 
         return $string;
     }
 
-    /**
-     * @param string          $string
-     * @param QrCodeInterface $qrCode
-     *
-     * @return string
-     */
-    protected function addMargin($string, QrCodeInterface $qrCode)
+    protected function addMargin(string $string, QrCodeInterface $qrCode): string
     {
         $targetSize = $qrCode->getSize() + $qrCode->getMargin() * 2;
 
@@ -80,19 +70,18 @@ class EpsWriter extends AbstractBaconWriter
         return $string;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getContentType()
+    public static function getContentType(): string
     {
         return 'image/eps';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSupportedExtensions()
+    public static function getSupportedExtensions(): array
     {
         return ['eps'];
+    }
+
+    public function getName(): string
+    {
+        return 'eps';
     }
 }

@@ -16,10 +16,7 @@ use SimpleXMLElement;
 
 class SvgWriter extends AbstractBaconWriter
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function writeString(QrCodeInterface $qrCode)
+    public function writeString(QrCodeInterface $qrCode): string
     {
         $renderer = new Svg();
         $renderer->setWidth($qrCode->getSize());
@@ -36,14 +33,7 @@ class SvgWriter extends AbstractBaconWriter
         return $string;
     }
 
-    /**
-     * @param string $string
-     * @param int    $margin
-     * @param int    $size
-     *
-     * @return string
-     */
-    protected function addMargin($string, $margin, $size)
+    protected function addMargin(string $string, int $margin, int $size): string
     {
         $targetSize = $size + $margin * 2;
 
@@ -74,19 +64,18 @@ class SvgWriter extends AbstractBaconWriter
         return $xml->asXML();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getContentType()
+    public static function getContentType(): string
     {
         return 'image/svg+xml';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSupportedExtensions()
+    public static function getSupportedExtensions(): array
     {
         return ['svg'];
+    }
+
+    public function getName(): string
+    {
+        return 'svg';
     }
 }
