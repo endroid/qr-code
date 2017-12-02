@@ -56,7 +56,7 @@ class PngWriter extends AbstractBaconWriter
         return $string;
     }
 
-    protected function addMargin(resource $sourceImage, int $margin, int $size, array $foregroundColor, array $backgroundColor): resource
+    protected function addMargin($sourceImage, int $margin, int $size, array $foregroundColor, array $backgroundColor)
     {
         $additionalWhitespace = $this->calculateAdditionalWhiteSpace($sourceImage, $foregroundColor);
 
@@ -72,7 +72,7 @@ class PngWriter extends AbstractBaconWriter
         return $targetImage;
     }
 
-    protected function calculateAdditionalWhiteSpace(resource $image, array $foregroundColor): int
+    protected function calculateAdditionalWhiteSpace($image, array $foregroundColor): int
     {
         $width = imagesx($image);
         $height = imagesy($image);
@@ -93,7 +93,7 @@ class PngWriter extends AbstractBaconWriter
         return $whitespace;
     }
 
-    protected function addLogo(resource $sourceImage, string $logoPath, int $logoWidth = null): resource
+    protected function addLogo($sourceImage, string $logoPath, int $logoWidth = null)
     {
         $logoImage = imagecreatefromstring(file_get_contents($logoPath));
         $logoSourceWidth = imagesx($logoImage);
@@ -115,7 +115,7 @@ class PngWriter extends AbstractBaconWriter
         return $sourceImage;
     }
 
-    protected function addLabel(resource $sourceImage, string $label, string $labelFontPath, int $labelFontSize, string $labelAlignment, array $labelMargin, array $foregroundColor, array $backgroundColor): resource
+    protected function addLabel($sourceImage, string $label, string $labelFontPath, int $labelFontSize, string $labelAlignment, array $labelMargin, array $foregroundColor, array $backgroundColor)
     {
         if (!function_exists('imagettfbbox')) {
             throw new MissingFunctionException('Missing function "imagettfbbox", please make sure you installed the FreeType library');
@@ -157,7 +157,7 @@ class PngWriter extends AbstractBaconWriter
         return $targetImage;
     }
 
-    protected function imageToString(resource $image): string
+    protected function imageToString($image): string
     {
         ob_start();
         imagepng($image);

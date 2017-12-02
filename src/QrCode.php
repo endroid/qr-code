@@ -62,8 +62,6 @@ class QrCode implements QrCodeInterface
 
         $this->errorCorrectionLevel = new ErrorCorrectionLevel(ErrorCorrectionLevel::LOW);
         $this->labelAlignment = new LabelAlignment(LabelAlignment::CENTER);
-
-        $this->writerRegistry = new StaticWriterRegistry();
     }
 
     public function setText(string $text): void
@@ -147,7 +145,7 @@ class QrCode implements QrCodeInterface
         $this->logoPath = $logoPath;
     }
 
-    public function getLogoPath(): string
+    public function getLogoPath(): ?string
     {
         return $this->logoPath;
     }
@@ -157,7 +155,7 @@ class QrCode implements QrCodeInterface
         $this->logoWidth = $logoWidth;
     }
 
-    public function getLogoWidth(): int
+    public function getLogoWidth(): ?int
     {
         return $this->logoWidth;
     }
@@ -183,7 +181,7 @@ class QrCode implements QrCodeInterface
         }
     }
 
-    public function getLabel(): string
+    public function getLabel(): ?string
     {
         return $this->label;
     }
@@ -193,7 +191,7 @@ class QrCode implements QrCodeInterface
         $this->labelFontSize = $labelFontSize;
     }
 
-    public function getLabelFontSize(): int
+    public function getLabelFontSize(): ?int
     {
         return $this->labelFontSize;
     }
@@ -209,7 +207,7 @@ class QrCode implements QrCodeInterface
         $this->labelFontPath = $labelFontPath;
     }
 
-    public function getLabelFontPath(): string
+    public function getLabelFontPath(): ?string
     {
         return $this->labelFontPath;
     }
@@ -219,7 +217,7 @@ class QrCode implements QrCodeInterface
         $this->labelAlignment = new LabelAlignment($labelAlignment);
     }
 
-    public function getLabelAlignment(): string
+    public function getLabelAlignment(): ?string
     {
         return $this->labelAlignment->getValue();
     }
@@ -229,7 +227,7 @@ class QrCode implements QrCodeInterface
         $this->labelMargin = array_merge($this->labelMargin, $labelMargin);
     }
 
-    public function getLabelMargin(): array
+    public function getLabelMargin(): ?array
     {
         return $this->labelMargin;
     }
@@ -246,6 +244,10 @@ class QrCode implements QrCodeInterface
 
     public function getWriter(string $name = null): WriterInterface
     {
+        if (!$this->writerRegistry instanceof WriterRegistryInterface) {
+            $this->createWriterRegistry();
+        }
+
         if (!is_null($name)) {
             return $this->writerRegistry->getWriter($name);
         }
@@ -257,9 +259,15 @@ class QrCode implements QrCodeInterface
         return $this->writerRegistry->getDefaultWriter();
     }
 
+    private function createWriterRegistry()
+    {
+        $this->writerRegistry = new WriterRegistry();
+        $this->writerRegistry->loadDefaultWriters();
+    }
+
     public function setWriterByName(string $name)
     {
-        $this->writer = $this->writerRegistry->getWriter($name);
+        $this->writer = $this->getWriter($name);
     }
 
     public function setWriterByPath(string $path): void

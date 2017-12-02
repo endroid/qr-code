@@ -10,12 +10,32 @@
 namespace Endroid\QrCode;
 
 use Endroid\QrCode\Exception\InvalidWriterException;
+use Endroid\QrCode\Writer\BinaryWriter;
+use Endroid\QrCode\Writer\DebugWriter;
+use Endroid\QrCode\Writer\EpsWriter;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
 use Endroid\QrCode\Writer\WriterInterface;
 
 class WriterRegistry implements WriterRegistryInterface
 {
     private $writers = [];
     private $defaultWriter;
+
+    public function loadDefaultWriters(): void
+    {
+        if (count($this->writers) > 0) {
+            return;
+        }
+
+        $this->addWriter(new BinaryWriter());
+        $this->addWriter(new DebugWriter());
+        $this->addWriter(new EpsWriter());
+        $this->addWriter(new PngWriter());
+        $this->addWriter(new SvgWriter());
+
+        $this->setDefaultWriter('png');
+    }
 
     public function addWriter(WriterInterface $writer): void
     {
