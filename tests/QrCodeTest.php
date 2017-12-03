@@ -98,10 +98,8 @@ class QrCodeTest extends TestCase
     public function testSetLabel(): void
     {
         $qrCode = new QrCode('QrCode');
-        $qrCode
-            ->setSize(300)
-            ->setLabel('Scan the code', 15)
-        ;
+        $qrCode->setSize(300);
+        $qrCode->setLabel('Scan the code', 15);
 
         $pngData = $qrCode->writeString();
         $this->assertTrue(is_string($pngData));
@@ -110,11 +108,10 @@ class QrCodeTest extends TestCase
     public function testSetLogo(): void
     {
         $qrCode = new QrCode('QrCode');
-        $qrCode
-            ->setSize(400)
-            ->setLogoPath(__DIR__.'/../assets/images/symfony.png')
-            ->setLogoWidth(150)
-            ->setValidateResult(true);
+        $qrCode->setSize(400);
+        $qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
+        $qrCode->setLogoWidth(150);
+        $qrCode->setValidateResult(true);
 
         $pngData = $qrCode->writeString();
         $this->assertTrue(is_string($pngData));

@@ -9,10 +9,7 @@
 
 namespace Endroid\QrCode\Twig\Extension;
 
-use Endroid\QrCode\Exception\UnsupportedExtensionException;
-use Endroid\QrCode\Factory\QrCodeFactory;
 use Endroid\QrCode\Factory\QrCodeFactoryInterface;
-use Endroid\QrCode\WriterRegistryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Twig_Extension;

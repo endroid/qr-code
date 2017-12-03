@@ -12,10 +12,13 @@ namespace Endroid\QrCode\Writer;
 use BaconQrCode\Renderer\Image\Svg;
 use BaconQrCode\Writer;
 use Endroid\QrCode\QrCodeInterface;
+use Endroid\QrCode\Traits\BaconConversionTrait;
 use SimpleXMLElement;
 
-class SvgWriter extends AbstractBaconWriter
+class SvgWriter extends AbstractWriter
 {
+    use BaconConversionTrait;
+
     public function writeString(QrCodeInterface $qrCode): string
     {
         $renderer = new Svg();
@@ -33,7 +36,7 @@ class SvgWriter extends AbstractBaconWriter
         return $string;
     }
 
-    protected function addMargin(string $string, int $margin, int $size): string
+    private function addMargin(string $string, int $margin, int $size): string
     {
         $targetSize = $size + $margin * 2;
 

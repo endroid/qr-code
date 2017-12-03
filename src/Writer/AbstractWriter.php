@@ -10,7 +10,6 @@
 namespace Endroid\QrCode\Writer;
 
 use Endroid\QrCode\QrCodeInterface;
-use ReflectionClass;
 
 abstract class AbstractWriter implements WriterInterface
 {

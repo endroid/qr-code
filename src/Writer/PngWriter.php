@@ -15,10 +15,13 @@ use Endroid\QrCode\Exception\MissingFunctionException;
 use Endroid\QrCode\Exception\ValidationException;
 use Endroid\QrCode\LabelAlignment;
 use Endroid\QrCode\QrCodeInterface;
+use Endroid\QrCode\Traits\BaconConversionTrait;
 use QrReader;
 
-class PngWriter extends AbstractBaconWriter
+class PngWriter extends AbstractWriter
 {
+    use BaconConversionTrait;
+
     public function writeString(QrCodeInterface $qrCode): string
     {
         $renderer = new Png();
@@ -56,7 +59,7 @@ class PngWriter extends AbstractBaconWriter
         return $string;
     }
 
-    protected function addMargin($sourceImage, int $margin, int $size, array $foregroundColor, array $backgroundColor)
+    private function addMargin($sourceImage, int $margin, int $size, array $foregroundColor, array $backgroundColor)
     {
         $additionalWhitespace = $this->calculateAdditionalWhiteSpace($sourceImage, $foregroundColor);
 
@@ -72,7 +75,7 @@ class PngWriter extends AbstractBaconWriter
         return $targetImage;
     }
 
-    protected function calculateAdditionalWhiteSpace($image, array $foregroundColor): int
+    private function calculateAdditionalWhiteSpace($image, array $foregroundColor): int
     {
         $width = imagesx($image);
         $height = imagesy($image);
@@ -93,7 +96,7 @@ class PngWriter extends AbstractBaconWriter
         return $whitespace;
     }
 
-    protected function addLogo($sourceImage, string $logoPath, int $logoWidth = null)
+    private function addLogo($sourceImage, string $logoPath, int $logoWidth = null)
     {
         $logoImage = imagecreatefromstring(file_get_contents($logoPath));
         $logoSourceWidth = imagesx($logoImage);
@@ -115,7 +118,7 @@ class PngWriter extends AbstractBaconWriter
         return $sourceImage;
     }
 
-    protected function addLabel($sourceImage, string $label, string $labelFontPath, int $labelFontSize, string $labelAlignment, array $labelMargin, array $foregroundColor, array $backgroundColor)
+    private function addLabel($sourceImage, string $label, string $labelFontPath, int $labelFontSize, string $labelAlignment, array $labelMargin, array $foregroundColor, array $backgroundColor)
     {
         if (!function_exists('imagettfbbox')) {
             throw new MissingFunctionException('Missing function "imagettfbbox", please make sure you installed the FreeType library');
@@ -157,7 +160,7 @@ class PngWriter extends AbstractBaconWriter
         return $targetImage;
     }
 
-    protected function imageToString($image): string
+    private function imageToString($image): string
     {
         ob_start();
         imagepng($image);
@@ -176,7 +179,7 @@ class PngWriter extends AbstractBaconWriter
         return ['png'];
     }
 
-    public function getName():string
+    public function getName(): string
     {
         return 'png';
     }

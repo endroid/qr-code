@@ -12,9 +12,12 @@ namespace Endroid\QrCode\Writer;
 use BaconQrCode\Renderer\Image\Eps;
 use BaconQrCode\Writer;
 use Endroid\QrCode\QrCodeInterface;
+use Endroid\QrCode\Traits\BaconConversionTrait;
 
-class EpsWriter extends AbstractBaconWriter
+class EpsWriter extends AbstractWriter
 {
+    use BaconConversionTrait;
+
     public function writeString(QrCodeInterface $qrCode): string
     {
         $renderer = new Eps();
@@ -31,7 +34,7 @@ class EpsWriter extends AbstractBaconWriter
         return $string;
     }
 
-    protected function addMargin(string $string, QrCodeInterface $qrCode): string
+    private function addMargin(string $string, QrCodeInterface $qrCode): string
     {
         $targetSize = $qrCode->getSize() + $qrCode->getMargin() * 2;
 

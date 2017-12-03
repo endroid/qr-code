@@ -7,11 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Endroid\QrCode\Writer;
+namespace Endroid\QrCode\Traits;
 
 use BaconQrCode\Renderer\Color\Rgb;
 
-abstract class AbstractBaconWriter extends AbstractWriter
+trait BaconConversionTrait
 {
     protected function convertColor(array $color): Rgb
     {

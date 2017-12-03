@@ -13,11 +13,17 @@ use Endroid\QrCode\QrCodeInterface;
 
 interface WriterInterface
 {
-    function writeString(QrCodeInterface $qrCode): string;
-    function writeDataUri(QrCodeInterface $qrCode): string;
-    function writeFile(QrCodeInterface $qrCode, string $path): string;
-    static function getContentType(): string;
-    static function supportsExtension(string $extension): bool;
-    static function getSupportedExtensions(): array;
-    function getName(): string;
+    public function writeString(QrCodeInterface $qrCode): string;
+
+    public function writeDataUri(QrCodeInterface $qrCode): string;
+
+    public function writeFile(QrCodeInterface $qrCode, string $path): string;
+
+    public static function getContentType(): string;
+
+    public static function supportsExtension(string $extension): bool;
+
+    public static function getSupportedExtensions(): array;
+
+    public function getName(): string;
 }

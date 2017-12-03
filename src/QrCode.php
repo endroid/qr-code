@@ -10,7 +10,6 @@
 namespace Endroid\QrCode;
 
 use Endroid\QrCode\Exception\InvalidPathException;
-use Endroid\QrCode\Exception\InvalidWriterException;
 use Endroid\QrCode\Exception\UnsupportedExtensionException;
 use Endroid\QrCode\Writer\WriterInterface;
 
@@ -282,6 +281,7 @@ class QrCode implements QrCodeInterface
         foreach ($this->writerRegistry->getWriters() as $writer) {
             if ($writer->supportsExtension($extension)) {
                 $this->writer = $writer;
+
                 return;
             }
         }
