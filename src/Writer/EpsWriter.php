@@ -61,7 +61,7 @@ class EpsWriter extends AbstractWriter
             } elseif (preg_match('#[0-9]+ [0-9]+ [0-9]+ [0-9]+ F#i', $line)) {
                 $parts = explode(' ', $line);
                 $parts[0] = $qrCode->getMargin() + $targetBlockSize * ($parts[0] - $additionalWhitespace) / $sourceBlockSize;
-                $parts[1] = $qrCode->getMargin() + $targetBlockSize * ($parts[1] - $sourceBlockSize - $additionalWhitespace) / $sourceBlockSize;
+                $parts[1] = $qrCode->getMargin() + $targetBlockSize * ($parts[1] - $additionalWhitespace) / $sourceBlockSize;
                 $parts[2] = $targetBlockSize;
                 $parts[3] = $targetBlockSize;
                 $line = implode(' ', $parts);
