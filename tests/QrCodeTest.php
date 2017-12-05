@@ -116,4 +116,16 @@ class QrCodeTest extends TestCase
         $pngData = $qrCode->writeString();
         $this->assertTrue(is_string($pngData));
     }
+
+    public function testWriteFile(): void
+    {
+        $filename = __DIR__.'/output/qr-code.png';
+
+        $qrCode = new QrCode('QrCode');
+        $qrCode->writeFile($filename);
+
+        $image = imagecreatefromstring(file_get_contents($filename));
+
+        $this->assertTrue(is_resource($image));
+    }
 }
