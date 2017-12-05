@@ -299,9 +299,9 @@ class QrCode implements QrCodeInterface
         return $this->getWriter()->writeDataUri($this);
     }
 
-    public function writeFile(string $path): string
+    public function writeFile(string $path): void
     {
-        return $this->getWriter()->writeFile($this, $path);
+        $this->getWriter()->writeFile($this, $path);
     }
 
     public function getContentType(): string

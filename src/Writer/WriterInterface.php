@@ -17,7 +17,7 @@ interface WriterInterface
 
     public function writeDataUri(QrCodeInterface $qrCode): string;
 
-    public function writeFile(QrCodeInterface $qrCode, string $path): string;
+    public function writeFile(QrCodeInterface $qrCode, string $path): void;
 
     public static function getContentType(): string;
 
