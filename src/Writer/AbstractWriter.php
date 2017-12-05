@@ -23,7 +23,7 @@ abstract class AbstractWriter implements WriterInterface
     public function writeFile(QrCodeInterface $qrCode, string $path): string
     {
         $string = $this->writeString($qrCode);
-        file_put_contents($path, $string);
+        return file_put_contents($path, $string);
     }
 
     public static function supportsExtension(string $extension): bool
