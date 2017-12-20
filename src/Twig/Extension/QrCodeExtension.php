@@ -15,6 +15,9 @@ use Symfony\Component\Routing\RouterInterface;
 use Twig_Extension;
 use Twig_SimpleFunction;
 
+/**
+ * @deprecated as of 3.1 and will be removed in 4.0. Use the QrCodeRoutingExtension and QrCodeUriExtension instead.
+ */
 class QrCodeExtension extends Twig_Extension
 {
     private $qrCodeFactory;
@@ -35,13 +38,17 @@ class QrCodeExtension extends Twig_Extension
         ];
     }
 
-    public function qrcodeUrlFunction(string $text, array $options = []): string
+    public function qrCodeUrlFunction(string $text, array $options = []): string
     {
+        @trigger_error(sprintf('Using %s is deprecated as of 3.1 and will be removed in 4.0. Install the EndroidQrCodeBundle instead.', __METHOD__), E_USER_DEPRECATED);
+
         return $this->getQrCodeReference($text, $options, UrlGeneratorInterface::ABSOLUTE_URL);
     }
 
     public function qrCodePathFunction(string $text, array $options = []): string
     {
+        @trigger_error(sprintf('Using %s is deprecated as of 3.1 and will be removed in 4.0. Install the EndroidQrCodeBundle instead.', __METHOD__), E_USER_DEPRECATED);
+
         return $this->getQrCodeReference($text, $options, UrlGeneratorInterface::ABSOLUTE_PATH);
     }
 
@@ -56,8 +63,10 @@ class QrCodeExtension extends Twig_Extension
         return $this->router->generate('endroid_qrcode_generate', $options, $referenceType);
     }
 
-    public function qrcodeDataUriFunction(string $text, array $options = []): string
+    public function qrCodeDataUriFunction(string $text, array $options = []): string
     {
+        @trigger_error(sprintf('Using %s is deprecated as of 3.1 and will be removed in 4.0. Use %s::qrCodeDataUriFunction() instead.', __METHOD__, QrCodeUriExtension::class), E_USER_DEPRECATED);
+
         $qrCode = $this->qrCodeFactory->create($text, $options);
 
         return $qrCode->writeDataUri();
