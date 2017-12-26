@@ -52,7 +52,8 @@ class PngWriter extends AbstractWriter
             if ($reader->text() !== $qrCode->getText()) {
                 throw new ValidationException(
                     'Built-in validation reader read "'.$reader->text().'" instead of "'.$qrCode->getText().'".
-                     Adjust your parameters to increase readability or disable built-in validation.');
+                     Adjust your parameters to increase readability or disable built-in validation.'
+                );
             }
         }
 
