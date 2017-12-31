@@ -2,7 +2,7 @@
     "name": "endroid/qrcode",
     "description": "Endroid QR Code",
     "keywords": ["endroid", "qrcode", "qr", "code", "bundle", "php"],
-    "homepage": "https://github.com/endroid/QrCode",
+    "homepage": "https://github.com/endroid/qr-code",
     "type": "library",
     "license": "MIT",
     "authors": [
