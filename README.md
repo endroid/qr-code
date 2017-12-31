@@ -1,5 +1,4 @@
-QR Code
-=======
+# QR Code
 
 *By [endroid](https://endroid.nl/)*
 
@@ -82,7 +81,7 @@ that the validator can consume quite amount of additional resources.
 
 ## Symfony integration
 
-The [endroid/qrcode-bundle](https://github.com/endroid/EndroidQrCodeBundle)
+The [endroid/qrcode-bundle](https://github.com/endroid/qrcode-bundle)
 integrates the QR code library in Symfony for an even better experience.
 
 * Configure your defaults (like image size, default writer etc.)
@@ -90,7 +89,7 @@ integrates the QR code library in Symfony for an even better experience.
 * Generate QR codes directly by typing an URL like /qrcode/\<text>.png?size=300
 * Generate QR codes or URLs directly from Twig using dedicated functions
  
-Read the [bundle documentation](https://github.com/endroid/EndroidQrCodeBundle)
+Read the [bundle documentation](https://github.com/endroid/qrcode-bundle)
 for more information.
 
 ## Versioning
