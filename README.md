@@ -3,7 +3,7 @@
 *By [endroid](https://endroid.nl/)*
 
 [![Latest Stable Version](http://img.shields.io/packagist/v/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
-[![Build Status](http://img.shields.io/travis/endroid/QrCode.svg)](http://travis-ci.org/endroid/QrCode)
+[![Build Status](http://img.shields.io/travis/endroid/qrcode.svg)](http://travis-ci.org/endroid/qrcode)
 [![Total Downloads](http://img.shields.io/packagist/dt/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
 [![Monthly Downloads](http://img.shields.io/packagist/dm/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
 [![License](http://img.shields.io/packagist/l/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
