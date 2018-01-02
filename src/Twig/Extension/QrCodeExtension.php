@@ -32,9 +32,9 @@ class QrCodeExtension extends Twig_Extension
     public function getFunctions(): array
     {
         return [
-            new Twig_SimpleFunction('qrcode_path', [$this, 'qrCodePathFunction']),
-            new Twig_SimpleFunction('qrcode_url', [$this, 'qrCodeUrlFunction']),
-            new Twig_SimpleFunction('qrcode_data_uri', [$this, 'qrCodeDataUriFunction']),
+            new Twig_SimpleFunction('qr_code_path', [$this, 'qrCodePathFunction']),
+            new Twig_SimpleFunction('qr_code_url', [$this, 'qrCodeUrlFunction']),
+            new Twig_SimpleFunction('qr_code_data_uri', [$this, 'qrCodeDataUriFunction']),
         ];
     }
 
@@ -60,7 +60,7 @@ class QrCodeExtension extends Twig_Extension
         $options['text'] = $text;
         $options['extension'] = current($supportedExtensions);
 
-        return $this->router->generate('endroid_qrcode_generate', $options, $referenceType);
+        return $this->router->generate('endroid_qr_code_generate', $options, $referenceType);
     }
 
     public function qrCodeDataUriFunction(string $text, array $options = []): string

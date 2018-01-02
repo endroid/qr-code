@@ -2,11 +2,11 @@
 
 *By [endroid](https://endroid.nl/)*
 
-[![Latest Stable Version](http://img.shields.io/packagist/v/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
-[![Build Status](http://img.shields.io/travis/endroid/qrcode.svg)](http://travis-ci.org/endroid/qrcode)
-[![Total Downloads](http://img.shields.io/packagist/dt/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
-[![Monthly Downloads](http://img.shields.io/packagist/dm/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
-[![License](http://img.shields.io/packagist/l/endroid/qrcode.svg)](https://packagist.org/packages/endroid/qrcode)
+[![Latest Stable Version](http://img.shields.io/packagist/v/endroid/qr-code.svg)](https://packagist.org/packages/endroid/qr-code)
+[![Build Status](http://img.shields.io/travis/endroid/qr-code.svg)](http://travis-ci.org/endroid/qr-code)
+[![Total Downloads](http://img.shields.io/packagist/dt/endroid/qr-code.svg)](https://packagist.org/packages/endroid/qr-code)
+[![Monthly Downloads](http://img.shields.io/packagist/dm/endroid/qr-code.svg)](https://packagist.org/packages/endroid/qr-code)
+[![License](http://img.shields.io/packagist/l/endroid/qr-code.svg)](https://packagist.org/packages/endroid/qr-code)
 [![Donate](https://img.shields.io/badge/donate-paypal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGH86QN825TWN)
 
 This library helps you generate QR codes in a jiffy.
@@ -16,7 +16,7 @@ This library helps you generate QR codes in a jiffy.
 Use [Composer](https://getcomposer.org/) to install the library.
 
 ``` bash
-$ composer require endroid/qrcode
+$ composer require endroid/qr-code
 ```
 
 ## Basic usage
@@ -65,7 +65,7 @@ $qrCode->writeFile(__DIR__.'/qrcode.png');
 $response = new Response($qrCode->writeString(), Response::HTTP_OK, ['Content-Type' => $qrCode->getContentType()]);
 ```
 
-![QR Code](https://endroid.nl/qrcode/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png)
+![QR Code](https://endroid.nl/qr-code/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png)
 
 ## Built-in validation reader
 
@@ -81,15 +81,15 @@ that the validator can consume quite amount of additional resources.
 
 ## Symfony integration
 
-The [endroid/qrcode-bundle](https://github.com/endroid/qrcode-bundle)
+The [endroid/qr-code-bundle](https://github.com/endroid/qr-code-bundle)
 integrates the QR code library in Symfony for an even better experience.
 
 * Configure your defaults (like image size, default writer etc.)
 * Generate QR codes quickly from anywhere via the factory service
-* Generate QR codes directly by typing an URL like /qrcode/\<text>.png?size=300
+* Generate QR codes directly by typing an URL like /qr-code/\<text>.png?size=300
 * Generate QR codes or URLs directly from Twig using dedicated functions
  
-Read the [bundle documentation](https://github.com/endroid/qrcode-bundle)
+Read the [bundle documentation](https://github.com/endroid/qr-code-bundle)
 for more information.
 
 ## Versioning
