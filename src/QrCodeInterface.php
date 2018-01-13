@@ -43,6 +43,8 @@ interface QrCodeInterface
 
     public function getValidateResult(): bool;
 
+    public function getContentType(): string;
+
     public function setWriterRegistry(WriterRegistryInterface $writerRegistry): void;
 
     public function writeString(): string;

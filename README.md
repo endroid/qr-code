@@ -36,7 +36,7 @@ echo $qrCode->writeString();
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\LabelAlignment;
 use Endroid\QrCode\QrCode;
-use Symfony\Component\HttpFoundation\Response;
+use Endroid\QrCode\Response\QrCodeResponse;
 
 // Create a basic QR code
 $qrCode = new QrCode('Life is too short to be generating QR codes');
@@ -63,7 +63,7 @@ echo $qrCode->writeString();
 $qrCode->writeFile(__DIR__.'/qrcode.png');
 
 // Create a response object
-$response = new Response($qrCode->writeString(), Response::HTTP_OK, ['Content-Type' => $qrCode->getContentType()]);
+$response = new QrCodeResponse($qrCode);
 ```
 
 ![QR Code](https://endroid.nl/qr-code/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png)
