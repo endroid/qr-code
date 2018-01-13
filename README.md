@@ -52,6 +52,7 @@ $qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255]);
 $qrCode->setLabel('Scan the code', 16, __DIR__.'/../assets/fonts/noto_sans.otf', LabelAlignment::CENTER);
 $qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
 $qrCode->setLogoWidth(150);
+$qrCode->setRoundBlockSize(true);
 $qrCode->setValidateResult(false);
 
 // Directly output the QR code
