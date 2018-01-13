@@ -27,6 +27,7 @@ class QrCodeFactory implements QrCodeFactoryInterface
         'foreground_color',
         'background_color',
         'encoding',
+        'round_block_size',
         'error_correction_level',
         'logo_path',
         'logo_width',
