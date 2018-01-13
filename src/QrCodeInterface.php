@@ -23,6 +23,8 @@ interface QrCodeInterface
 
     public function getEncoding(): string;
 
+    public function getRoundBlockSize(): bool;
+
     public function getErrorCorrectionLevel(): string;
 
     public function getLogoPath(): ?string;

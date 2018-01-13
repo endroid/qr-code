@@ -26,15 +26,18 @@ class QrCode implements QrCodeInterface
         'r' => 0,
         'g' => 0,
         'b' => 0,
+        'a' => 0,
     ];
 
     private $backgroundColor = [
         'r' => 255,
         'g' => 255,
         'b' => 255,
+        'a' => 127,
     ];
 
     private $encoding = 'UTF-8';
+    private $roundBlockSize = true;
     private $errorCorrectionLevel;
 
     private $logoPath;
@@ -121,6 +124,16 @@ class QrCode implements QrCodeInterface
     public function getEncoding(): string
     {
         return $this->encoding;
+    }
+
+    public function setRoundBlockSize(bool $roundBlockSize): void
+    {
+        $this->roundBlockSize = $roundBlockSize;
+    }
+
+    public function getRoundBlockSize(): bool
+    {
+        return $this->roundBlockSize;
     }
 
     public function setErrorCorrectionLevel(string $errorCorrectionLevel): void

@@ -9,62 +9,52 @@
 
 namespace Endroid\QrCode\Writer;
 
-use BaconQrCode\Renderer\Image\Svg;
-use BaconQrCode\Writer;
 use Endroid\QrCode\QrCodeInterface;
-use Endroid\QrCode\Traits\BaconConversionTrait;
 use SimpleXMLElement;
 
 class SvgWriter extends AbstractWriter
 {
-    use BaconConversionTrait;
-
     public function writeString(QrCodeInterface $qrCode): string
     {
-        $renderer = new Svg();
-        $renderer->setWidth($qrCode->getSize());
-        $renderer->setHeight($qrCode->getSize());
-        $renderer->setMargin(0);
-        $renderer->setForegroundColor($this->convertColor($qrCode->getForegroundColor()));
-        $renderer->setBackgroundColor($this->convertColor($qrCode->getBackgroundColor()));
+        $data = $this->getData($qrCode);
 
-        $writer = new Writer($renderer);
-        $string = $writer->writeString($qrCode->getText(), $qrCode->getEncoding(), $this->convertErrorCorrectionLevel($qrCode->getErrorCorrectionLevel()));
+        $svg = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>'
+            .'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"/>'
+        );
+        $svg->addAttribute('version', '1.1');
+        $svg->addAttribute('width', $data['inner_width'].'px');
+        $svg->addAttribute('height', $data['inner_height'].'px');
+        $svg->addAttribute('viewBox', '0 0 '.$data['outer_width'].' '.$data['outer_height']);
+        $svg->addChild('defs');
 
-        $string = $this->addMargin($string, $qrCode->getMargin(), $qrCode->getSize());
+        // Block definition
+        $blockDefinition = $svg->defs->addChild('rect');
+        $blockDefinition->addAttribute('id', 'block');
+        $blockDefinition->addAttribute('width', $data['block_size']);
+        $blockDefinition->addAttribute('height', $data['block_size']);
+        $blockDefinition->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getForegroundColor()['r'], $qrCode->getForegroundColor()['g'], $qrCode->getForegroundColor()['b']));
 
-        return $string;
-    }
+        // Background
+        $background = $svg->addChild('rect');
+        $background->addAttribute('x', 0);
+        $background->addAttribute('y', 0);
+        $background->addAttribute('width', $data['outer_width']);
+        $background->addAttribute('height', $data['outer_height']);
+        $background->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getBackgroundColor()['r'], $qrCode->getBackgroundColor()['g'], $qrCode->getBackgroundColor()['b']));
 
-    private function addMargin(string $string, int $margin, int $size): string
-    {
-        $targetSize = $size + $margin * 2;
-
-        $xml = new SimpleXMLElement($string);
-        $xml['width'] = $targetSize;
-        $xml['height'] = $targetSize;
-        $xml['viewBox'] = '0 0 '.$targetSize.' '.$targetSize;
-        $xml->rect['width'] = $targetSize;
-        $xml->rect['height'] = $targetSize;
-
-        $additionalWhitespace = $targetSize;
-        foreach ($xml->use as $block) {
-            $additionalWhitespace = min($additionalWhitespace, (int) $block['x']);
+        foreach ($data['matrix'] as $row => $values) {
+            foreach ($values as $column => $value) {
+                if (1 === $value) {
+                    $block = $svg->addChild('use');
+                    $block->addAttribute('x', $data['margin_left'] + $data['block_size'] * $column);
+                    $block->addAttribute('y', $data['margin_left'] + $data['block_size'] * $row);
+                    $block->addAttribute('xlink:href', '#block', 'http://www.w3.org/1999/xlink');
+                }
+            }
         }
 
-        $sourceBlockSize = (int) $xml->defs->rect['width'];
-        $blockCount = ($size - 2 * $additionalWhitespace) / $sourceBlockSize;
-        $targetBlockSize = $size / $blockCount;
-
-        $xml->defs->rect['width'] = $targetBlockSize;
-        $xml->defs->rect['height'] = $targetBlockSize;
-
-        foreach ($xml->use as $block) {
-            $block['x'] = $margin + $targetBlockSize * ($block['x'] - $additionalWhitespace) / $sourceBlockSize;
-            $block['y'] = $margin + $targetBlockSize * ($block['y'] - $additionalWhitespace) / $sourceBlockSize;
-        }
-
-        return $xml->asXML();
+        return $svg->asXML();
     }
 
     public static function getContentType(): string

@@ -15,20 +15,18 @@ class BinaryWriter extends AbstractWriter
 {
     public function writeString(QrCodeInterface $qrCode): string
     {
-        $string = '
-            0001010101
-            0001010101
-            1000101010
-            0001010101
-            0101010101
-            0001010101
-            0001010101
-            0001010101
-            0001010101
-            1000101010
-        ';
+        $data = $this->getData($qrCode);
 
-        return $string;
+        $rows = [];
+        foreach ($data['matrix'] as $row) {
+            $values = '';
+            foreach ($row as $value) {
+                $values .= $value;
+            }
+            $rows[] = $values;
+        }
+
+        return implode("\n", $rows);
     }
 
     public static function getContentType(): string
