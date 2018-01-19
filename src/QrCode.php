@@ -33,7 +33,7 @@ class QrCode implements QrCodeInterface
         'r' => 255,
         'g' => 255,
         'b' => 255,
-        'a' => 127,
+        'a' => 0,
     ];
 
     private $encoding = 'UTF-8';
