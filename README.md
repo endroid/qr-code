@@ -106,6 +106,6 @@ information please view the LICENSE file that was distributed with this source c
 
 ## Donation
 
-If this project help you reduce time to develop, you can give me a cup of coffee :)
+If this project help you reduce time to develop, you can give me a Tesla :)
 
 [![paypal](https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_donate_92x26.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGH86QN825TWN)
