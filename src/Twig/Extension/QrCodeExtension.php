@@ -60,7 +60,7 @@ class QrCodeExtension extends Twig_Extension
         $options['text'] = $text;
         $options['extension'] = current($supportedExtensions);
 
-        return $this->router->generate('endroid_qr_code_generate', $options, $referenceType);
+        return $this->router->generate('qr_code_generate', $options, $referenceType);
     }
 
     public function qrCodeDataUriFunction(string $text, array $options = []): string
