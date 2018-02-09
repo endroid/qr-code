@@ -28,13 +28,22 @@ class WriterRegistry implements WriterRegistryInterface
             return;
         }
 
-        $this->addWriter(new BinaryWriter());
-        $this->addWriter(new DebugWriter());
-        $this->addWriter(new EpsWriter());
-        $this->addWriter(new PngWriter());
-        $this->addWriter(new SvgWriter());
+        $this->addWriters([
+            new BinaryWriter(),
+            new DebugWriter(),
+            new EpsWriter(),
+            new PngWriter(),
+            new SvgWriter()
+        ]);
 
         $this->setDefaultWriter('png');
+    }
+
+    public function addWriters(iterable $writers): void
+    {
+        foreach ($writers as $writer) {
+            $this->addWriter($writer);
+        }
     }
 
     public function addWriter(WriterInterface $writer): void

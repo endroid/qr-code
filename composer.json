@@ -22,10 +22,7 @@
         "myclabs/php-enum": "^1.5"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7|^6.0",
-        "twig/twig": "^1.34.2|^2.4.4",
-        "symfony/phpunit-bridge": "^3.0|^4.0",
-        "symfony/routing": "^3.0|^4.0"
+        "phpunit/phpunit": "^5.7|^6.0"
     },
     "autoload": {
         "psr-4": {
