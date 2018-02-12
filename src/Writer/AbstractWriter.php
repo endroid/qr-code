@@ -19,10 +19,6 @@ abstract class AbstractWriter implements WriterInterface
 
     protected function getData(QrCodeInterface $qrCode): array
     {
-        if (0 !== count($this->data)) {
-            return $this->data;
-        }
-
         $name = strtoupper(substr($qrCode->getErrorCorrectionLevel(), 0, 1));
         $errorCorrectionLevel = constant('BaconQrCode\Common\ErrorCorrectionLevel::'.$name);
 
