@@ -15,14 +15,8 @@ use Endroid\QrCode\QrCodeInterface;
 
 abstract class AbstractWriter implements WriterInterface
 {
-    private $data = [];
-
     protected function getData(QrCodeInterface $qrCode): array
     {
-        if (0 !== count($this->data)) {
-            return $this->data;
-        }
-
         $name = strtoupper(substr($qrCode->getErrorCorrectionLevel(), 0, 1));
         $errorCorrectionLevel = constant('BaconQrCode\Common\ErrorCorrectionLevel::'.$name);
 
@@ -33,23 +27,23 @@ abstract class AbstractWriter implements WriterInterface
             $row = $row->toArray();
         }
 
-        $this->data['matrix'] = $matrix;
-        $this->data['block_count'] = count($matrix[0]);
-        $this->data['block_size'] = $qrCode->getSize() / $this->data['block_count'];
+        $data['matrix'] = $matrix;
+        $data['block_count'] = count($matrix[0]);
+        $data['block_size'] = $qrCode->getSize() / $data['block_count'];
         if ($qrCode->getRoundBlockSize()) {
-            $this->data['block_size'] = intval(floor($this->data['block_size']));
+            $data['block_size'] = intval(floor($data['block_size']));
         }
-        $this->data['inner_width'] = $this->data['block_size'] * $this->data['block_count'];
-        $this->data['inner_height'] = $this->data['block_size'] * $this->data['block_count'];
-        $this->data['outer_width'] = $qrCode->getSize() + 2 * $qrCode->getMargin();
-        $this->data['outer_height'] = $qrCode->getSize() + 2 * $qrCode->getMargin();
-        $this->data['margin_left'] = ($this->data['outer_width'] - $this->data['inner_width']) / 2;
+        $data['inner_width'] = $data['block_size'] * $data['block_count'];
+        $data['inner_height'] = $data['block_size'] * $data['block_count'];
+        $data['outer_width'] = $qrCode->getSize() + 2 * $qrCode->getMargin();
+        $data['outer_height'] = $qrCode->getSize() + 2 * $qrCode->getMargin();
+        $data['margin_left'] = ($data['outer_width'] - $data['inner_width']) / 2;
         if ($qrCode->getRoundBlockSize()) {
-            $this->data['margin_left'] = intval(floor($this->data['margin_left']));
+            $data['margin_left'] = intval(floor($data['margin_left']));
         }
-        $this->data['margin_right'] = $this->data['outer_width'] - $this->data['inner_width'] - $this->data['margin_left'];
+        $data['margin_right'] = $data['outer_width'] - $data['inner_width'] - $data['margin_left'];
 
-        return $this->data;
+        return $data;
     }
 
     public function writeDataUri(QrCodeInterface $qrCode): string
