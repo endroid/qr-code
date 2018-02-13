@@ -27,7 +27,7 @@ abstract class AbstractWriter implements WriterInterface
             $row = $row->toArray();
         }
 
-        $data['matrix'] = $matrix;
+        $data = ['matrix' => $matrix];
         $data['block_count'] = count($matrix[0]);
         $data['block_size'] = $qrCode->getSize() / $data['block_count'];
         if ($qrCode->getRoundBlockSize()) {
