@@ -33,7 +33,7 @@ class WriterRegistry implements WriterRegistryInterface
             new DebugWriter(),
             new EpsWriter(),
             new PngWriter(),
-            new SvgWriter()
+            new SvgWriter(),
         ]);
 
         $this->setDefaultWriter('png');
