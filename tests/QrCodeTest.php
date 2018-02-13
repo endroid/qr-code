@@ -12,6 +12,7 @@ namespace Endroid\QrCode\Tests;
 use Endroid\QrCode\Factory\QrCodeFactory;
 use Endroid\QrCode\QrCode;
 use PHPUnit\Framework\TestCase;
+use QrReader;
 
 class QrCodeTest extends TestCase
 {
@@ -28,12 +29,14 @@ class QrCodeTest extends TestCase
             '有限公司',
         ];
 
+        $qrCode = new QrCode();
+        $qrCode->setSize(300);
         foreach ($messages as $message) {
-            $qrCode = new QrCode($message);
-            $qrCode->setSize(300);
-            $qrCode->setValidateResult(true);
+            $qrCode->setText($message);
             $pngData = $qrCode->writeString();
             $this->assertTrue(is_string($pngData));
+            $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
+            $this->assertEquals($message, $reader->text());
         }
     }
 
@@ -48,11 +51,13 @@ class QrCodeTest extends TestCase
 
         $pngData = $qrCode->writeString();
         $this->assertTrue(is_string($pngData));
+        $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
+        $this->assertEquals('QR Code', $reader->text());
     }
 
     public function testWriteQrCode(): void
     {
-        $qrCode = new QrCode('QrCode');
+        $qrCode = new QrCode('QR Code');
 
         $qrCode->setWriterByName('binary');
         $binData = $qrCode->writeString();
@@ -84,7 +89,7 @@ class QrCodeTest extends TestCase
         $size = 400;
         $margin = 10;
 
-        $qrCode = new QrCode('QrCode');
+        $qrCode = new QrCode('QR Code');
         $qrCode->setSize($size);
         $qrCode->setMargin($margin);
 
@@ -97,20 +102,22 @@ class QrCodeTest extends TestCase
 
     public function testSetLabel(): void
     {
-        $qrCode = new QrCode('QrCode');
+        $qrCode = new QrCode('QR Code');
         $qrCode->setSize(300);
         $qrCode->setLabel('Scan the code', 15);
 
         $pngData = $qrCode->writeString();
         $this->assertTrue(is_string($pngData));
+        $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
+        $this->assertEquals('QR Code', $reader->text());
     }
 
     public function testSetLogo(): void
     {
-        $qrCode = new QrCode('QrCode');
-        $qrCode->setSize(400);
+        $qrCode = new QrCode('QR Code');
+        $qrCode->setSize(500);
         $qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
-        $qrCode->setLogoWidth(150);
+        $qrCode->setLogoWidth(100);
         $qrCode->setValidateResult(true);
 
         $pngData = $qrCode->writeString();
@@ -121,7 +128,7 @@ class QrCodeTest extends TestCase
     {
         $filename = __DIR__.'/output/qr-code.png';
 
-        $qrCode = new QrCode('QrCode');
+        $qrCode = new QrCode('QR Code');
         $qrCode->writeFile($filename);
 
         $image = imagecreatefromstring(file_get_contents($filename));
