@@ -77,8 +77,11 @@ of quality.
  
 The readability of a QR code is primarily determined by the size, the input
 length, the error correction level and any possible logo over the image so you
-can tweak these parameters if you are looking for optimal results. Take note
-that the validator can consume quite amount of additional resources.
+can tweak these parameters if you are looking for optimal results. You can also
+check $qrCode->getRoundBlockSize() value to see if block dimensions are rounded
+so that the image is more sharp and readable.
+
+Take note that the validator can consume quite amount of additional resources.
 
 ## Symfony integration
 
