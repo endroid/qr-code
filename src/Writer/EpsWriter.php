@@ -21,9 +21,9 @@ class EpsWriter extends AbstractWriter
         $epsData[] = '%!PS-Adobe-3.0 EPSF-3.0';
         $epsData[] = '%%BoundingBox: 0 0 '.$data['outer_width'].' '.$data['outer_height'];
         $epsData[] = '/F { rectfill } def';
-        $epsData[] = ($qrCode->getBackgroundColor()['r'] / 100).' '.($qrCode->getBackgroundColor()['g'] / 100).' '.($qrCode->getBackgroundColor()['b'] / 100).' setrgbcolor';
+        $epsData[] = number_format($qrCode->getBackgroundColor()['r'] / 100, 2, '.', ',').' '.number_format($qrCode->getBackgroundColor()['g'] / 100, 2, '.', ',').' '.number_format($qrCode->getBackgroundColor()['b'] / 100, 2, '.', ',').' setrgbcolor';
         $epsData[] = '0 0 '.$data['outer_width'].' '.$data['outer_height'].' F';
-        $epsData[] = ($qrCode->getForegroundColor()['r'] / 100).' '.($qrCode->getForegroundColor()['g'] / 100).' '.($qrCode->getForegroundColor()['b'] / 100).' setrgbcolor';
+        $epsData[] = number_format($qrCode->getForegroundColor()['r'] / 100, 2, '.', ',').' '.number_format($qrCode->getForegroundColor()['g'] / 100, 2, '.', ',').' '.number_format($qrCode->getForegroundColor()['b'] / 100, 2, '.', ',').' setrgbcolor';
 
         foreach ($data['matrix'] as $row => $values) {
             foreach ($values as $column => $value) {
