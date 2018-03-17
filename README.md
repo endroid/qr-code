@@ -12,7 +12,7 @@
 This library helps you generate QR codes in a jiffy. Makes use of [bacon/bacon-qr-code](https://github.com/Bacon/BaconQrCode)
 to generate the matrix and [khanamiryan/qrcode-detector-decoder](https://github.com/khanamiryan/php-qrcode-detector-decoder)
 for validating generated QR codes. Further extended with Twig extensions, generation routes, a factory and a
-Symfony bundle for easy installation and configuration in your favorite Framework.
+Symfony bundle for easy installation and configuration.
 
 ## Installation
 
