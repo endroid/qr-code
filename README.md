@@ -9,7 +9,10 @@
 [![License](http://img.shields.io/packagist/l/endroid/qr-code.svg)](https://packagist.org/packages/endroid/qr-code)
 [![Donate](https://img.shields.io/badge/donate-paypal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGH86QN825TWN)
 
-This library helps you generate QR codes in a jiffy.
+This library helps you generate QR codes in a jiffy. Makes use of [bacon/bacon-qr-code](https://github.com/Bacon/BaconQrCode)
+to generate the matrix and [khanamiryan/qrcode-detector-decoder](https://github.com/khanamiryan/php-qrcode-detector-decoder)
+for validating generated QR codes. Further extended with Twig extensions, generation routes, a factory and a
+Symfony bundle for easy installation and configuration in your favorite Framework.
 
 ## Installation
 
