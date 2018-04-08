@@ -8,8 +8,7 @@
     "authors": [
         {
             "name": "Jeroen van den Enden",
-            "email": "info@endroid.nl",
-            "homepage": "https://endroid.nl/"
+            "email": "info@endroid.nl"
         }
     ],
     "require": {
