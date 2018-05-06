@@ -13,7 +13,7 @@ use Endroid\QrCode\Exception\MissingFunctionException;
 use Endroid\QrCode\Exception\ValidationException;
 use Endroid\QrCode\LabelAlignment;
 use Endroid\QrCode\QrCodeInterface;
-use QrReader;
+use Zxing\QrReader;
 
 class PngWriter extends AbstractWriter
 {

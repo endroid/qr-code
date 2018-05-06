@@ -16,7 +16,7 @@
         "ext-gd": "*",
         "bacon/bacon-qr-code": "^1.0.3",
         "endroid/installer": "^1.0.3",
-        "khanamiryan/qrcode-detector-decoder": "1.0",
+        "khanamiryan/qrcode-detector-decoder": "^1.0.2",
         "myclabs/php-enum": "^1.5",
         "symfony/options-resolver": "^2.7|^3.0|^4.0",
         "symfony/property-access": "^2.7|^3.0|^4.0"

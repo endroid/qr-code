@@ -12,7 +12,7 @@ namespace Endroid\QrCode\Tests;
 use Endroid\QrCode\Factory\QrCodeFactory;
 use Endroid\QrCode\QrCode;
 use PHPUnit\Framework\TestCase;
-use QrReader;
+use Zxing\QrReader;
 
 class QrCodeTest extends TestCase
 {
