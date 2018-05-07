@@ -159,7 +159,7 @@ class PngWriter extends AbstractWriter
 
     public static function getContentType(): string
     {
-        return IMAGETYPE_PNG;
+        return 'image/png';
     }
 
     public static function getSupportedExtensions(): array
