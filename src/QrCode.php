@@ -165,7 +165,7 @@ class QrCode implements QrCodeInterface
         $this->logoPath = $logoPath;
     }
 
-    public function getLogoPath(): ?string
+    public function getLogoPath()
     {
         return $this->logoPath;
     }
@@ -175,7 +175,7 @@ class QrCode implements QrCodeInterface
         $this->logoWidth = $logoWidth;
     }
 
-    public function getLogoWidth(): ?int
+    public function getLogoWidth()
     {
         return $this->logoWidth;
     }
@@ -201,7 +201,7 @@ class QrCode implements QrCodeInterface
         }
     }
 
-    public function getLabel(): ?string
+    public function getLabel()
     {
         return $this->label;
     }
@@ -211,7 +211,7 @@ class QrCode implements QrCodeInterface
         $this->labelFontSize = $labelFontSize;
     }
 
-    public function getLabelFontSize(): ?int
+    public function getLabelFontSize()
     {
         return $this->labelFontSize;
     }
@@ -227,7 +227,7 @@ class QrCode implements QrCodeInterface
         $this->labelFontPath = $labelFontPath;
     }
 
-    public function getLabelFontPath(): ?string
+    public function getLabelFontPath()
     {
         return $this->labelFontPath;
     }
@@ -237,7 +237,7 @@ class QrCode implements QrCodeInterface
         $this->labelAlignment = new LabelAlignment($labelAlignment);
     }
 
-    public function getLabelAlignment(): ?string
+    public function getLabelAlignment()
     {
         return $this->labelAlignment->getValue();
     }
@@ -247,7 +247,7 @@ class QrCode implements QrCodeInterface
         $this->labelMargin = array_merge($this->labelMargin, $labelMargin);
     }
 
-    public function getLabelMargin(): ?array
+    public function getLabelMargin()
     {
         return $this->labelMargin;
     }
