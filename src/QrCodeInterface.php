@@ -27,19 +27,19 @@ interface QrCodeInterface
 
     public function getErrorCorrectionLevel(): string;
 
-    public function getLogoPath(): ?string;
+    public function getLogoPath();
 
-    public function getLogoWidth(): ?int;
+    public function getLogoWidth();
 
-    public function getLabel(): ?string;
+    public function getLabel();
 
-    public function getLabelFontPath(): ?string;
+    public function getLabelFontPath();
 
-    public function getLabelFontSize(): ?int;
+    public function getLabelFontSize();
 
-    public function getLabelAlignment(): ?string;
+    public function getLabelAlignment();
 
-    public function getLabelMargin(): ?array;
+    public function getLabelMargin();
 
     public function getValidateResult(): bool;
 
