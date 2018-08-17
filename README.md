@@ -56,6 +56,7 @@ $qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
 $qrCode->setLogoWidth(150);
 $qrCode->setRoundBlockSize(true);
 $qrCode->setValidateResult(false);
+$qrCode->setWriterOptions(['exclude_xml_declaration' => true]);
 
 // Directly output the QR code
 header('Content-Type: '.$qrCode->getContentType());

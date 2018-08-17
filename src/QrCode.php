@@ -56,6 +56,7 @@ class QrCode implements QrCodeInterface
 
     private $writerRegistry;
     private $writer;
+    private $writerOptions = [];
     private $validateResult = false;
 
     public function __construct(string $text = '')
@@ -277,6 +278,16 @@ class QrCode implements QrCodeInterface
         }
 
         return $this->writerRegistry->getDefaultWriter();
+    }
+
+    public function setWriterOptions(array $writerOptions): void
+    {
+        $this->writerOptions = $writerOptions;
+    }
+
+    public function getWriterOptions(): array
+    {
+        return $this->writerOptions;
     }
 
     private function createWriterRegistry()

@@ -18,10 +18,7 @@ class SvgWriter extends AbstractWriter
     {
         $data = $this->getData($qrCode);
 
-        $svg = new SimpleXMLElement(
-            '<?xml version="1.0" encoding="UTF-8"?>'
-            .'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"/>'
-        );
+        $svg = new SimpleXMLElement('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"/>');
         $svg->addAttribute('version', '1.1');
         $svg->addAttribute('width', $data['inner_width'].'px');
         $svg->addAttribute('height', $data['inner_height'].'px');
@@ -56,7 +53,14 @@ class SvgWriter extends AbstractWriter
             }
         }
 
-        return $svg->asXML();
+        $xml = $svg->asXML();
+
+        $options = $qrCode->getWriterOptions();
+        if (isset($options['exclude_xml_declaration']) && $options['exclude_xml_declaration']) {
+            $xml = str_replace("<?xml version=\"1.0\"?>\n", '', $xml);
+        }
+
+        return $xml;
     }
 
     private function getOpacity(int $alpha): float
