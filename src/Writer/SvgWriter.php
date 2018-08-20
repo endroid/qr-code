@@ -16,6 +16,7 @@ class SvgWriter extends AbstractWriter
 {
     public function writeString(QrCodeInterface $qrCode): string
     {
+
         $data = $this->getData($qrCode);
 
         $svg = new SimpleXMLElement('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"/>');
@@ -24,7 +25,8 @@ class SvgWriter extends AbstractWriter
         $svg->addAttribute('height', $data['inner_height'].'px');
         $svg->addAttribute('viewBox', '0 0 '.$data['outer_width'].' '.$data['outer_height']);
         $svg->addChild('defs');
-
+        
+        		
         // Block definition
         $blockDefinition = $svg->defs->addChild('rect');
         $blockDefinition->addAttribute('id', 'block');
@@ -52,14 +54,30 @@ class SvgWriter extends AbstractWriter
                 }
             }
         }
-
+        
+		//image
+	    if ($qrCode->getLogoPath()) {
+		    
+		    #this results in: $image->image_data $image->image_height and $image->imagewidth
+            $image = $this->resizeAndGetLogo($qrCode->getLogoPath(), $qrCode->getLogoWidth());
+            
+            # create new block
+	        $blockDefinition = $svg->addChild('image');
+	        $blockDefinition->addAttribute('width', $image->image_width);
+	        $blockDefinition->addAttribute('height', $image->image_height);
+	        
+	        $blockDefinition->addAttribute('x', (($data['outer_width']-$data['margin_right'])/2) - (($image->image_width/2)-10));
+	        $blockDefinition->addAttribute('y', (($data['outer_height']-$data['margin_right'])/2) - (($image->image_height/2)-10));
+	        
+	        $blockDefinition->addAttribute('xlink:href', $image->image_data);
+        }
+        
         $xml = $svg->asXML();
 
         $options = $qrCode->getWriterOptions();
         if (isset($options['exclude_xml_declaration']) && $options['exclude_xml_declaration']) {
             $xml = str_replace("<?xml version=\"1.0\"?>\n", '', $xml);
         }
-
         return $xml;
     }
 
@@ -84,4 +102,60 @@ class SvgWriter extends AbstractWriter
     {
         return 'svg';
     }
+    
+	private function resizeAndGetLogo(string $logoPath, int $logoWidth = null)
+    {
+	    
+	    if (!$this->isSvg($logoPath)) {
+		    
+		    $logoWidth = $logoWidth*2;
+		    
+	        $logoImage = imagecreatefromstring(file_get_contents($logoPath));
+	
+	        $logoSourceWidth = imagesx($logoImage);
+	        $logoSourceHeight = imagesy($logoImage);
+	        
+			$ratio = $logoSourceWidth/$logoSourceHeight;		
+			
+		    $width = $logoWidth/$ratio;
+		    $height = $logoWidth;
+		    
+			$dst = imagecreatetruecolor($width,$height);
+			
+			//handle PNG transparancy
+			imagealphablending($dst, false);
+			imagesavealpha($dst,true);
+			$transparent = imagecolorallocatealpha($dst, 255, 255, 255, 127);
+			imagefilledrectangle($dst, 0, 0, $width, $height, $transparent);
+			
+			//create the image
+			imagecopyresampled($dst,$logoImage,0,0,0,0,$width,$height,$logoSourceWidth,$logoSourceHeight);
+			
+			//buffer the image and output as PNG file
+			ob_start();
+			imagepng($dst);
+			// Capture the output
+			$imagedata = ob_get_contents();
+			// Clear the output buffer
+			ob_end_clean();	
+			
+			$image_data = "data:image/png;base64,".base64_encode($imagedata);        
+        } else {
+	        $image_data = "data:image/svg+xml;base64,".base64_encode(file_get_contents($logoPath));
+	        $width = $logoWidth*2;
+	        $height = $logoWidth*2;
+        }
+        
+        return (object)[
+	        "image_data" => $image_data,
+	        "image_width" => $width/2,
+	        "image_height" => $height/2
+        ];
+
+    }
+    
+	public function isSvg($filePath)
+	{
+	    return (mime_content_type($filePath) === 'image/svg+xml');
+	}        
 }
