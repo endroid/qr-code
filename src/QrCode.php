@@ -42,6 +42,7 @@ class QrCode implements QrCodeInterface
 
     private $logoPath;
     private $logoWidth;
+    private $logoHeight;
 
     private $label;
     private $labelFontSize = 16;
@@ -171,14 +172,20 @@ class QrCode implements QrCodeInterface
         return $this->logoPath;
     }
 
-    public function setLogoWidth(int $logoWidth): void
+    public function setLogoSize(int $logoWidth, int $logoHeight = null): void
     {
         $this->logoWidth = $logoWidth;
+        $this->logoHeight = $logoHeight;
     }
 
     public function getLogoWidth(): ?int
     {
         return $this->logoWidth;
+    }
+
+    public function getLogoHeight(): ?int
+    {
+        return $this->logoHeight;
     }
 
     public function setLabel(string $label, int $labelFontSize = null, string $labelFontPath = null, string $labelAlignment = null, array $labelMargin = null): void

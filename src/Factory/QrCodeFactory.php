@@ -32,6 +32,7 @@ class QrCodeFactory implements QrCodeFactoryInterface
         'error_correction_level',
         'logo_path',
         'logo_width',
+        'logo_height',
         'label',
         'label_font_size',
         'label_font_path',
