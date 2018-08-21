@@ -178,6 +178,11 @@ class QrCode implements QrCodeInterface
         $this->logoHeight = $logoHeight;
     }
 
+    public function setLogoWidth(int $logoWidth): void
+    {
+        $this->logoWidth = $logoWidth;
+    }
+
     public function getLogoWidth(): ?int
     {
         return $this->logoWidth;
