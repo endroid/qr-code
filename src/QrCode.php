@@ -178,19 +178,19 @@ class QrCode implements QrCodeInterface
         $this->logoHeight = $logoHeight;
     }
 
-    /**
-     * @deprecated
-     */
     public function setLogoWidth(int $logoWidth): void
     {
-        trigger_error('Method ' . __METHOD__ . ' is deprecated: use setLogoSize', E_USER_DEPRECATED);
-
         $this->logoWidth = $logoWidth;
     }
 
     public function getLogoWidth(): ?int
     {
         return $this->logoWidth;
+    }
+
+    public function setLogoHeight(int $logoHeight): void
+    {
+        $this->logoHeight = $logoHeight;
     }
 
     public function getLogoHeight(): ?int
