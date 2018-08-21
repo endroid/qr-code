@@ -76,19 +76,8 @@ class SvgWriter extends AbstractWriter
 
     private function addLogo(SimpleXMLElement $svg, int $imageWidth, int $imageHeight, string $logoPath, int $logoWidth, int $logoHeight = null): void
     {
-//        $logoPath = '/var/www/html/application/public/flag.svg';
-
-        if (!function_exists('mime_content_type')) {
-            throw new MissingExtensionException('You need the ext-fileinfo extension to determine the mime type');
-        }
-
-        $mimeType = mime_content_type($logoPath);
+        $mimeType = $this->getMimeType($logoPath);
         $imageData = file_get_contents($logoPath);
-
-        // Passing mime type image/svg results in invisible images
-        if ($mimeType === 'image/svg') {
-            $mimeType = 'image/svg+xml';
-        }
 
         if ($logoHeight === null) {
             if ($mimeType === 'image/svg+xml') {
@@ -96,7 +85,7 @@ class SvgWriter extends AbstractWriter
             } else {
                 $logoImage = imagecreatefromstring($imageData);
                 $aspectRatio = $logoWidth / imagesx($logoImage);
-                $logoHeight = imagesy($logoImage) * $aspectRatio;
+                $logoHeight = intval(imagesy($logoImage) * $aspectRatio);
             }
         }
 
@@ -107,6 +96,22 @@ class SvgWriter extends AbstractWriter
         $imageDefinition->addAttribute('height', $logoHeight);
         $imageDefinition->addAttribute('preserveAspectRatio', 'none');
         $imageDefinition->addAttribute('xlink:href', 'data:'.$mimeType.';base64,'.base64_encode($imageData));
+    }
+
+    private function getMimeType(string $path): string
+    {
+        if (!function_exists('mime_content_type')) {
+            throw new MissingExtensionException('You need the ext-fileinfo extension to determine the mime type');
+        }
+
+        $mimeType = mime_content_type($path);
+
+        // Passing mime type image/svg results in invisible images
+        if ($mimeType === 'image/svg') {
+            return 'image/svg+xml';
+        }
+
+        return $mimeType;
     }
 
     private function getOpacity(int $alpha): float

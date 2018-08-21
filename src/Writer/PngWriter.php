@@ -24,7 +24,7 @@ class PngWriter extends AbstractWriter
         $image = $this->createImage($data, $qrCode);
 
         if ($qrCode->getLogoPath()) {
-            $image = $this->addLogo($image, $qrCode->getLogoPath(), $qrCode->getLogoWidth());
+            $image = $this->addLogo($image, $qrCode->getLogoPath(), $qrCode->getLogoWidth(), $qrCode->getLogoHeight());
         }
 
         if ($qrCode->getLabel()) {
@@ -84,24 +84,25 @@ class PngWriter extends AbstractWriter
         return $image;
     }
 
-    private function addLogo($sourceImage, string $logoPath, int $logoWidth = null)
+    private function addLogo($sourceImage, string $logoPath, int $logoWidth = null, int $logoHeight = null)
     {
         $logoImage = imagecreatefromstring(file_get_contents($logoPath));
         $logoSourceWidth = imagesx($logoImage);
         $logoSourceHeight = imagesy($logoImage);
-        $logoTargetWidth = $logoWidth;
 
-        if (null === $logoTargetWidth) {
-            $logoTargetWidth = $logoSourceWidth;
-            $logoTargetHeight = $logoSourceHeight;
-        } else {
-            $scale = $logoTargetWidth / $logoSourceWidth;
-            $logoTargetHeight = intval($scale * imagesy($logoImage));
+        if (null === $logoWidth) {
+            $logoWidth = $logoSourceWidth;
         }
 
-        $logoX = imagesx($sourceImage) / 2 - $logoTargetWidth / 2;
-        $logoY = imagesy($sourceImage) / 2 - $logoTargetHeight / 2;
-        imagecopyresampled($sourceImage, $logoImage, $logoX, $logoY, 0, 0, $logoTargetWidth, $logoTargetHeight, $logoSourceWidth, $logoSourceHeight);
+        if (null === $logoHeight) {
+            $aspectRatio = $logoWidth / $logoSourceWidth;
+            $logoHeight = intval($logoSourceHeight * $aspectRatio);
+        }
+
+        $logoX = imagesx($sourceImage) / 2 - $logoWidth / 2;
+        $logoY = imagesy($sourceImage) / 2 - $logoHeight / 2;
+
+        imagecopyresampled($sourceImage, $logoImage, $logoX, $logoY, 0, 0, $logoWidth, $logoHeight, $logoSourceWidth, $logoSourceHeight);
 
         return $sourceImage;
     }
