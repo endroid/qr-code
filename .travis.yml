@@ -24,4 +24,5 @@ script:
   - vendor/bin/phpunit
 
 notifications:
-  email: info@endroid.nl
+  email:
+    - info@endroid.nl
