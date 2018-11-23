@@ -37,26 +37,26 @@ class SvgWriter extends AbstractWriter
         // Block definition
         $blockDefinition = $svg->defs->addChild('rect');
         $blockDefinition->addAttribute('id', 'block');
-        $blockDefinition->addAttribute('width', $data['block_size']);
-        $blockDefinition->addAttribute('height', $data['block_size']);
+        $blockDefinition->addAttribute('width', strval($data['block_size']));
+        $blockDefinition->addAttribute('height', strval($data['block_size']));
         $blockDefinition->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getForegroundColor()['r'], $qrCode->getForegroundColor()['g'], $qrCode->getForegroundColor()['b']));
-        $blockDefinition->addAttribute('fill-opacity', $this->getOpacity($qrCode->getForegroundColor()['a']));
+        $blockDefinition->addAttribute('fill-opacity', strval($this->getOpacity($qrCode->getForegroundColor()['a'])));
 
         // Background
         $background = $svg->addChild('rect');
-        $background->addAttribute('x', 0);
-        $background->addAttribute('y', 0);
-        $background->addAttribute('width', $data['outer_width']);
-        $background->addAttribute('height', $data['outer_height']);
+        $background->addAttribute('x', '0');
+        $background->addAttribute('y', '0');
+        $background->addAttribute('width', strval($data['outer_width']));
+        $background->addAttribute('height', strval($data['outer_height']));
         $background->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getBackgroundColor()['r'], $qrCode->getBackgroundColor()['g'], $qrCode->getBackgroundColor()['b']));
-        $background->addAttribute('fill-opacity', $this->getOpacity($qrCode->getBackgroundColor()['a']));
+        $background->addAttribute('fill-opacity', strval($this->getOpacity($qrCode->getBackgroundColor()['a'])));
 
         foreach ($data['matrix'] as $row => $values) {
             foreach ($values as $column => $value) {
                 if (1 === $value) {
                     $block = $svg->addChild('use');
-                    $block->addAttribute('x', $data['margin_left'] + $data['block_size'] * $column);
-                    $block->addAttribute('y', $data['margin_left'] + $data['block_size'] * $row);
+                    $block->addAttribute('x', strval($data['margin_left'] + $data['block_size'] * $column));
+                    $block->addAttribute('y', strval($data['margin_left'] + $data['block_size'] * $row));
                     $block->addAttribute('xlink:href', '#block', 'http://www.w3.org/1999/xlink');
                 }
             }
