@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * (c) Jeroen van den Enden <info@endroid.nl>
  *
@@ -81,6 +83,7 @@ class PngWriter extends AbstractWriter
         imagefill($image, 0, 0, $backgroundColor);
         imagecopyresampled($image, $baseImage, $data['margin_left'], $data['margin_left'], 0, 0, $data['inner_width'], $data['inner_height'], imagesx($baseImage), imagesy($baseImage));
         imagesavealpha($image, true);
+
         return $image;
     }
 

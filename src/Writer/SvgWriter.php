@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * (c) Jeroen van den Enden <info@endroid.nl>
  *
@@ -79,8 +81,8 @@ class SvgWriter extends AbstractWriter
         $mimeType = $this->getMimeType($logoPath);
         $imageData = file_get_contents($logoPath);
 
-        if ($logoHeight === null) {
-            if ($mimeType === 'image/svg+xml') {
+        if (null === $logoHeight) {
+            if ('image/svg+xml' === $mimeType) {
                 throw new MissingLogoHeightException('SVG Logos require an explicit height set via setLogoSize($width, $height)');
             } else {
                 $logoImage = imagecreatefromstring($imageData);
@@ -107,7 +109,7 @@ class SvgWriter extends AbstractWriter
         $mimeType = mime_content_type($path);
 
         // Passing mime type image/svg results in invisible images
-        if ($mimeType === 'image/svg') {
+        if ('image/svg' === $mimeType) {
             return 'image/svg+xml';
         }
 
