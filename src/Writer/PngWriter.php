@@ -105,7 +105,7 @@ class PngWriter extends AbstractWriter
         $logoX = imagesx($sourceImage) / 2 - $logoWidth / 2;
         $logoY = imagesy($sourceImage) / 2 - $logoHeight / 2;
 
-        imagecopyresampled($sourceImage, $logoImage, $logoX, $logoY, 0, 0, $logoWidth, $logoHeight, $logoSourceWidth, $logoSourceHeight);
+        imagecopyresampled($sourceImage, $logoImage, (int)$logoX, (int)$logoY, 0, 0, $logoWidth, $logoHeight, $logoSourceWidth, $logoSourceHeight);
 
         return $sourceImage;
     }
