@@ -92,10 +92,10 @@ class SvgWriter extends AbstractWriter
         }
 
         $imageDefinition = $svg->addChild('image');
-        $imageDefinition->addAttribute('x', $imageWidth / 2 - $logoWidth / 2);
-        $imageDefinition->addAttribute('y', $imageHeight / 2 - $logoHeight / 2);
-        $imageDefinition->addAttribute('width', $logoWidth);
-        $imageDefinition->addAttribute('height', $logoHeight);
+        $imageDefinition->addAttribute('x', strval($imageWidth / 2 - $logoWidth / 2));
+        $imageDefinition->addAttribute('y', strval($imageHeight / 2 - $logoHeight / 2));
+        $imageDefinition->addAttribute('width', strval($logoWidth));
+        $imageDefinition->addAttribute('height', strval($logoHeight));
         $imageDefinition->addAttribute('preserveAspectRatio', 'none');
         $imageDefinition->addAttribute('xlink:href', 'data:'.$mimeType.';base64,'.base64_encode($imageData));
     }

@@ -60,6 +60,8 @@ class QrCodeTest extends TestCase
     public function testWriteQrCode(): void
     {
         $qrCode = new QrCode('QR Code');
+        $qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
+        $qrCode->setLogoWidth(100);
 
         $qrCode->setWriterByName('binary');
         $binData = $qrCode->writeString();
