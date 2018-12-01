@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer;
 
-use BaconQrCode\Common\ErrorCorrectionLevel;
 use BaconQrCode\Encoder\Encoder;
 use Endroid\QrCode\QrCodeInterface;
 
@@ -19,12 +18,12 @@ abstract class AbstractWriter implements WriterInterface
 {
     protected function getData(QrCodeInterface $qrCode): array
     {
-        $name = strtoupper(substr($qrCode->getErrorCorrectionLevel(), 0, 1));
-        $errorCorrectionLevel = constant('BaconQrCode\Common\ErrorCorrectionLevel::'.$name);
+        $baconErrorCorrectionLevel = $qrCode->getErrorCorrectionLevel()->toBaconErrorCorrectionLevel();
 
-        $baconQrCode = Encoder::encode($qrCode->getText(), new ErrorCorrectionLevel($errorCorrectionLevel), $qrCode->getEncoding());
+        $baconQrCode = Encoder::encode($qrCode->getText(), $baconErrorCorrectionLevel, $qrCode->getEncoding());
 
         $matrix = $baconQrCode->getMatrix()->getArray()->toArray();
+
         foreach ($matrix as &$row) {
             $row = $row->toArray();
         }

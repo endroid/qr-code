@@ -148,14 +148,14 @@ class QrCode implements QrCodeInterface
         return $this->roundBlockSize;
     }
 
-    public function setErrorCorrectionLevel(string $errorCorrectionLevel): void
+    public function setErrorCorrectionLevel(ErrorCorrectionLevel $errorCorrectionLevel): void
     {
-        $this->errorCorrectionLevel = new ErrorCorrectionLevel($errorCorrectionLevel);
+        $this->errorCorrectionLevel = $errorCorrectionLevel;
     }
 
-    public function getErrorCorrectionLevel(): string
+    public function getErrorCorrectionLevel(): ErrorCorrectionLevel
     {
-        return $this->errorCorrectionLevel->getValue();
+        return $this->errorCorrectionLevel;
     }
 
     public function setLogoPath(string $logoPath): void
