@@ -48,7 +48,7 @@ $qrCode->setSize(300);
 $qrCode->setWriterByName('png');
 $qrCode->setMargin(10);
 $qrCode->setEncoding('UTF-8');
-$qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH);
+$qrCode->setErrorCorrectionLevel(new ErrorCorrectionLevel(ErrorCorrectionLevel::HIGH));
 $qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
 $qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
 $qrCode->setLabel('Scan the code', 16, __DIR__.'/../assets/fonts/noto_sans.otf', LabelAlignment::CENTER);
