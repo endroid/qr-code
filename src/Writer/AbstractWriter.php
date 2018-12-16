@@ -16,37 +16,6 @@ use Endroid\QrCode\QrCodeInterface;
 
 abstract class AbstractWriter implements WriterInterface
 {
-    protected function getData(QrCodeInterface $qrCode): array
-    {
-        $baconErrorCorrectionLevel = $qrCode->getErrorCorrectionLevel()->toBaconErrorCorrectionLevel();
-
-        $baconQrCode = Encoder::encode($qrCode->getText(), $baconErrorCorrectionLevel, $qrCode->getEncoding());
-
-        $matrix = $baconQrCode->getMatrix()->getArray()->toArray();
-
-        foreach ($matrix as &$row) {
-            $row = $row->toArray();
-        }
-
-        $data = ['matrix' => $matrix];
-        $data['block_count'] = count($matrix[0]);
-        $data['block_size'] = $qrCode->getSize() / $data['block_count'];
-        if ($qrCode->getRoundBlockSize()) {
-            $data['block_size'] = intval(floor($data['block_size']));
-        }
-        $data['inner_width'] = $data['block_size'] * $data['block_count'];
-        $data['inner_height'] = $data['block_size'] * $data['block_count'];
-        $data['outer_width'] = $qrCode->getSize() + 2 * $qrCode->getMargin();
-        $data['outer_height'] = $qrCode->getSize() + 2 * $qrCode->getMargin();
-        $data['margin_left'] = ($data['outer_width'] - $data['inner_width']) / 2;
-        if ($qrCode->getRoundBlockSize()) {
-            $data['margin_left'] = intval(floor($data['margin_left']));
-        }
-        $data['margin_right'] = $data['outer_width'] - $data['inner_width'] - $data['margin_left'];
-
-        return $data;
-    }
-
     public function writeDataUri(QrCodeInterface $qrCode): string
     {
         $dataUri = 'data:'.$this->getContentType().';base64,'.base64_encode($this->writeString($qrCode));

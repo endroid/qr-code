@@ -58,4 +58,6 @@ interface QrCodeInterface
     public function writeDataUri(): string;
 
     public function writeFile(string $path): void;
+
+    public function getData(): array;
 }

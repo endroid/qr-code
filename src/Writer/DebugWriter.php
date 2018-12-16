@@ -20,11 +20,12 @@ class DebugWriter extends AbstractWriter
     public function writeString(QrCodeInterface $qrCode): string
     {
         $data = [];
+        $skip = ['getData'];
 
         $reflectionClass = new ReflectionClass($qrCode);
         foreach ($reflectionClass->getMethods() as $method) {
             $methodName = $method->getShortName();
-            if (0 === strpos($methodName, 'get') && 0 == $method->getNumberOfParameters()) {
+            if (0 === strpos($methodName, 'get') && 0 == $method->getNumberOfParameters() && !in_array($methodName, $skip)) {
                 $value = $qrCode->{$methodName}();
                 if (is_array($value) && !is_object(current($value))) {
                     $value = '['.implode(', ', $value).']';

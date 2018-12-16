@@ -21,9 +21,7 @@ class PngWriter extends AbstractWriter
 {
     public function writeString(QrCodeInterface $qrCode): string
     {
-        $data = $this->getData($qrCode);
-
-        $image = $this->createImage($data, $qrCode);
+        $image = $this->createImage($qrCode->getData(), $qrCode);
 
         if ($qrCode->getLogoPath()) {
             $image = $this->addLogo($image, $qrCode->getLogoPath(), $qrCode->getLogoWidth(), $qrCode->getLogoHeight());
