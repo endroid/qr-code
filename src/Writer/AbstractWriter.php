@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer;
 
-use BaconQrCode\Encoder\Encoder;
 use Endroid\QrCode\QrCodeInterface;
 
 abstract class AbstractWriter implements WriterInterface
