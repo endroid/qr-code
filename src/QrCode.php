@@ -69,6 +69,8 @@ class QrCode implements QrCodeInterface
 
         $this->errorCorrectionLevel = new ErrorCorrectionLevel(ErrorCorrectionLevel::LOW);
         $this->labelAlignment = new LabelAlignment(LabelAlignment::CENTER);
+
+        $this->createWriterRegistry();
     }
 
     public function setText(string $text): void
@@ -285,10 +287,6 @@ class QrCode implements QrCodeInterface
 
     public function getWriter(string $name = null): WriterInterface
     {
-        if (!$this->writerRegistry instanceof WriterRegistryInterface) {
-            $this->createWriterRegistry();
-        }
-
         if (!is_null($name)) {
             return $this->writerRegistry->getWriter($name);
         }
