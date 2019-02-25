@@ -109,6 +109,10 @@ class QrCode implements QrCodeInterface
             $foregroundColor['a'] = 0;
         }
 
+        foreach ($foregroundColor as &$color) {
+            $color = intval($color);
+        }
+
         $this->foregroundColor = $foregroundColor;
     }
 
@@ -121,6 +125,10 @@ class QrCode implements QrCodeInterface
     {
         if (!isset($backgroundColor['a'])) {
             $backgroundColor['a'] = 0;
+        }
+
+        foreach ($backgroundColor as &$color) {
+            $color = intval($color);
         }
 
         $this->backgroundColor = $backgroundColor;
