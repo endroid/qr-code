@@ -83,7 +83,7 @@ class QrCodeTest extends TestCase
             ['debug', null],
             ['eps', null],
             ['png', 'data:image/png;base64'],
-            ['svg', 'data:image/svg+xml;base64']
+            ['svg', 'data:image/svg+xml;base64'],
         ];
     }
 
@@ -113,7 +113,7 @@ class QrCodeTest extends TestCase
             ['txt', null],
             ['eps', null],
             ['png', 'data:image/png;base64'],
-            ['svg', 'data:image/svg+xml;base64']
+            ['svg', 'data:image/svg+xml;base64'],
         ];
     }
 

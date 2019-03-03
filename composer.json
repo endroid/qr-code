@@ -24,6 +24,9 @@
     "require-dev": {
         "phpunit/phpunit": "^5.7|^6.0"
     },
+    "suggest": {
+        "symfony/http-foundation": "Install if you want to use QrCodeResponse"
+    },
     "autoload": {
         "psr-4": {
             "Endroid\\QrCode\\": "src/"
