@@ -14,7 +14,7 @@ namespace Endroid\QrCode\Response;
 use Endroid\QrCode\QrCodeInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-if (class_exists(Response::class)) {
+if (!class_exists(Response::class)) {
     throw new \Exception('QrCodeResponse requires symfony/http-foundation');
 }
 
