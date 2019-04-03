@@ -249,13 +249,13 @@ class QrCode implements QrCodeInterface
 
     public function setLabelFontPath(string $labelFontPath): void
     {
-        $labelFontPath = realpath($labelFontPath);
+        $resolvedLabelFontPath = realpath($labelFontPath);
 
-        if (!is_file($labelFontPath)) {
+        if (!is_string($resolvedLabelFontPath) || !is_file($resolvedLabelFontPath)) {
             throw new InvalidPathException('Invalid label font path: '.$labelFontPath);
         }
 
-        $this->labelFontPath = $labelFontPath;
+        $this->labelFontPath = $resolvedLabelFontPath;
     }
 
     public function getLabelFontPath(): ?string
