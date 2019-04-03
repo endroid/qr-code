@@ -137,7 +137,7 @@ class QrCodeTest extends TestCase
     {
         $qrCode = new QrCode('QR Code');
         $qrCode->setSize(300);
-        $qrCode->setLabel('Scan the code', 15, 'test');
+        $qrCode->setLabel('Scan the code', 15);
 
         $pngData = $qrCode->writeString();
         $this->assertTrue(is_string($pngData));
