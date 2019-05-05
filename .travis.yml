@@ -1,9 +1,8 @@
 language: php
 
 php:
-  - 7.1
-  - 7.2
-  - 7.3
+  - '7.2'
+  - '7.3'
 
 matrix:
   fast_finish: true
@@ -16,10 +15,10 @@ before_install:
   - composer self-update
 
 install:
-  - composer update --no-interaction --prefer-dist $COMPOSER_FLAGS
+  - composer update --no-interaction --prefer-source $COMPOSER_FLAGS
 
 script:
-  - vendor/bin/phpunit
+  - vendor/bin/test
 
 notifications:
   email:

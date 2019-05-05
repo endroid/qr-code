@@ -37,13 +37,13 @@ interface QrCodeInterface
 
     public function getLabel(): ?string;
 
-    public function getLabelFontPath(): ?string;
+    public function getLabelFontPath(): string;
 
-    public function getLabelFontSize(): ?int;
+    public function getLabelFontSize(): int;
 
-    public function getLabelAlignment(): ?string;
+    public function getLabelAlignment(): string;
 
-    public function getLabelMargin(): ?array;
+    public function getLabelMargin(): array;
 
     public function getValidateResult(): bool;
 

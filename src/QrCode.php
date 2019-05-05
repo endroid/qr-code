@@ -173,7 +173,7 @@ class QrCode implements QrCodeInterface
     {
         $logoPath = realpath($logoPath);
 
-        if (!is_file($logoPath)) {
+        if (false === $logoPath || !is_file($logoPath)) {
             throw new InvalidPathException('Invalid logo path: '.$logoPath);
         }
 
@@ -242,23 +242,23 @@ class QrCode implements QrCodeInterface
         $this->labelFontSize = $labelFontSize;
     }
 
-    public function getLabelFontSize(): ?int
+    public function getLabelFontSize(): int
     {
         return $this->labelFontSize;
     }
 
     public function setLabelFontPath(string $labelFontPath): void
     {
-        $resolvedLabelFontPath = realpath($labelFontPath);
+        $resolvedLabelFontPath = (string) realpath($labelFontPath);
 
-        if (!is_string($resolvedLabelFontPath) || !is_file($resolvedLabelFontPath)) {
+        if (!is_file($resolvedLabelFontPath)) {
             throw new InvalidPathException('Invalid label font path: '.$labelFontPath);
         }
 
         $this->labelFontPath = $resolvedLabelFontPath;
     }
 
-    public function getLabelFontPath(): ?string
+    public function getLabelFontPath(): string
     {
         return $this->labelFontPath;
     }
@@ -268,7 +268,7 @@ class QrCode implements QrCodeInterface
         $this->labelAlignment = new LabelAlignment($labelAlignment);
     }
 
-    public function getLabelAlignment(): ?string
+    public function getLabelAlignment(): string
     {
         return $this->labelAlignment->getValue();
     }
@@ -278,7 +278,7 @@ class QrCode implements QrCodeInterface
         $this->labelMargin = array_merge($this->labelMargin, $labelMargin);
     }
 
-    public function getLabelMargin(): ?array
+    public function getLabelMargin(): array
     {
         return $this->labelMargin;
     }

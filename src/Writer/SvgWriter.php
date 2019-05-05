@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer;
 
+use Endroid\QrCode\Exception\GenerateImageException;
+use Endroid\QrCode\Exception\InvalidLogoException;
 use Endroid\QrCode\Exception\MissingExtensionException;
 use Endroid\QrCode\Exception\MissingLogoHeightException;
 use Endroid\QrCode\Exception\ValidationException;
@@ -62,11 +64,15 @@ class SvgWriter extends AbstractWriter
             }
         }
 
-        if ($qrCode->getLogoPath()) {
+        if (null !== $qrCode->getLogoPath()) {
             $this->addLogo($svg, $data['outer_width'], $data['outer_height'], $qrCode->getLogoPath(), $qrCode->getLogoWidth(), $qrCode->getLogoHeight());
         }
 
         $xml = $svg->asXML();
+
+        if (!is_string($xml)) {
+            throw new GenerateImageException('Unable to save SVG XML');
+        }
 
         $options = $qrCode->getWriterOptions();
         if (isset($options['exclude_xml_declaration']) && $options['exclude_xml_declaration']) {
@@ -76,16 +82,25 @@ class SvgWriter extends AbstractWriter
         return $xml;
     }
 
-    private function addLogo(SimpleXMLElement $svg, int $imageWidth, int $imageHeight, string $logoPath, int $logoWidth, int $logoHeight = null): void
+    private function addLogo(SimpleXMLElement $svg, int $imageWidth, int $imageHeight, string $logoPath, int $logoWidth = null, int $logoHeight = null): void
     {
         $mimeType = $this->getMimeType($logoPath);
         $imageData = file_get_contents($logoPath);
+
+        if (!is_string($imageData)) {
+            throw new InvalidLogoException('Invalid logo at path "'.$logoPath.'"');
+        }
 
         if (null === $logoHeight) {
             if ('image/svg+xml' === $mimeType) {
                 throw new MissingLogoHeightException('SVG Logos require an explicit height set via setLogoSize($width, $height)');
             } else {
                 $logoImage = imagecreatefromstring($imageData);
+
+                if (!is_resource($logoImage)) {
+                    throw new GenerateImageException('Unable to generate image: check your GD installation');
+                }
+
                 $aspectRatio = $logoWidth / imagesx($logoImage);
                 $logoHeight = intval(imagesy($logoImage) * $aspectRatio);
             }
@@ -103,10 +118,14 @@ class SvgWriter extends AbstractWriter
     private function getMimeType(string $path): string
     {
         if (!function_exists('mime_content_type')) {
-            throw new MissingExtensionException('You need the ext-fileinfo extension to determine the mime type');
+            throw new MissingExtensionException('You need the ext-fileinfo extension to determine logo mime type');
         }
 
         $mimeType = mime_content_type($path);
+
+        if (!is_string($mimeType)) {
+            throw new InvalidLogoException('Could not determine mime type');
+        }
 
         // Passing mime type image/svg results in invisible images
         if ('image/svg' === $mimeType) {
