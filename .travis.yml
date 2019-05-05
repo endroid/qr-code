@@ -12,7 +12,7 @@ env:
   - COMPOSER_FLAGS=""
 
 before_install:
-  - composer self-update
+  - curl -sS https://getcomposer.org/installer | php -- --filename=composer
 
 install:
   - composer update --no-interaction --prefer-source $COMPOSER_FLAGS
