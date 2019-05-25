@@ -13,6 +13,11 @@ namespace Endroid\QrCode;
 
 use MyCLabs\Enum\Enum;
 
+/**
+ * @method static LabelAlignment LEFT()
+ * @method static LabelAlignment CENTER()
+ * @method static LabelAlignment RIGHT()
+ */
 class LabelAlignment extends Enum
 {
     const LEFT = 'left';
