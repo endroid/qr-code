@@ -154,7 +154,7 @@ class PngWriter extends AbstractWriter
     }
 
     /**
-     * @param $sourceImage
+     * @param resource $sourceImage
      * @param string $label
      * @param string $labelFontPath
      * @param int $labelFontSize
@@ -162,7 +162,7 @@ class PngWriter extends AbstractWriter
      * @param array $labelMargin
      * @param \Color\Value\ValueInterface $foregroundColor
      * @param \Color\Value\ValueInterface $backgroundColor
-     * @return false|resource
+     * @return resource
      * @throws \Endroid\QrCode\Exception\GenerateImageException
      * @throws \Endroid\QrCode\Exception\MissingFunctionException
      */
