@@ -19,6 +19,14 @@ use Endroid\QrCode\LabelAlignment;
 use Endroid\QrCode\QrCodeInterface;
 use Zxing\QrReader;
 
+/**
+ * Class PngWriter
+ * Outputs the QR as PNG. 
+ * Note that colors with alpha channels like RGBA will not affect the transparency of the image.
+ * The alpha information is getting used for creating the color. For example rgba(255, 255, 255, .5) will return grey.
+ * 
+ * @package Endroid\QrCode\Writer
+ */
 class PngWriter extends AbstractWriter
 {
     public function writeString(QrCodeInterface $qrCode): string
@@ -68,18 +76,20 @@ class PngWriter extends AbstractWriter
 
         $foregroundColor = imagecolorallocatealpha(
             $image, 
-            $qrCode->getForegroundColor()->getRGBA()->getValue('R'), 
-            $qrCode->getForegroundColor()->getRGBA()->getValue('G'), 
-            $qrCode->getForegroundColor()->getRGBA()->getValue('B'), 
-            $qrCode->getForegroundColor()->getRGBA()->getValue('A')
+            $qrCode->getForegroundColor()->getRGB()->getValue('R'), 
+            $qrCode->getForegroundColor()->getRGB()->getValue('G'), 
+            $qrCode->getForegroundColor()->getRGB()->getValue('B'),
+            0
         );
+        
         $backgroundColor = imagecolorallocatealpha(
             $image, 
-            $qrCode->getBackgroundColor()->getRGBA()->getValue('R'), 
-            $qrCode->getBackgroundColor()->getRGBA()->getValue('G'), 
-            $qrCode->getBackgroundColor()->getRGBA()->getValue('B'), 
-            $qrCode->getBackgroundColor()->getRGBA()->getValue('A')
+            $qrCode->getBackgroundColor()->getRGB()->getValue('R'), 
+            $qrCode->getBackgroundColor()->getRGB()->getValue('G'), 
+            $qrCode->getBackgroundColor()->getRGB()->getValue('B'),
+            0
         );
+
         imagefill($image, 0, 0, $backgroundColor);
 
         foreach ($data['matrix'] as $row => $values) {
@@ -103,14 +113,14 @@ class PngWriter extends AbstractWriter
 
         $backgroundColor = imagecolorallocatealpha(
             $image, 
-            $qrCode->getBackgroundColor()->getRGBA()->getValue('R'), 
-            $qrCode->getBackgroundColor()->getRGBA()->getValue('G'), 
-            $qrCode->getBackgroundColor()->getRGBA()->getValue('B'), 
-            $qrCode->getBackgroundColor()->getRGBA()->getValue('A')
+            $qrCode->getBackgroundColor()->getRGB()->getValue('R'), 
+            $qrCode->getBackgroundColor()->getRGB()->getValue('G'), 
+            $qrCode->getBackgroundColor()->getRGB()->getValue('B'),
+            0
         );
+        
         imagefill($image, 0, 0, $backgroundColor);
         imagecopyresampled($image, $baseImage, (int) $data['margin_left'], (int) $data['margin_left'], 0, 0, (int) $data['inner_width'], (int) $data['inner_height'], imagesx($baseImage), imagesy($baseImage));
-        imagesavealpha($image, true);
 
         return $image;
     }
