@@ -103,10 +103,10 @@ class PngWriter extends AbstractWriter
 
         $backgroundColor = imagecolorallocatealpha(
             $image, 
-            $qrCode->getBackgroundColor()->getValue('R'), 
-            $qrCode->getBackgroundColor()->getValue('G'), 
-            $qrCode->getBackgroundColor()->getValue('B'), 
-            $qrCode->getBackgroundColor()->getValue('A')
+            $qrCode->getBackgroundColor()->getRGBA()->getValue('R'), 
+            $qrCode->getBackgroundColor()->getRGBA()->getValue('G'), 
+            $qrCode->getBackgroundColor()->getRGBA()->getValue('B'), 
+            $qrCode->getBackgroundColor()->getRGBA()->getValue('A')
         );
         imagefill($image, 0, 0, $backgroundColor);
         imagecopyresampled($image, $baseImage, (int) $data['margin_left'], (int) $data['margin_left'], 0, 0, (int) $data['inner_width'], (int) $data['inner_height'], imagesx($baseImage), imagesy($baseImage));
