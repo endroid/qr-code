@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer;
 
+use Color\Value\CMY;
 use Color\Value\CMYK;
-use Color\Value\RGB;
 use Endroid\QrCode\QrCodeInterface;
 
 class EpsWriter extends AbstractWriter
@@ -21,34 +21,20 @@ class EpsWriter extends AbstractWriter
     {
         $data = $qrCode->getData();
 
-        switch ($qrCode->getBackgroundColor())
-        {
-            case RGB::class:
-                $backgroundColor = $qrCode->getBackgroundColor()->getFormattedValue('%d %d %d').' setrgbcolor';
-                break;
+        $backgroundColor = $qrCode->getBackgroundColor()->getRGB()->getFormattedValue('%d %d %d').' setrgbcolor';
 
-            case CMYK::class:
-                $backgroundColor = $qrCode->getBackgroundColor()->getFormattedValue('%d %d %d %d').' setcmykcolor';
-                break;
-
-            default:
-                $backgroundColor = '';
-                break;
+        if ($qrCode->getBackgroundColor() instanceof CMYK
+            || $qrCode->getBackgroundColor() instanceof CMY
+        ) {
+            $backgroundColor = $qrCode->getBackgroundColor()->getCMYK()->getFormattedValue('%d %d %d %d').' setcmykcolor';
         }
-        
-        switch ($qrCode->getForegroundColor())
-        {
-            case RGB::class:
-                $foregroundColor = $qrCode->getForegroundColor()->getFormattedValue('%d %d %d').' setrgbcolor';
-                break;
 
-            case CMYK::class:
-                $foregroundColor = $qrCode->getForegroundColor()->getFormattedValue('%d %d %d %d').' setcmykcolor';
-                break;
+        $foregroundColor = $qrCode->getForegroundColor()->getRGB()->getFormattedValue('%d %d %d').' setrgbcolor';
 
-            default:
-                $foregroundColor = '';
-                break;
+        if ($qrCode->getForegroundColor() instanceof CMYK
+            || $qrCode->getForegroundColor() instanceof CMY
+        ) {
+            $foregroundColor = $qrCode->getForegroundColor()->getCMYK()->getFormattedValue('%d %d %d %d').' setcmykcolor';
         }
         
         $epsData = [];
