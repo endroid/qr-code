@@ -70,8 +70,8 @@ class QrCode implements QrCodeInterface
 
         $this->createWriterRegistry();
 
-        $this->foregroundColor = new RGBA(255, 255, 255, 1);
-        $this->backgroundColor = new RGBA(0, 0, 0, 1);
+        $this->backgroundColor = new RGBA(255, 255, 255, 1);
+        $this->foregroundColor = new RGBA(0, 0, 0, 1);
     }
 
     public function setText(string $text): void
