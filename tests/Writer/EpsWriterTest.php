@@ -23,15 +23,14 @@ class EpsWriterTest extends TestCase
         $backgroundColor = [0, 4, 4];
         $foregroundColor = [0, 255, 200];
 
+        $backgroundColorRGB = new RGB(...$backgroundColor);
+        $foregroundColorRGB = new RGB(...$foregroundColor);         
+
         $qrCode = new QrCode();
         $qrCode->setWriter(new EpsWriter());
         $qrCode
-            ->setBackgroundColor(
-                new RGB(...$backgroundColor)
-            )
-            ->setForegroundColor(
-                new RGB(...$foregroundColor)
-            )
+            ->setBackgroundColor($backgroundColorRGB)
+            ->setForegroundColor($foregroundColorRGB)
         ;
 
         $string = $qrCode->writeString();
