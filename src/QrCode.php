@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Endroid\QrCode;
 
 use BaconQrCode\Encoder\Encoder;
-use Color\Value\RGBA;
+use Color\Value\RGB;
 use Color\Value\ValueInterface;
 use Endroid\QrCode\Exception\InvalidPathException;
 use Endroid\QrCode\Exception\UnsupportedExtensionException;
@@ -70,8 +70,8 @@ class QrCode implements QrCodeInterface
 
         $this->createWriterRegistry();
 
-        $this->backgroundColor = new RGBA(255, 255, 255, 1);
-        $this->foregroundColor = new RGBA(0, 0, 0, 1);
+        $this->backgroundColor = new RGB(255, 255, 255);
+        $this->foregroundColor = new RGB(0, 0, 0);
     }
 
     public function setText(string $text): void
