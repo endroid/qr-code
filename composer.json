@@ -20,7 +20,9 @@
     ],
     "require": {
         "php": ">=7.2",
+        "ext-fileinfo": "*",
         "ext-gd": "*",
+        "ext-simplexml": "*",
         "bacon/bacon-qr-code": "^2.0",
         "bitandblack/colors": "^2.4",
         "endroid/installer": "^1.1.5",
@@ -33,6 +35,9 @@
     "require-dev": {
         "endroid/test": "^1.1.4",
         "phpunit/phpunit": "^8.2"
+    },
+    "config": {
+        "sort-packages": true
     },
     "extra": {
         "branch-alias": {
