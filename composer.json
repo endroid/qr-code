@@ -1,9 +1,16 @@
 {
     "name": "endroid/qr-code",
-    "description": "Endroid QR Code",
-    "keywords": ["endroid", "qrcode", "qr", "code", "bundle", "php"],
-    "homepage": "https://github.com/endroid/qr-code",
     "type": "library",
+    "description": "Endroid QR Code",
+    "keywords": [
+        "endroid",
+        "qrcode",
+        "qr",
+        "code",
+        "bundle",
+        "php"
+    ],
+    "homepage": "https://github.com/endroid/qr-code",
     "license": "MIT",
     "authors": [
         {
@@ -15,15 +22,22 @@
         "php": ">=7.2",
         "ext-gd": "*",
         "bacon/bacon-qr-code": "^2.0",
+        "bitandblack/colors": "^2.4",
         "endroid/installer": "^1.1.5",
         "khanamiryan/qrcode-detector-decoder": "^1.0.2",
         "myclabs/php-enum": "^1.5",
-        "symfony/http-foundation": "^3.4|^4.0",
-        "symfony/options-resolver": "^3.4|^4.0",
-        "symfony/property-access": "^3.4|^4.0"
+        "symfony/http-foundation": "^3.4 || ^4.0",
+        "symfony/options-resolver": "^3.4 || ^4.0",
+        "symfony/property-access": "^3.4 || ^4.0"
     },
     "require-dev": {
-        "endroid/test": "^1.1.4"
+        "endroid/test": "^1.1.4",
+        "phpunit/phpunit": "^8.2"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.x-dev"
+        }
     },
     "autoload": {
         "psr-4": {
@@ -33,11 +47,6 @@
     "autoload-dev": {
         "psr-4": {
             "Endroid\\QrCode\\Tests\\": "tests/"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.x-dev"
         }
     }
 }
