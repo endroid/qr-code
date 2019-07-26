@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode;
 
+use Color\Value\ValueInterface;
+
 interface QrCodeInterface
 {
     public function getText(): string;
@@ -19,9 +21,19 @@ interface QrCodeInterface
 
     public function getMargin(): int;
 
-    public function getForegroundColor(): array;
+    /**
+     * Returns the foreground color
+     * 
+     * @return \Color\Value\ValueInterface
+     */
+    public function getForegroundColor(): ValueInterface;
 
-    public function getBackgroundColor(): array;
+    /**
+     * Returns the background color
+     *
+     * @return \Color\Value\ValueInterface
+     */
+    public function getBackgroundColor(): ValueInterface;
 
     public function getEncoding(): string;
 

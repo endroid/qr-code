@@ -41,8 +41,7 @@ class SvgWriter extends AbstractWriter
         $blockDefinition->addAttribute('id', 'block');
         $blockDefinition->addAttribute('width', strval($data['block_size']));
         $blockDefinition->addAttribute('height', strval($data['block_size']));
-        $blockDefinition->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getForegroundColor()['r'], $qrCode->getForegroundColor()['g'], $qrCode->getForegroundColor()['b']));
-        $blockDefinition->addAttribute('fill-opacity', strval($this->getOpacity($qrCode->getForegroundColor()['a'])));
+        $blockDefinition->addAttribute('fill', (string) $qrCode->getForegroundColor()->getHEX());
 
         // Background
         $background = $svg->addChild('rect');
@@ -50,8 +49,7 @@ class SvgWriter extends AbstractWriter
         $background->addAttribute('y', '0');
         $background->addAttribute('width', strval($data['outer_width']));
         $background->addAttribute('height', strval($data['outer_height']));
-        $background->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getBackgroundColor()['r'], $qrCode->getBackgroundColor()['g'], $qrCode->getBackgroundColor()['b']));
-        $background->addAttribute('fill-opacity', strval($this->getOpacity($qrCode->getBackgroundColor()['a'])));
+        $background->addAttribute('fill', (string) $qrCode->getBackgroundColor()->getHEX());
 
         foreach ($data['matrix'] as $row => $values) {
             foreach ($values as $column => $value) {
@@ -133,13 +131,6 @@ class SvgWriter extends AbstractWriter
         }
 
         return $mimeType;
-    }
-
-    private function getOpacity(int $alpha): float
-    {
-        $opacity = 1 - $alpha / 127;
-
-        return $opacity;
     }
 
     public static function getContentType(): string

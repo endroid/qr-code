@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer;
 
+use Color\Value\ValueInterface;
 use Endroid\QrCode\Exception\GenerateImageException;
 use Endroid\QrCode\Exception\MissingFunctionException;
 use Endroid\QrCode\Exception\ValidationException;
@@ -65,8 +66,20 @@ class PngWriter extends AbstractWriter
             throw new GenerateImageException('Unable to generate image: check your GD installation');
         }
 
-        $foregroundColor = imagecolorallocatealpha($image, $qrCode->getForegroundColor()['r'], $qrCode->getForegroundColor()['g'], $qrCode->getForegroundColor()['b'], $qrCode->getForegroundColor()['a']);
-        $backgroundColor = imagecolorallocatealpha($image, $qrCode->getBackgroundColor()['r'], $qrCode->getBackgroundColor()['g'], $qrCode->getBackgroundColor()['b'], $qrCode->getBackgroundColor()['a']);
+        $foregroundColor = imagecolorallocatealpha(
+            $image, 
+            $qrCode->getForegroundColor()->getValue('R'), 
+            $qrCode->getForegroundColor()->getValue('G'), 
+            $qrCode->getForegroundColor()->getValue('B'), 
+            $qrCode->getForegroundColor()->getValue('A')
+        );
+        $backgroundColor = imagecolorallocatealpha(
+            $image, 
+            $qrCode->getBackgroundColor()->getValue('R'), 
+            $qrCode->getBackgroundColor()->getValue('G'), 
+            $qrCode->getBackgroundColor()->getValue('B'), 
+            $qrCode->getBackgroundColor()->getValue('A')
+        );
         imagefill($image, 0, 0, $backgroundColor);
 
         foreach ($data['matrix'] as $row => $values) {
@@ -88,7 +101,13 @@ class PngWriter extends AbstractWriter
             throw new GenerateImageException('Unable to generate image: check your GD installation');
         }
 
-        $backgroundColor = imagecolorallocatealpha($image, $qrCode->getBackgroundColor()['r'], $qrCode->getBackgroundColor()['g'], $qrCode->getBackgroundColor()['b'], $qrCode->getBackgroundColor()['a']);
+        $backgroundColor = imagecolorallocatealpha(
+            $image, 
+            $qrCode->getBackgroundColor()->getValue('R'), 
+            $qrCode->getBackgroundColor()->getValue('G'), 
+            $qrCode->getBackgroundColor()->getValue('B'), 
+            $qrCode->getBackgroundColor()->getValue('A')
+        );
         imagefill($image, 0, 0, $backgroundColor);
         imagecopyresampled($image, $baseImage, (int) $data['margin_left'], (int) $data['margin_left'], 0, 0, (int) $data['inner_width'], (int) $data['inner_height'], imagesx($baseImage), imagesy($baseImage));
         imagesavealpha($image, true);
@@ -124,8 +143,29 @@ class PngWriter extends AbstractWriter
         return $sourceImage;
     }
 
-    private function addLabel($sourceImage, string $label, string $labelFontPath, int $labelFontSize, string $labelAlignment, array $labelMargin, array $foregroundColor, array $backgroundColor)
-    {
+    /**
+     * @param $sourceImage
+     * @param string $label
+     * @param string $labelFontPath
+     * @param int $labelFontSize
+     * @param string $labelAlignment
+     * @param array $labelMargin
+     * @param \Color\Value\ValueInterface $foregroundColor
+     * @param \Color\Value\ValueInterface $backgroundColor
+     * @return false|resource
+     * @throws \Endroid\QrCode\Exception\GenerateImageException
+     * @throws \Endroid\QrCode\Exception\MissingFunctionException
+     */
+    private function addLabel(
+        $sourceImage, 
+        string $label, 
+        string $labelFontPath, 
+        int $labelFontSize, 
+        string $labelAlignment, 
+        array $labelMargin, 
+        ValueInterface $foregroundColor, 
+        ValueInterface $backgroundColor
+    ) {
         if (!function_exists('imagettfbbox')) {
             throw new MissingFunctionException('Missing function "imagettfbbox", please make sure you installed the FreeType library');
         }
@@ -146,8 +186,18 @@ class PngWriter extends AbstractWriter
             throw new GenerateImageException('Unable to generate image: check your GD installation');
         }
 
-        $foregroundColor = imagecolorallocate($targetImage, $foregroundColor['r'], $foregroundColor['g'], $foregroundColor['b']);
-        $backgroundColor = imagecolorallocate($targetImage, $backgroundColor['r'], $backgroundColor['g'], $backgroundColor['b']);
+        $foregroundColor = imagecolorallocate(
+            $targetImage, 
+            $foregroundColor->getRGB()->getValue('R'), 
+            $foregroundColor->getRGB()->getValue('G'), 
+            $foregroundColor->getRGB()->getValue('B')
+        );
+        $backgroundColor = imagecolorallocate(
+            $targetImage, 
+            $backgroundColor->getRGB()->getValue('R'), 
+            $backgroundColor->getRGB()->getValue('G'), 
+            $backgroundColor->getRGB()->getValue('B')
+        );
         imagefill($targetImage, 0, 0, $backgroundColor);
 
         // Copy source image to target image

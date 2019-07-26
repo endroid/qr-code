@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Endroid\QrCode;
 
 use BaconQrCode\Encoder\Encoder;
+use Color\Value\RGBA;
+use Color\Value\ValueInterface;
 use Endroid\QrCode\Exception\InvalidPathException;
 use Endroid\QrCode\Exception\UnsupportedExtensionException;
 use Endroid\QrCode\Writer\WriterInterface;
@@ -25,19 +27,15 @@ class QrCode implements QrCodeInterface
     private $size = 300;
     private $margin = 10;
 
-    private $foregroundColor = [
-        'r' => 0,
-        'g' => 0,
-        'b' => 0,
-        'a' => 0,
-    ];
+    /**
+     * @var \Color\Value\ValueInterface 
+     */
+    private $foregroundColor;
 
-    private $backgroundColor = [
-        'r' => 255,
-        'g' => 255,
-        'b' => 255,
-        'a' => 0,
-    ];
+    /**
+     * @var \Color\Value\ValueInterface
+     */
+    private $backgroundColor;
 
     private $encoding = 'UTF-8';
     private $roundBlockSize = true;
@@ -71,6 +69,9 @@ class QrCode implements QrCodeInterface
         $this->labelAlignment = new LabelAlignment(LabelAlignment::CENTER);
 
         $this->createWriterRegistry();
+
+        $this->foregroundColor = new RGBA(255, 255, 255, 1);
+        $this->backgroundColor = new RGBA(0, 0, 0, 1);
     }
 
     public function setText(string $text): void
@@ -103,38 +104,38 @@ class QrCode implements QrCodeInterface
         return $this->margin;
     }
 
-    public function setForegroundColor(array $foregroundColor): void
+    /**
+     * @param \Color\Value\ValueInterface $foregroundColor
+     * @return \Endroid\QrCode\QrCode
+     */
+    public function setForegroundColor(ValueInterface $foregroundColor): self
     {
-        if (!isset($foregroundColor['a'])) {
-            $foregroundColor['a'] = 0;
-        }
-
-        foreach ($foregroundColor as &$color) {
-            $color = intval($color);
-        }
-
         $this->foregroundColor = $foregroundColor;
+        return $this;
     }
 
-    public function getForegroundColor(): array
+    /**
+     * @return \Color\Value\ValueInterface
+     */
+    public function getForegroundColor(): ValueInterface
     {
         return $this->foregroundColor;
     }
 
-    public function setBackgroundColor(array $backgroundColor): void
+    /**
+     * @param \Color\Value\ValueInterface $backgroundColor
+     * @return \Endroid\QrCode\QrCode
+     */
+    public function setBackgroundColor(ValueInterface $backgroundColor): self
     {
-        if (!isset($backgroundColor['a'])) {
-            $backgroundColor['a'] = 0;
-        }
-
-        foreach ($backgroundColor as &$color) {
-            $color = intval($color);
-        }
-
         $this->backgroundColor = $backgroundColor;
+        return $this;
     }
 
-    public function getBackgroundColor(): array
+    /**
+     * @return \Color\Value\ValueInterface
+     */
+    public function getBackgroundColor(): ValueInterface
     {
         return $this->backgroundColor;
     }

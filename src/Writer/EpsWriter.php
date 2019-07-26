@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer;
 
+use Color\Value\CMYK;
+use Color\Value\RGB;
 use Endroid\QrCode\QrCodeInterface;
 
 class EpsWriter extends AbstractWriter
@@ -19,13 +21,43 @@ class EpsWriter extends AbstractWriter
     {
         $data = $qrCode->getData();
 
+        switch ($qrCode->getBackgroundColor())
+        {
+            case RGB::class:
+                $backgroundColor = $qrCode->getBackgroundColor()->getFormattedValue('%d %d %d').' setrgbcolor';
+                break;
+
+            case CMYK::class:
+                $backgroundColor = $qrCode->getBackgroundColor()->getFormattedValue('%d %d %d %d').' setcmykcolor';
+                break;
+
+            default:
+                $backgroundColor = '';
+                break;
+        }
+        
+        switch ($qrCode->getForegroundColor())
+        {
+            case RGB::class:
+                $foregroundColor = $qrCode->getForegroundColor()->getFormattedValue('%d %d %d').' setrgbcolor';
+                break;
+
+            case CMYK::class:
+                $foregroundColor = $qrCode->getForegroundColor()->getFormattedValue('%d %d %d %d').' setcmykcolor';
+                break;
+
+            default:
+                $foregroundColor = '';
+                break;
+        }
+        
         $epsData = [];
         $epsData[] = '%!PS-Adobe-3.0 EPSF-3.0';
         $epsData[] = '%%BoundingBox: 0 0 '.$data['outer_width'].' '.$data['outer_height'];
         $epsData[] = '/F { rectfill } def';
-        $epsData[] = number_format($qrCode->getBackgroundColor()['r'] / 100, 2, '.', ',').' '.number_format($qrCode->getBackgroundColor()['g'] / 100, 2, '.', ',').' '.number_format($qrCode->getBackgroundColor()['b'] / 100, 2, '.', ',').' setrgbcolor';
+        $epsData[] = $backgroundColor;
         $epsData[] = '0 0 '.$data['outer_width'].' '.$data['outer_height'].' F';
-        $epsData[] = number_format($qrCode->getForegroundColor()['r'] / 100, 2, '.', ',').' '.number_format($qrCode->getForegroundColor()['g'] / 100, 2, '.', ',').' '.number_format($qrCode->getForegroundColor()['b'] / 100, 2, '.', ',').' setrgbcolor';
+        $epsData[] = $foregroundColor;
 
         foreach ($data['matrix'] as $row => $values) {
             foreach ($values as $column => $value) {
