@@ -35,6 +35,9 @@ echo $qrCode->writeString();
 ## Advanced usage
 
 ```php
+<?php 
+
+use Color\Value\RGB;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\LabelAlignment;
 use Endroid\QrCode\QrCode;
@@ -49,8 +52,8 @@ $qrCode->setWriterByName('png');
 $qrCode->setMargin(10);
 $qrCode->setEncoding('UTF-8');
 $qrCode->setErrorCorrectionLevel(new ErrorCorrectionLevel(ErrorCorrectionLevel::HIGH));
-$qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
-$qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
+$qrCode->setForegroundColor(new RGB(0, 0, 0));
+$qrCode->setBackgroundColor(new RGB(255, 255, 255));
 $qrCode->setLabel('Scan the code', 16, __DIR__.'/../assets/fonts/noto_sans.otf', LabelAlignment::CENTER);
 $qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
 $qrCode->setLogoSize(150, 200);
