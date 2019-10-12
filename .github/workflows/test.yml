@@ -1,0 +1,16 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run tests
+      run: |
+        curl -sS https://getcomposer.org/installer | php -- --filename=composer
+        composer install --no-interaction --prefer-source
+        vendor/bin/test
