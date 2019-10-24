@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['7.2', '7.3', '7.4']
+        php-versions: ['7.2', '7.3']
     steps:
     - uses: actions/checkout@v1
     - name: Run tests

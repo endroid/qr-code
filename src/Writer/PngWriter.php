@@ -47,6 +47,7 @@ class PngWriter extends AbstractWriter
         return $string;
     }
 
+    /** @return resource */
     private function createImage(array $data, QrCodeInterface $qrCode)
     {
         $baseSize = $qrCode->getRoundBlockSize() ? $data['block_size'] : 25;
@@ -57,6 +58,7 @@ class PngWriter extends AbstractWriter
         return $interpolatedImage;
     }
 
+    /** @return resource */
     private function createBaseImage(int $baseSize, array $data, QrCodeInterface $qrCode)
     {
         $image = imagecreatetruecolor($data['block_count'] * $baseSize, $data['block_count'] * $baseSize);
@@ -80,6 +82,11 @@ class PngWriter extends AbstractWriter
         return $image;
     }
 
+    /**
+     * @param resource $baseImage
+     *
+     * @return resource
+     */
     private function createInterpolatedImage($baseImage, array $data, QrCodeInterface $qrCode)
     {
         $image = imagecreatetruecolor($data['outer_width'], $data['outer_height']);
@@ -96,6 +103,11 @@ class PngWriter extends AbstractWriter
         return $image;
     }
 
+    /**
+     * @param resource $sourceImage
+     *
+     * @return resource
+     */
     private function addLogo($sourceImage, string $logoPath, int $logoWidth = null, int $logoHeight = null)
     {
         $logoImage = imagecreatefromstring((string) file_get_contents($logoPath));
@@ -124,6 +136,11 @@ class PngWriter extends AbstractWriter
         return $sourceImage;
     }
 
+    /**
+     * @param resource $sourceImage
+     *
+     * @return resource
+     */
     private function addLabel($sourceImage, string $label, string $labelFontPath, int $labelFontSize, string $labelAlignment, array $labelMargin, array $foregroundColor, array $backgroundColor)
     {
         if (!function_exists('imagettfbbox')) {
@@ -171,6 +188,9 @@ class PngWriter extends AbstractWriter
         return $targetImage;
     }
 
+    /**
+     * @param resource $image
+     */
     private function imageToString($image): string
     {
         ob_start();

@@ -21,5 +21,7 @@ interface WriterRegistryInterface
 
     public function getWriter(string $name): WriterInterface;
 
+    public function getDefaultWriter(): WriterInterface;
+
     public function getWriters(): array;
 }

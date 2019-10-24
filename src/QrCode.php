@@ -22,9 +22,13 @@ class QrCode implements QrCodeInterface
 
     private $text;
 
+    /** @var int */
     private $size = 300;
+
+    /** @var int */
     private $margin = 10;
 
+    /** @var array */
     private $foregroundColor = [
         'r' => 0,
         'g' => 0,
@@ -32,6 +36,7 @@ class QrCode implements QrCodeInterface
         'a' => 0,
     ];
 
+    /** @var array */
     private $backgroundColor = [
         'r' => 255,
         'g' => 255,
@@ -39,18 +44,35 @@ class QrCode implements QrCodeInterface
         'a' => 0,
     ];
 
+    /** @var string */
     private $encoding = 'UTF-8';
+
+    /** @var bool */
     private $roundBlockSize = true;
+
     private $errorCorrectionLevel;
 
+    /** @var string */
     private $logoPath;
+
+    /** @var int */
     private $logoWidth;
+
+    /** @var int|null */
     private $logoHeight;
 
+    /** @var string */
     private $label;
+
+    /** @var int */
     private $labelFontSize = 16;
+
+    /** @var string */
     private $labelFontPath = self::LABEL_FONT_PATH_DEFAULT;
+
     private $labelAlignment;
+
+    /** @var array */
     private $labelMargin = [
         't' => 0,
         'r' => 10,
@@ -58,9 +80,16 @@ class QrCode implements QrCodeInterface
         'l' => 10,
     ];
 
+    /** @var WriterRegistryInterface */
     private $writerRegistry;
+
+    /** @var WriterInterface|null */
     private $writer;
+
+    /** @var array */
     private $writerOptions = [];
+
+    /** @var bool */
     private $validateResult = false;
 
     public function __construct(string $text = '')
@@ -316,13 +345,13 @@ class QrCode implements QrCodeInterface
         return $this->writerOptions;
     }
 
-    private function createWriterRegistry()
+    private function createWriterRegistry(): void
     {
         $this->writerRegistry = new WriterRegistry();
         $this->writerRegistry->loadDefaultWriters();
     }
 
-    public function setWriterByName(string $name)
+    public function setWriterByName(string $name): void
     {
         $this->writer = $this->getWriter($name);
     }
