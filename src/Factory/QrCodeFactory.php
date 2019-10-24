@@ -21,8 +21,13 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 class QrCodeFactory implements QrCodeFactoryInterface
 {
     private $writerRegistry;
+
+    /** @var OptionsResolver */
     private $optionsResolver;
+
     private $defaultOptions;
+
+    /** @var array */
     private $definedOptions = [
         'writer',
         'writer_options',
