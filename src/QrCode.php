@@ -55,7 +55,7 @@ class QrCode implements QrCodeInterface
     /** @var string */
     private $logoPath;
 
-    /** @var int */
+    /** @var int|null */
     private $logoWidth;
 
     /** @var int|null */
@@ -412,10 +412,16 @@ class QrCode implements QrCodeInterface
 
         $baconQrCode = Encoder::encode($this->text, $baconErrorCorrectionLevel, $this->encoding);
 
-        $matrix = $baconQrCode->getMatrix()->getArray()->toArray();
+        $baconMatrix = $baconQrCode->getMatrix();
 
-        foreach ($matrix as &$row) {
-            $row = $row->toArray();
+        $matrix = [];
+        $columnCount = $baconMatrix->getWidth();
+        $rowCount = $baconMatrix->getHeight();
+        for ($rowIndex = 0; $rowIndex < $rowCount; ++$rowIndex) {
+            $matrix[$rowIndex] = [];
+            for ($columnIndex = 0; $columnIndex < $columnCount; ++$columnIndex) {
+                $matrix[$rowIndex][$columnIndex] = $baconMatrix->get($columnIndex, $rowIndex);
+            }
         }
 
         $data = ['matrix' => $matrix];

@@ -13,6 +13,7 @@ namespace Endroid\QrCode\Writer;
 
 use Endroid\QrCode\Exception\GenerateImageException;
 use Endroid\QrCode\Exception\MissingFunctionException;
+use Endroid\QrCode\Exception\MissingLogoHeightException;
 use Endroid\QrCode\Exception\ValidationException;
 use Endroid\QrCode\LabelAlignment;
 use Endroid\QrCode\QrCodeInterface;
@@ -24,12 +25,14 @@ class PngWriter extends AbstractWriter
     {
         $image = $this->createImage($qrCode->getData(), $qrCode);
 
-        if (null !== $qrCode->getLogoPath()) {
-            $image = $this->addLogo($image, $qrCode->getLogoPath(), $qrCode->getLogoWidth(), $qrCode->getLogoHeight());
+        $logoPath = $qrCode->getLogoPath();
+        if (null !== $logoPath) {
+            $image = $this->addLogo($image, $logoPath, $qrCode->getLogoWidth(), $qrCode->getLogoHeight());
         }
 
-        if (null !== $qrCode->getLabel()) {
-            $image = $this->addLabel($image, $qrCode->getLabel(), $qrCode->getLabelFontPath(), $qrCode->getLabelFontSize(), $qrCode->getLabelAlignment(), $qrCode->getLabelMargin(), $qrCode->getForegroundColor(), $qrCode->getBackgroundColor());
+        $label = $qrCode->getLabel();
+        if (null !== $label) {
+            $image = $this->addLabel($image, $label, $qrCode->getLabelFontPath(), $qrCode->getLabelFontSize(), $qrCode->getLabelAlignment(), $qrCode->getLabelMargin(), $qrCode->getForegroundColor(), $qrCode->getBackgroundColor());
         }
 
         $string = $this->imageToString($image);
@@ -110,10 +113,15 @@ class PngWriter extends AbstractWriter
      */
     private function addLogo($sourceImage, string $logoPath, int $logoWidth = null, int $logoHeight = null)
     {
-        $logoImage = imagecreatefromstring((string) file_get_contents($logoPath));
+        $mimeType = $this->getMimeType($logoPath);
+        $logoImage = imagecreatefromstring(strval(file_get_contents($logoPath)));
+
+        if ('image/svg+xml' === $mimeType && (null === $logoHeight || null === $logoWidth)) {
+            throw new MissingLogoHeightException('SVG Logos require an explicit height set via setLogoSize($width, $height)');
+        }
 
         if (!is_resource($logoImage)) {
-            throw new GenerateImageException('Unable to generate image: check your GD installation');
+            throw new GenerateImageException('Unable to generate image: check your GD installation or logo path');
         }
 
         $logoSourceWidth = imagesx($logoImage);
@@ -131,7 +139,7 @@ class PngWriter extends AbstractWriter
         $logoX = imagesx($sourceImage) / 2 - $logoWidth / 2;
         $logoY = imagesy($sourceImage) / 2 - $logoHeight / 2;
 
-        imagecopyresampled($sourceImage, $logoImage, (int) $logoX, (int) $logoY, 0, 0, $logoWidth, $logoHeight, $logoSourceWidth, $logoSourceHeight);
+        imagecopyresampled($sourceImage, $logoImage, intval($logoX), intval($logoY), 0, 0, $logoWidth, $logoHeight, $logoSourceWidth, $logoSourceHeight);
 
         return $sourceImage;
     }

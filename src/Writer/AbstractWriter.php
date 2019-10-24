@@ -11,10 +11,32 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer;
 
+use Endroid\QrCode\Exception\InvalidLogoException;
+use Endroid\QrCode\Exception\MissingExtensionException;
 use Endroid\QrCode\QrCodeInterface;
 
 abstract class AbstractWriter implements WriterInterface
 {
+    protected function getMimeType(string $path): string
+    {
+        if (!function_exists('mime_content_type')) {
+            throw new MissingExtensionException('You need the ext-fileinfo extension to determine logo mime type');
+        }
+
+        $mimeType = mime_content_type($path);
+
+        if (!is_string($mimeType)) {
+            throw new InvalidLogoException('Could not determine mime type');
+        }
+
+        // Passing mime type image/svg results in invisible images
+        if ('image/svg' === $mimeType) {
+            return 'image/svg+xml';
+        }
+
+        return $mimeType;
+    }
+
     public function writeDataUri(QrCodeInterface $qrCode): string
     {
         $dataUri = 'data:'.$this->getContentType().';base64,'.base64_encode($this->writeString($qrCode));

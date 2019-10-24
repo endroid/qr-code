@@ -12,8 +12,6 @@ declare(strict_types=1);
 namespace Endroid\QrCode\Writer;
 
 use Endroid\QrCode\Exception\GenerateImageException;
-use Endroid\QrCode\Exception\InvalidLogoException;
-use Endroid\QrCode\Exception\MissingExtensionException;
 use Endroid\QrCode\Exception\MissingLogoHeightException;
 use Endroid\QrCode\Exception\ValidationException;
 use Endroid\QrCode\QrCodeInterface;
@@ -64,8 +62,9 @@ class SvgWriter extends AbstractWriter
             }
         }
 
-        if (null !== $qrCode->getLogoPath()) {
-            $this->addLogo($svg, $data['outer_width'], $data['outer_height'], $qrCode->getLogoPath(), $qrCode->getLogoWidth(), $qrCode->getLogoHeight());
+        $logoPath = $qrCode->getLogoPath();
+        if (is_string($logoPath)) {
+            $this->addLogo($svg, $data['outer_width'], $data['outer_height'], $logoPath, $qrCode->getLogoWidth(), $qrCode->getLogoHeight());
         }
 
         $xml = $svg->asXML();
@@ -88,51 +87,43 @@ class SvgWriter extends AbstractWriter
         $imageData = file_get_contents($logoPath);
 
         if (!is_string($imageData)) {
-            throw new InvalidLogoException('Invalid logo at path "'.$logoPath.'"');
+            throw new GenerateImageException('Unable to read image data: check your logo path');
         }
 
-        if (null === $logoHeight) {
-            if ('image/svg+xml' === $mimeType) {
-                throw new MissingLogoHeightException('SVG Logos require an explicit height set via setLogoSize($width, $height)');
-            } else {
-                $logoImage = imagecreatefromstring($imageData);
+        if ('image/svg+xml' === $mimeType && (null === $logoHeight || null === $logoWidth)) {
+            throw new MissingLogoHeightException('SVG Logos require an explicit height set via setLogoSize($width, $height)');
+        }
 
-                if (!is_resource($logoImage)) {
-                    throw new GenerateImageException('Unable to generate image: check your GD installation');
-                }
+        if (null === $logoHeight || null === $logoWidth) {
+            $logoImage = imagecreatefromstring(strval($imageData));
 
-                $aspectRatio = $logoWidth / imagesx($logoImage);
-                $logoHeight = intval(imagesy($logoImage) * $aspectRatio);
+            if (!is_resource($logoImage)) {
+                throw new GenerateImageException('Unable to generate image: check your GD installation or logo path');
+            }
+
+            $logoSourceWidth = imagesx($logoImage);
+            $logoSourceHeight = imagesy($logoImage);
+
+            if (null === $logoWidth) {
+                $logoWidth = $logoSourceWidth;
+            }
+
+            if (null === $logoHeight) {
+                $aspectRatio = $logoWidth / $logoSourceWidth;
+                $logoHeight = intval($logoSourceHeight * $aspectRatio);
             }
         }
 
+        $logoX = $imageWidth / 2 - $logoWidth / 2;
+        $logoY = $imageHeight / 2 - $logoHeight / 2;
+
         $imageDefinition = $svg->addChild('image');
-        $imageDefinition->addAttribute('x', strval($imageWidth / 2 - $logoWidth / 2));
-        $imageDefinition->addAttribute('y', strval($imageHeight / 2 - $logoHeight / 2));
+        $imageDefinition->addAttribute('x', strval($logoX));
+        $imageDefinition->addAttribute('y', strval($logoY));
         $imageDefinition->addAttribute('width', strval($logoWidth));
         $imageDefinition->addAttribute('height', strval($logoHeight));
         $imageDefinition->addAttribute('preserveAspectRatio', 'none');
         $imageDefinition->addAttribute('xlink:href', 'data:'.$mimeType.';base64,'.base64_encode($imageData));
-    }
-
-    private function getMimeType(string $path): string
-    {
-        if (!function_exists('mime_content_type')) {
-            throw new MissingExtensionException('You need the ext-fileinfo extension to determine logo mime type');
-        }
-
-        $mimeType = mime_content_type($path);
-
-        if (!is_string($mimeType)) {
-            throw new InvalidLogoException('Could not determine mime type');
-        }
-
-        // Passing mime type image/svg results in invisible images
-        if ('image/svg' === $mimeType) {
-            return 'image/svg+xml';
-        }
-
-        return $mimeType;
     }
 
     private function getOpacity(int $alpha): float

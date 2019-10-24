@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Endroid\QrCode\Factory;
 
 use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Exception\ValidationException;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\QrCodeInterface;
 use Endroid\QrCode\WriterRegistryInterface;
@@ -77,6 +78,10 @@ class QrCodeFactory implements QrCodeFactoryInterface
                 }
                 $accessor->setValue($qrCode, $option, $options[$option]);
             }
+        }
+
+        if (!$qrCode instanceof QrCodeInterface) {
+            throw new ValidationException('QR Code was messed up by property accessor');
         }
 
         return $qrCode;
