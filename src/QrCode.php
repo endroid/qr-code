@@ -96,8 +96,8 @@ class QrCode implements QrCodeInterface
     {
         $this->text = $text;
 
-        $this->errorCorrectionLevel = new ErrorCorrectionLevel(ErrorCorrectionLevel::LOW);
-        $this->labelAlignment = new LabelAlignment(LabelAlignment::CENTER);
+        $this->errorCorrectionLevel = ErrorCorrectionLevel::LOW();
+        $this->labelAlignment = LabelAlignment::CENTER();
 
         $this->createWriterRegistry();
     }
