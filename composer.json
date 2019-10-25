@@ -16,10 +16,10 @@
         "ext-gd": "*",
         "bacon/bacon-qr-code": "^2.0",
         "khanamiryan/qrcode-detector-decoder": "^1.0.2",
-        "myclabs/php-enum": "^1.5",
         "symfony/http-foundation": "^3.4||^4.0",
         "symfony/options-resolver": "^3.4||^4.0",
-        "symfony/property-access": "^3.4||^4.0"
+        "symfony/property-access": "^3.4||^4.0",
+        "myclabs/php-enum": "^1.5"
     },
     "require-dev": {
         "endroid/test": "dev-master"
@@ -33,6 +33,9 @@
         "psr-4": {
             "Endroid\\QrCode\\Tests\\": "tests/"
         }
+    },
+    "config": {
+        "sort-packages": true
     },
     "extra": {
         "branch-alias": {
