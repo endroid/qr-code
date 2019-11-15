@@ -15,7 +15,6 @@
         "php": ">=7.1",
         "ext-gd": "*",
         "bacon/bacon-qr-code": "^2.0",
-        "endroid/installer": "^1.0.3",
         "khanamiryan/qrcode-detector-decoder": "^1.0.2",
         "myclabs/php-enum": "^1.5",
         "symfony/options-resolver": "^2.7|^3.0|^4.0",
