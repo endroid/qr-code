@@ -10,8 +10,19 @@ jobs:
         php-versions: ['7.2', '7.3', '7.4']
     steps:
     - uses: actions/checkout@v1
-    - name: Run tests
+    - name: Code quality
+      run: |
+        curl -sS https://getcomposer.org/installer | php -- --filename=composer
+        vendor/bin/code-quality
+    - name: Test against highest versions
       run: |
         curl -sS https://getcomposer.org/installer | php -- --filename=composer
         composer install --no-interaction --prefer-source
-        vendor/bin/test
+        vendor/bin/unit-test
+        vendor/bin/functional-test
+    - name: Test against lowest versions
+      run: |
+        curl -sS https://getcomposer.org/installer | php -- --filename=composer
+        composer install --no-interaction --prefer-source --prefer-lowest
+        vendor/bin/unit-test
+        vendor/bin/functional-test
