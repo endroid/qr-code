@@ -9,20 +9,20 @@ jobs:
       matrix:
         php-versions: ['7.2', '7.3', '7.4']
     steps:
-    - uses: actions/checkout@v1
-    - name: Code quality
-      run: |
-        curl -sS https://getcomposer.org/installer | php -- --filename=composer
-        vendor/bin/code-quality
-    - name: Test against highest versions
-      run: |
-        curl -sS https://getcomposer.org/installer | php -- --filename=composer
-        composer install --no-interaction --prefer-source
-        vendor/bin/unit-test
-        vendor/bin/functional-test
-    - name: Test against lowest versions
-      run: |
-        curl -sS https://getcomposer.org/installer | php -- --filename=composer
-        composer install --no-interaction --prefer-source --prefer-lowest
-        vendor/bin/unit-test
-        vendor/bin/functional-test
+      - uses: actions/checkout@v1
+      - name: Install dependencies
+        run: |
+          curl -sS https://getcomposer.org/installer | php -- --filename=composer
+          composer install
+      - name: Check code quality
+        run: |
+          vendor/bin/code-quality
+      - name: Test against highest versions
+        run: |
+          vendor/bin/unit-test
+          vendor/bin/functional-test
+      - name: Test against lowest versions
+        run: |
+          composer update --prefer-lowest
+          vendor/bin/unit-test
+          vendor/bin/functional-test
