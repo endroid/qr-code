@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode;
 
-use MyCLabs\Enum\Enum;
 use BaconQrCode\Common\ErrorCorrectionLevel as BaconErrorCorrectionLevel;
+use MyCLabs\Enum\Enum;
 
 /**
  * @method static ErrorCorrectionLevel LOW()
