@@ -26,3 +26,8 @@ jobs:
           composer update --prefer-lowest
           vendor/bin/unit-test
           vendor/bin/functional-test ^3.4
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v1
+        with:
+          name: coverage
+          path: tests/coverage
