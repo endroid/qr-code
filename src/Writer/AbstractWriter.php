@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer;
 
+use Endroid\QrCode\Exception\GenerateImageException;
 use Endroid\QrCode\Exception\InvalidLogoException;
 use Endroid\QrCode\Exception\MissingExtensionException;
 use Endroid\QrCode\QrCodeInterface;
@@ -27,6 +28,10 @@ abstract class AbstractWriter implements WriterInterface
 
         if (!is_string($mimeType)) {
             throw new InvalidLogoException('Could not determine mime type');
+        }
+
+        if (!preg_match('#^image/#', $mimeType)) {
+            throw new GenerateImageException('Logo path is not an image');
         }
 
         // Passing mime type image/svg results in invisible images

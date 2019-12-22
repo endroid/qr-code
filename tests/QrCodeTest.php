@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Tests;
 
+use Endroid\QrCode\Exception\GenerateImageException;
 use Endroid\QrCode\Factory\QrCodeFactory;
 use Endroid\QrCode\QrCode;
 use PHPUnit\Framework\TestCase;
@@ -183,5 +184,16 @@ class QrCodeTest extends TestCase
         $this->assertArrayHasKey('outer_height', $data);
         $this->assertArrayHasKey('margin_left', $data);
         $this->assertArrayHasKey('margin_right', $data);
+    }
+
+    public function testNonImageData(): void
+    {
+        $qrCode = new QrCode('QR Code');
+        $qrCode->setLogoPath(__DIR__.'/QrCodeTest.php');
+        $qrCode->setLogoSize(200, 200);
+        $qrCode->setWriterByExtension('svg');
+
+        $this->expectException(GenerateImageException::class);
+        $qrCode->writeString();
     }
 }
