@@ -10,6 +10,12 @@ jobs:
         php-versions: ['7.2', '7.3', '7.4']
     steps:
       - uses: actions/checkout@v1
+      - uses: shivammathur/setup-php@v1
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring
+          ini-values: max_execution_time=600, memory_limit=-1
+          coverage: pcov
       - name: Install dependencies
         run: |
           curl -sS https://getcomposer.org/installer | php -- --filename=composer
