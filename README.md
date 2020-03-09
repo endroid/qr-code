@@ -25,6 +25,7 @@ $ composer require endroid/qr-code
 
 ```php
 use Endroid\QrCode\QrCode;
+require 'vendor/autoload.php';
 
 $qrCode = new QrCode('Life is too short to be generating QR codes');
 
