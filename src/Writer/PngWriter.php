@@ -37,6 +37,8 @@ class PngWriter extends AbstractWriter
 
         $string = $this->imageToString($image);
 
+        imagedestroy($image);
+
         if ($qrCode->getValidateResult()) {
             $reader = new QrReader($string, QrReader::SOURCE_TYPE_BLOB);
             if ($reader->text() !== $qrCode->getText()) {
