@@ -104,6 +104,8 @@ class SvgWriter extends AbstractWriter
             $logoSourceWidth = imagesx($logoImage);
             $logoSourceHeight = imagesy($logoImage);
 
+            imagedestroy($logoImage);
+
             if (null === $logoWidth) {
                 $logoWidth = $logoSourceWidth;
             }
