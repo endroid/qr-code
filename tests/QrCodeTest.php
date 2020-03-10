@@ -19,30 +19,100 @@ use Zxing\QrReader;
 
 class QrCodeTest extends TestCase
 {
-    public function testReadable(): void
+    /**
+     * @dataProvider stringProvider
+     * @testdox QR code created with text $text is readable
+     */
+    public function testReadable(string $text): void
     {
-        $messages = [
-            'Tiny',
-            'This one has spaces',
-            'd2llMS9uU01BVmlvalM2YU9BUFBPTTdQMmJabHpqdndt',
-            'http://this.is.an/url?with=query&string=attached',
-            '11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
-            '{"i":"serialized.data","v":1,"t":1,"d":"4AEPc9XuIQ0OjsZoSRWp9DRWlN6UyDvuMlyOYy8XjOw="}',
-            'Spëci&al ch@ract3rs',
-            '有限公司',
-        ];
-
         $qrCode = new QrCode();
         $qrCode->setSize(300);
-        foreach ($messages as $message) {
-            $qrCode->setText($message);
-            $pngData = $qrCode->writeString();
-            $this->assertTrue(is_string($pngData));
-            $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-            $this->assertEquals($message, $reader->text());
+        $qrCode->setText($text);
+        $pngData = $qrCode->writeString();
+        $this->assertTrue(is_string($pngData));
+        $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
+        $this->assertEquals($text, $reader->text());
+    }
+
+    public function stringProvider(): array
+    {
+        return [
+            ['Tiny'],
+            ['This one has spaces'],
+            ['d2llMS9uU01BVmlvalM2YU9BUFBPTTdQMmJabHpqdndt'],
+            ['http://this.is.an/url?with=query&string=attached'],
+            ['11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111'],
+            ['{"i":"serialized.data","v":1,"t":1,"d":"4AEPc9XuIQ0OjsZoSRWp9DRWlN6UyDvuMlyOYy8XjOw="}'],
+            ['Spëci&al ch@ract3rs'],
+            ['有限公司'],
+        ];
+    }
+
+    /**
+     * @dataProvider writerNameProvider
+     * @testdox Writer set by name $writerName results in the correct data type
+     */
+    public function testWriteQrCodeByWriterName(string $writerName, ?string $fileContent): void
+    {
+        $qrCode = new QrCode('QR Code');
+        $qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
+        $qrCode->setLogoWidth(100);
+
+        $qrCode->setWriterByName($writerName);
+        $data = $qrCode->writeString();
+        $this->assertTrue(is_string($data));
+
+        if (null !== $fileContent) {
+            $uriData = $qrCode->writeDataUri();
+            $this->assertTrue(0 === strpos($uriData, $fileContent));
         }
     }
 
+    public function writerNameProvider(): array
+    {
+        return [
+            ['binary', null],
+            ['debug', null],
+            ['eps', null],
+            ['png', 'data:image/png;base64'],
+            ['svg', 'data:image/svg+xml;base64'],
+        ];
+    }
+
+    /**
+     * @dataProvider extensionsProvider
+     * @testdox Writer set by extension $extension results in the correct data type
+     */
+    public function testWriteQrCodeByWriterExtension(string $extension, ?string $fileContent): void
+    {
+        $qrCode = new QrCode('QR Code');
+        $qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
+        $qrCode->setLogoWidth(100);
+
+        $qrCode->setWriterByExtension($extension);
+        $data = $qrCode->writeString();
+        $this->assertTrue(is_string($data));
+
+        if (null !== $fileContent) {
+            $uriData = $qrCode->writeDataUri();
+            $this->assertTrue(0 === strpos($uriData, $fileContent));
+        }
+    }
+
+    public function extensionsProvider(): array
+    {
+        return [
+            ['bin', null],
+            ['txt', null],
+            ['eps', null],
+            ['png', 'data:image/png;base64'],
+            ['svg', 'data:image/svg+xml;base64'],
+        ];
+    }
+
+    /**
+     * @testdox Factory creates a valid QR code
+     */
     public function testFactory(): void
     {
         $qrCodeFactory = new QrCodeFactory();
@@ -59,65 +129,8 @@ class QrCodeTest extends TestCase
     }
 
     /**
-     * @dataProvider writerNamesProvider
+     * @testdox Size and margin are handled correctly
      */
-    public function testWriteQrCodeByWriterName($writerName, $fileContent): void
-    {
-        $qrCode = new QrCode('QR Code');
-        $qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
-        $qrCode->setLogoWidth(100);
-
-        $qrCode->setWriterByName($writerName);
-        $data = $qrCode->writeString();
-        $this->assertTrue(is_string($data));
-
-        if (null !== $fileContent) {
-            $uriData = $qrCode->writeDataUri();
-            $this->assertTrue(0 === strpos($uriData, $fileContent));
-        }
-    }
-
-    public function writerNamesProvider()
-    {
-        return [
-            ['binary', null],
-            ['debug', null],
-            ['eps', null],
-            ['png', 'data:image/png;base64'],
-            ['svg', 'data:image/svg+xml;base64'],
-        ];
-    }
-
-    /**
-     * @dataProvider extensionsProvider
-     */
-    public function testWriteQrCodeByWriterExtension($extension, $fileContent): void
-    {
-        $qrCode = new QrCode('QR Code');
-        $qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
-        $qrCode->setLogoWidth(100);
-
-        $qrCode->setWriterByExtension($extension);
-        $data = $qrCode->writeString();
-        $this->assertTrue(is_string($data));
-
-        if (null !== $fileContent) {
-            $uriData = $qrCode->writeDataUri();
-            $this->assertTrue(0 === strpos($uriData, $fileContent));
-        }
-    }
-
-    public function extensionsProvider()
-    {
-        return [
-            ['bin', null],
-            ['txt', null],
-            ['eps', null],
-            ['png', 'data:image/png;base64'],
-            ['svg', 'data:image/svg+xml;base64'],
-        ];
-    }
-
     public function testSetSize(): void
     {
         $size = 400;
@@ -134,6 +147,9 @@ class QrCodeTest extends TestCase
         $this->assertTrue(imagesy($image) === $size + 2 * $margin);
     }
 
+    /**
+     * @testdox Label can be added and QR code is still readable
+     */
     public function testSetLabel(): void
     {
         $qrCode = new QrCode('QR Code');
@@ -146,6 +162,9 @@ class QrCodeTest extends TestCase
         $this->assertEquals('QR Code', $reader->text());
     }
 
+    /**
+     * @testdox Logo can be added and QR code is still readable
+     */
     public function testSetLogo(): void
     {
         $qrCode = new QrCode('QR Code');
@@ -158,6 +177,9 @@ class QrCodeTest extends TestCase
         $this->assertTrue(is_string($pngData));
     }
 
+    /**
+     * @testdox Resulting QR code can be written to file
+     */
     public function testWriteFile(): void
     {
         $filename = __DIR__.'/output/qr-code.png';
@@ -168,8 +190,13 @@ class QrCodeTest extends TestCase
         $image = imagecreatefromstring(file_get_contents($filename));
 
         $this->assertTrue(is_resource($image));
+
+        imagedestroy($image);
     }
 
+    /**
+     * @testdox QR code data can be retrieved
+     */
     public function testData(): void
     {
         $qrCode = new QrCode('QR Code');
@@ -186,6 +213,9 @@ class QrCodeTest extends TestCase
         $this->assertArrayHasKey('margin_right', $data);
     }
 
+    /**
+     * @testdox Invalid image data results in appropriate exception
+     */
     public function testNonImageData(): void
     {
         $qrCode = new QrCode('QR Code');
