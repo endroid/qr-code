@@ -16,13 +16,17 @@
         "ext-gd": "*",
         "bacon/bacon-qr-code": "^2.0",
         "khanamiryan/qrcode-detector-decoder": "^1.0.2",
-        "symfony/http-foundation": "^3.4||^4.2.12||^5.0",
-        "symfony/options-resolver": "^3.4||^4.4.7||^5.0.7",
-        "symfony/property-access": "^3.4||^4.0||^5.0",
+        "symfony/http-foundation": "^3.4||^4.4||^5.0",
+        "symfony/options-resolver": "^3.4||^4.4||^5.0",
+        "symfony/property-access": "^3.4||^4.4||^5.0",
         "myclabs/php-enum": "^1.5"
     },
     "require-dev": {
-        "endroid/test": "dev-master"
+        "endroid/quality": "dev-master"
+    },
+    "suggest": {
+        "roave/security-advisories": "Avoids installation of package versions with vulnerabilities",
+        "symfony/security-checker": "Checks your composer.lock for vulnerabilities"
     },
     "autoload": {
         "psr-4": {
