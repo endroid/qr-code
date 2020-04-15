@@ -122,9 +122,10 @@ class QrCode implements QrCodeInterface
         return $this->size;
     }
 
-    public function setMargin(int $margin): void
+    public function setMargin(int $margin): self
     {
         $this->margin = $margin;
+        return $this;
     }
 
     public function getMargin(): int
