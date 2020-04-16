@@ -71,18 +71,21 @@ $response = new QrCodeResponse($qrCode);
 
 ![QR Code](https://endroid.nl/qr-code/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png)
 
+## Readability
+
+The readability of a QR code is primarily determined by the size, the input
+length, the error correction level and any possible logo over the image so you
+can tweak these parameters if you are looking for optimal results. You can also
+check $qrCode->getRoundBlockSize() value to see if block dimensions are rounded
+so that the image is more sharp and readable. Please note that rounding block
+size can result in additional padding to compensate for the rounding difference.
+
 ## Built-in validation reader
 
 You can enable the built-in validation reader (disabled by default) by calling
 setValidateResult(true). This validation reader does not guarantee that the QR
 code will be readable by all readers but it helps you provide a minimum level
 of quality.
- 
-The readability of a QR code is primarily determined by the size, the input
-length, the error correction level and any possible logo over the image so you
-can tweak these parameters if you are looking for optimal results. You can also
-check $qrCode->getRoundBlockSize() value to see if block dimensions are rounded
-so that the image is more sharp and readable.
 
 Take note that the validator can consume quite amount of additional resources.
 
