@@ -74,6 +74,9 @@ $qrCode->writeFile(__DIR__.'/qrcode.png');
 
 // Create a response object
 $response = new QrCodeResponse($qrCode);
+
+// Generate a data URI to include image data inline (i.e. inside an <img> tag)
+$dataUri = $qrCode->writeDataUri();
 ```
 
 ![QR Code](https://endroid.nl/qr-code/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png)
