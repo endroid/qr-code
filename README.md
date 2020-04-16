@@ -46,7 +46,7 @@ $qrCode->setSize(300);
 
 // Set advanced options
 $qrCode->setWriterByName('png');
-$qrCode->setMargin(10);
+$qrCode->setMargin(10); // Depending on the block size, extra margin is added automatically. So if setting this to `0` still gives you too much margin, change the value of `setSize()`
 $qrCode->setEncoding('UTF-8');
 $qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH());
 $qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
@@ -64,6 +64,9 @@ echo $qrCode->writeString();
 
 // Save it to a file
 $qrCode->writeFile(__DIR__.'/qrcode.png');
+
+// Use it as an image on-the-fly:
+$qrCode->writeDataUri(); // to be used inside `<img src="...">`
 
 // Create a response object
 $response = new QrCodeResponse($qrCode);
