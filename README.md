@@ -72,9 +72,6 @@ echo $qrCode->writeString();
 // Save it to a file
 $qrCode->writeFile(__DIR__.'/qrcode.png');
 
-// Create a response object
-$response = new QrCodeResponse($qrCode);
-
 // Generate a data URI to include image data inline (i.e. inside an <img> tag)
 $dataUri = $qrCode->writeDataUri();
 ```
