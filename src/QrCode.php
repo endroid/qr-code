@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Endroid\QrCode;
 
 use BaconQrCode\Encoder\Encoder;
-use Endroid\QrCode\Exception\InvalidPathException;
+use Endroid\QrCode\Exception\InvalidFontException;
 use Endroid\QrCode\Exception\UnsupportedExtensionException;
 use Endroid\QrCode\Writer\WriterInterface;
 
@@ -200,12 +200,6 @@ class QrCode implements QrCodeInterface
 
     public function setLogoPath(string $logoPath): void
     {
-        $logoPath = realpath($logoPath);
-
-        if (false === $logoPath || !is_file($logoPath)) {
-            throw new InvalidPathException('Invalid logo path: '.$logoPath);
-        }
-
         $this->logoPath = $logoPath;
     }
 
@@ -281,7 +275,7 @@ class QrCode implements QrCodeInterface
         $resolvedLabelFontPath = (string) realpath($labelFontPath);
 
         if (!is_file($resolvedLabelFontPath)) {
-            throw new InvalidPathException('Invalid label font path: '.$labelFontPath);
+            throw new InvalidFontException('Invalid label font path: '.$labelFontPath);
         }
 
         $this->labelFontPath = $resolvedLabelFontPath;

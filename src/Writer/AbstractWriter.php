@@ -20,6 +20,26 @@ abstract class AbstractWriter implements WriterInterface
 {
     protected function getMimeType(string $path): string
     {
+        if (false !== filter_var($path, FILTER_VALIDATE_URL)) {
+            return $this->getMimeTypeFromUrl($path);
+        }
+
+        return $this->getMimeTypeFromPath($path);
+    }
+
+    private function getMimeTypeFromUrl(string $url): string
+    {
+        $headers = get_headers($url, 1);
+
+        if (!is_array($headers) || !isset($headers['Content-Type'])) {
+            throw new InvalidLogoException(sprintf('Content type could not be determined for logo URL "%s"', $url));
+        }
+
+        return $headers['Content-Type'];
+    }
+
+    private function getMimeTypeFromPath(string $path): string
+    {
         if (!function_exists('mime_content_type')) {
             throw new MissingExtensionException('You need the ext-fileinfo extension to determine logo mime type');
         }
