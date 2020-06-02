@@ -27,6 +27,8 @@ class EpsWriter extends AbstractWriter
         $epsData[] = '0 0 '.$data['outer_width'].' '.$data['outer_height'].' F';
         $epsData[] = number_format($qrCode->getForegroundColor()['r'] / 100, 2, '.', ',').' '.number_format($qrCode->getForegroundColor()['g'] / 100, 2, '.', ',').' '.number_format($qrCode->getForegroundColor()['b'] / 100, 2, '.', ',').' setrgbcolor';
 
+        // Please note an EPS has a reversed Y axis compared to PNG and SVG
+        $data['matrix'] = array_reverse($data['matrix']);
         foreach ($data['matrix'] as $row => $values) {
             foreach ($values as $column => $value) {
                 if (1 === $value) {
