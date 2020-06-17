@@ -15,10 +15,7 @@
         "php": ">=7.2",
         "ext-gd": "*",
         "bacon/bacon-qr-code": "^2.0",
-        "khanamiryan/qrcode-detector-decoder": "^1.0.2",
-        "symfony/options-resolver": "^3.4||^4.4||^5.0",
-        "symfony/property-access": "^3.4||^4.4||^5.0",
-        "myclabs/php-enum": "^1.5"
+        "symfony/property-access": "^3.4||^4.4||^5.0"
     },
     "require-dev": {
         "endroid/quality": "dev-master"
@@ -42,7 +39,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.x-dev"
+            "dev-master": "4.x-dev"
         }
     }
 }
