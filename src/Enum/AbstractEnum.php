@@ -20,11 +20,16 @@ abstract class AbstractEnum
         return new static($value);
     }
 
+    public static function values(): array
+    {
+        $reflectionClass = new \ReflectionClass(get_called_class());
+
+        return $reflectionClass->getConstants();
+    }
+
     private function assertValid(string $value): void
     {
-        $reflectionClass = new \ReflectionClass($this);
-        $constants = $reflectionClass->getConstants();
-        foreach ($constants as $constantName => $constantValue) {
+        foreach ($this->values() as $constantName => $constantValue) {
             if ($value === $constantValue) {
                 return;
             }
