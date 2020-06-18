@@ -126,6 +126,8 @@ class SvgWriter extends AbstractWriter
         $imageDefinition->addAttribute('height', strval($logoHeight));
         $imageDefinition->addAttribute('preserveAspectRatio', 'none');
 
+        // xlink:href is actually deprecated, but still required when placing the qr code in a pdf.
+        // SimpleXML strips out the xlink part by using addAttribute(), so it must be set directly.
         if ($forceXlinkHref) {
             $imageDefinition['xlink:href'] = 'data:'.$mimeType.';base64,'.base64_encode($imageData);
         } else {
