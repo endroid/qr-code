@@ -35,8 +35,6 @@ interface QrCodeInterface
 
     public function getLogoHeight(): ?int;
 
-    public function getLogoForceXlinkHref(): bool;
-
     public function getLabel(): ?string;
 
     public function getLabelFontPath(): string;

@@ -21,6 +21,8 @@ class SvgWriter extends AbstractWriter
 {
     public function writeString(QrCodeInterface $qrCode): string
     {
+        $options = $qrCode->getWriterOptions();
+
         if ($qrCode->getValidateResult()) {
             throw new ValidationException('Built-in validation reader can not check SVG images: please disable via setValidateResult(false)');
         }
@@ -64,7 +66,13 @@ class SvgWriter extends AbstractWriter
 
         $logoPath = $qrCode->getLogoPath();
         if (is_string($logoPath)) {
-            $this->addLogo($svg, $data['outer_width'], $data['outer_height'], $logoPath, $qrCode->getLogoWidth(), $qrCode->getLogoHeight(), $qrCode->getLogoForceXlinkHref());
+
+            $forceXlinkHref = false;
+            if (isset($options['force_xlink_href']) && $options['force_xlink_href']) {
+                $forceXlinkHref = true;
+            }
+
+            $this->addLogo($svg, $data['outer_width'], $data['outer_height'], $logoPath, $qrCode->getLogoWidth(), $qrCode->getLogoHeight(), $forceXlinkHref);
         }
 
         $xml = $svg->asXML();
@@ -73,7 +81,7 @@ class SvgWriter extends AbstractWriter
             throw new GenerateImageException('Unable to save SVG XML');
         }
 
-        $options = $qrCode->getWriterOptions();
+
         if (isset($options['exclude_xml_declaration']) && $options['exclude_xml_declaration']) {
             $xml = str_replace("<?xml version=\"1.0\"?>\n", '', $xml);
         }
