@@ -11,24 +11,23 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Tests;
 
+use Endroid\QrCode\Builder;
 use Endroid\QrCode\Enum\LabelAlignment;
-use Endroid\QrCode\Generator;
 use Endroid\QrCode\Enum\ErrorCorrectionLevel;
 use PHPUnit\Framework\TestCase;
 
 class QrCodeTest extends TestCase
 {
-    public function testGenerateQrCode(): void
+    public function testBuilder(): void
     {
-        $generator = new Generator();
-        $generator
-            ->setData('Example data')
-            ->setSize(300)
-            ->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH)
-            ->setLabelAlignment(LabelAlignment::CENTER)
+        $builder = Builder::create()
+            ->withData('Example data')
+            ->withSize(300)
+            ->withErrorCorrectionLevel(ErrorCorrectionLevel::HIGH)
+            ->withLabelAlignment(LabelAlignment::CENTER)
         ;
 
-        $result = $generator->generate();
+        $builder->build()->writeString();
 
         dump($result);
         die;
