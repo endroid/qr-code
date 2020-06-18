@@ -61,6 +61,9 @@ class QrCode implements QrCodeInterface
     /** @var int|null */
     private $logoHeight;
 
+    /** @var bool */
+    private $logoForceXlinkHref = false;
+
     /** @var string */
     private $label;
 
@@ -232,6 +235,16 @@ class QrCode implements QrCodeInterface
     public function getLogoHeight(): ?int
     {
         return $this->logoHeight;
+    }
+
+    public function setLogoForceXlinkHref(bool $logoForceXlinkHref): void
+    {
+        $this->logoForceXlinkHref = $logoForceXlinkHref;
+    }
+
+    public function getLogoForceXlinkHref(): bool
+    {
+        return $this->logoForceXlinkHref;
     }
 
     public function setLabel(string $label, int $labelFontSize = null, string $labelFontPath = null, string $labelAlignment = null, array $labelMargin = null): void

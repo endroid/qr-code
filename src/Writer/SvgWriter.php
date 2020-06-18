@@ -64,7 +64,7 @@ class SvgWriter extends AbstractWriter
 
         $logoPath = $qrCode->getLogoPath();
         if (is_string($logoPath)) {
-            $this->addLogo($svg, $data['outer_width'], $data['outer_height'], $logoPath, $qrCode->getLogoWidth(), $qrCode->getLogoHeight());
+            $this->addLogo($svg, $data['outer_width'], $data['outer_height'], $logoPath, $qrCode->getLogoWidth(), $qrCode->getLogoHeight(), $qrCode->getLogoForceXlinkHref());
         }
 
         $xml = $svg->asXML();
@@ -81,7 +81,7 @@ class SvgWriter extends AbstractWriter
         return $xml;
     }
 
-    private function addLogo(SimpleXMLElement $svg, int $imageWidth, int $imageHeight, string $logoPath, int $logoWidth = null, int $logoHeight = null): void
+    private function addLogo(SimpleXMLElement $svg, int $imageWidth, int $imageHeight, string $logoPath, int $logoWidth = null, int $logoHeight = null, bool $forceXlinkHref = false): void
     {
         $mimeType = $this->getMimeType($logoPath);
         $imageData = file_get_contents($logoPath);
@@ -125,7 +125,12 @@ class SvgWriter extends AbstractWriter
         $imageDefinition->addAttribute('width', strval($logoWidth));
         $imageDefinition->addAttribute('height', strval($logoHeight));
         $imageDefinition->addAttribute('preserveAspectRatio', 'none');
-        $imageDefinition->addAttribute('xlink:href', 'data:'.$mimeType.';base64,'.base64_encode($imageData));
+
+        if ($forceXlinkHref) {
+            $imageDefinition['xlink:href'] = 'data:'.$mimeType.';base64,'.base64_encode($imageData);
+        } else {
+            $imageDefinition->addAttribute('href', 'data:'.$mimeType.';base64,'.base64_encode($imageData));
+        }
     }
 
     private function getOpacity(int $alpha): float
