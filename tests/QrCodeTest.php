@@ -148,7 +148,7 @@ class QrCodeTest extends TestCase
     }
 
     /**
-     * @testdox Size and margin are handled correctly
+     * @testdox Size and margin are handled correctly with rounded blocks
      * @dataProvider roundedSizeProvider
      */
     public function testSetSizeRounded($size, $margin, $round, $mode, $expectedSize): void
