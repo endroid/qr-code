@@ -11,8 +11,8 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class Builder implements BuilderInterface
 {
-    private $options;
     private $writerClass = PngWriter::class;
+    private $options;
 
     private function __construct()
     {
@@ -24,6 +24,34 @@ class Builder implements BuilderInterface
         $new = new self();
 
         return $new->withOptions($options);
+    }
+
+    public function withWriter(string $writerClass): self
+    {
+        $new = clone $this;
+        $new->writerClass = $writerClass;
+
+        return $new;
+    }
+
+    private function withOptions(array $options): self
+    {
+        $new = clone $this;
+        foreach ($options as $class => $classOptions) {
+            foreach ($classOptions as $name => $value) {
+                $new = $this->withOption($class, $name, $value);
+            }
+        }
+
+        return $new;
+    }
+
+    private function withOption(string $class, string $name, $value): self
+    {
+        $new = clone $this;
+        $new->options[$class][$name] = $value;
+
+        return $new;
     }
 
     public function withData(string $data): self
@@ -46,18 +74,15 @@ class Builder implements BuilderInterface
         return $this->withOption(LabelInterface::class, 'label_alignment', $labelAlignment);
     }
 
-    public function withWriter(string $writerClass): self
-    {
-        $new = clone $this;
-        $new->writerClass = $writerClass;
-
-        return $new;
-    }
-
-    public function generate(): WriterInterface
+    public function getQrCode(): QrCodeInterface
     {
         $qrCode = new QrCode($this->options['data']);
         $this->applyOptions($qrCode);
+    }
+
+    public function getWriter(): WriterInterface
+    {
+        $qrCode = $this->getQrCode();
 
         $writer = new $this->writerClass($qrCode);
         $this->applyOptions($writer);
@@ -75,26 +100,6 @@ class Builder implements BuilderInterface
         }
 
         return $writer;
-    }
-
-    private function withOptions(array $options): self
-    {
-        $new = clone $this;
-        foreach ($options as $class => $classOptions) {
-            foreach ($classOptions as $name => $value) {
-                $new = $this->withOption($class, $name, $value);
-            }
-        }
-
-        return $new;
-    }
-
-    private function withOption(string $class, string $name, $value): self
-    {
-        $new = clone $this;
-        $new->options[$class][$name] = $value;
-
-        return $new;
     }
 
     private function applyOptions($object): void

@@ -10,9 +10,13 @@ interface BuilderInterface
 {
     public static function create(): self;
 
+    public function withOptions(array $options): self;
+
     public function withData(string $data): self;
 
     public function withErrorCorrectionLevel(string $errorCorrectionLevel): self;
 
-    public function generate(): WriterInterface;
+    public function getQrCode(): QrCodeInterface;
+
+    public function getWriter(): WriterInterface;
 }

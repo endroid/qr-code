@@ -27,7 +27,7 @@ class QrCodeTest extends TestCase
             ->withLabelAlignment(LabelAlignment::CENTER)
         ;
 
-        $builder->build()->writeString();
+        $result = $builder->getWriter()->writeString();
 
         dump($result);
         die;

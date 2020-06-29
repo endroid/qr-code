@@ -8,7 +8,6 @@ class PngWriter extends AbstractImageWriter
 {
     public function writeString(): string
     {
-
     }
 
     public function getMimeType(): string
