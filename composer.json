@@ -21,11 +21,13 @@
         "myclabs/php-enum": "^1.5"
     },
     "require-dev": {
-        "endroid/quality": "dev-master"
+        "endroid/quality": "dev-master",
+        "setasign/fpdf": "^1.8"
     },
     "suggest": {
         "roave/security-advisories": "Avoids installation of package versions with vulnerabilities",
-        "symfony/security-checker": "Checks your composer.lock for vulnerabilities"
+        "symfony/security-checker": "Checks your composer.lock for vulnerabilities",
+        "setasign/fpdf": "Required to use the QR FPDF writer."
     },
     "autoload": {
         "psr-4": {
