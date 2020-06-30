@@ -130,8 +130,8 @@ class FpdfWriter extends AbstractWriter
             }
         }
 
-        $logoX = $imageWidth / 2 - $logoWidth / 2;
-        $logoY = $imageHeight / 2 - $logoHeight / 2;
+        $logoX = $imageWidth / 2 - (int) $logoWidth / 2;
+        $logoY = $imageHeight / 2 - (int) $logoHeight / 2;
 
         $fpdf->Image($logoPath, $logoX, $logoY, $logoWidth, $logoHeight);
     }
