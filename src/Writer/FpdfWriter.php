@@ -110,18 +110,10 @@ class FpdfWriter extends AbstractWriter
         int $imageHeight
     ) {
         if (null === $logoHeight || null === $logoWidth) {
-            $logoImage = \imagecreatefromstring((string) \file_get_contents($logoPath));
-            if (!\is_resource($logoImage)) {
-                throw new GenerateImageException('Unable to generate image: check your GD installation or logo path');
-            }
-
-            $logoSourceWidth = \imagesx($logoImage);
-            $logoSourceHeight = \imagesy($logoImage);
-
-            \imagedestroy($logoImage);
+            [$logoSourceWidth, $logoSourceHeight] = \getimagesize($logoPath);
 
             if (null === $logoWidth) {
-                $logoWidth = $logoSourceWidth;
+                $logoWidth = (int) $logoSourceWidth;
             }
 
             if (null === $logoHeight) {
