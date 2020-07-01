@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Endroid\QrCode;
+namespace Endroid\QrCode\Builder;
 
+use Endroid\QrCode\QrCodeInterface;
 use Endroid\QrCode\Writer\WriterInterface;
 
 interface BuilderInterface
 {
     public static function create(): self;
 
+    public function withWriter(string $class): self;
+
     public function withOptions(array $options): self;
-
-    public function withData(string $data): self;
-
-    public function withErrorCorrectionLevel(string $errorCorrectionLevel): self;
 
     public function getQrCode(): QrCodeInterface;
 

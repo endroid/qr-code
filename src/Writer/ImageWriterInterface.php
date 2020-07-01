@@ -9,4 +9,6 @@ interface ImageWriterInterface extends WriterInterface
     public function setSize(int $size): void;
 
     public function setMargin(int $margin): void;
+
+    public function setRoundBlockSize(bool $roundBlockSize): void;
 }

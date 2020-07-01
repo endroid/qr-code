@@ -21,7 +21,6 @@ class QrCode implements QrCodeInterface
     public function __construct(string $data)
     {
         $this->data = $data;
-
         $this->errorCorrectionLevel = ErrorCorrectionLevel::create(ErrorCorrectionLevel::HIGH);
     }
 

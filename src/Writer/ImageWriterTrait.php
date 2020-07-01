@@ -7,7 +7,7 @@ namespace Endroid\QrCode\Writer;
 use Endroid\QrCode\LabelInterface;
 use Endroid\QrCode\LogoInterface;
 
-abstract class AbstractImageWriter extends AbstractWriter implements ImageWriterInterface
+trait ImageWriterTrait
 {
     private $size = 300;
     private $margin = 10;
