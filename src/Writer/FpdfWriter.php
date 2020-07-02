@@ -28,7 +28,7 @@ class FpdfWriter extends AbstractWriter
     {
         if(!\class_exists(\FPDF::class)){
             throw new \BadMethodCallException(
-                'The QRFpdf output requires FPDF as dependency but the class "\FPDF" couldn\'t be found.'
+                'The Fpdf writer requires FPDF as dependency but the class "\\FPDF" couldn\'t be found.'
             );
         }
     }
