@@ -27,7 +27,7 @@
     "suggest": {
         "roave/security-advisories": "Avoids installation of package versions with vulnerabilities",
         "symfony/security-checker": "Checks your composer.lock for vulnerabilities",
-        "setasign/fpdf": "Required to use the QR FPDF writer."
+        "setasign/fpdf": "Required to use the FPDF writer."
     },
     "autoload": {
         "psr-4": {
