@@ -45,6 +45,7 @@ use Endroid\QrCode\Response\QrCodeResponse;
 // Create a basic QR code
 $qrCode = new QrCode('Life is too short to be generating QR codes');
 $qrCode->setSize(300);
+$qrCode->setMargin(10); 
 
 // Set advanced options
 $qrCode->setWriterByName('png');
@@ -57,10 +58,11 @@ $qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
 $qrCode->setLogoSize(150, 200);
 $qrCode->setValidateResult(false);
 
-// Apply a margin and round block sizes to improve readability
-// Please note that rounding block sizes can result in additional margin
-$qrCode->setRoundBlockSize(true);
-$qrCode->setMargin(10); 
+// Round block sizes to improve readability and make the blocks sharper in pixel based outputs (like png).
+// There are three approaches:
+$qrCode->setRoundBlockSize(true, QrCode::ROUND_BLOCK_SIZE_MODE_MARGIN); // The size of the qr code is shrinked, if necessary, but the size of the final image remains unchanged due to additional margin being added (default)
+$qrCode->setRoundBlockSize(true, QrCode::ROUND_BLOCK_SIZE_MODE_ENLARGE); // The size of the qr code and the final image is enlarged, if necessary
+$qrCode->setRoundBlockSize(true, QrCode::ROUND_BLOCK_SIZE_MODE_SHRINK); // The size of the qr code and the final image is shrinked, if necessary
 
 // Set additional writer options (SvgWriter example)
 $qrCode->setWriterOptions(['exclude_xml_declaration' => true]);

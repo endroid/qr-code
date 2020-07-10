@@ -20,6 +20,10 @@ class QrCode implements QrCodeInterface
 {
     const LABEL_FONT_PATH_DEFAULT = __DIR__.'/../assets/fonts/noto_sans.otf';
 
+    const ROUND_BLOCK_SIZE_MODE_MARGIN = 'margin';
+    const ROUND_BLOCK_SIZE_MODE_SHRINK = 'shrink';
+    const ROUND_BLOCK_SIZE_MODE_ENLARGE = 'enlarge';
+
     private $text;
 
     /** @var int */
@@ -49,6 +53,9 @@ class QrCode implements QrCodeInterface
 
     /** @var bool */
     private $roundBlockSize = true;
+
+    /** @var string */
+    private $roundBlockSizeMode = self::ROUND_BLOCK_SIZE_MODE_MARGIN;
 
     private $errorCorrectionLevel;
 
@@ -178,9 +185,10 @@ class QrCode implements QrCodeInterface
         return $this->encoding;
     }
 
-    public function setRoundBlockSize(bool $roundBlockSize): void
+    public function setRoundBlockSize(bool $roundBlockSize, string $mode = self::ROUND_BLOCK_SIZE_MODE_MARGIN): void
     {
         $this->roundBlockSize = $roundBlockSize;
+        $this->roundBlockSizeMode = $mode;
     }
 
     public function getRoundBlockSize(): bool
@@ -422,7 +430,19 @@ class QrCode implements QrCodeInterface
         $data['block_count'] = count($matrix[0]);
         $data['block_size'] = $this->size / $data['block_count'];
         if ($this->roundBlockSize) {
-            $data['block_size'] = intval(floor($data['block_size']));
+            switch($this->roundBlockSizeMode) {
+                case self::ROUND_BLOCK_SIZE_MODE_ENLARGE:
+                    $data['block_size'] = intval(ceil($data['block_size']));
+                    $this->size = $data['block_size'] * $data['block_count'];
+                    break;
+                case self::ROUND_BLOCK_SIZE_MODE_SHRINK:
+                    $data['block_size'] = intval(floor($data['block_size']));
+                    $this->size = $data['block_size'] * $data['block_count'];
+                    break;
+                case self::ROUND_BLOCK_SIZE_MODE_MARGIN:
+                default:
+                    $data['block_size'] = intval(floor($data['block_size']));
+            }
         }
         $data['inner_width'] = $data['block_size'] * $data['block_count'];
         $data['inner_height'] = $data['block_size'] * $data['block_count'];
