@@ -26,15 +26,16 @@ class FpdfWriter extends AbstractWriter
 
     public function __construct()
     {
+    }
+
+    public function writeString(QrCodeInterface $qrCode): string
+    {
         if(!\class_exists(\FPDF::class)){
             throw new \BadMethodCallException(
                 'The Fpdf writer requires FPDF as dependency but the class "\\FPDF" couldn\'t be found.'
             );
         }
-    }
-
-    public function writeString(QrCodeInterface $qrCode): string
-    {
+        
         if ($qrCode->getValidateResult()) {
             throw new ValidationException(
                 'Built-in validation reader can not check fpdf qr codes: please disable via setValidateResult(false)'
