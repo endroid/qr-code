@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode;
 
-class Logo implements LogoInterface
+final class Logo implements LogoInterface
 {
-    private $path;
+    private string $path;
 
     public function __construct(string $path)
     {
+        $this->validatePath($path);
+
         $this->path = $path;
+    }
+
+    private function validatePath(string $path): void
+    {
+        if (!file_exists($path)) {
+            throw new \Exception(sprintf('Invalid logo path "%s"', $path));
+        }
     }
 }

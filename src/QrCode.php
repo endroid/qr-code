@@ -11,17 +11,17 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode;
 
-use Endroid\QrCode\Enum\ErrorCorrectionLevel;
-
-class QrCode implements QrCodeInterface
+final class QrCode implements QrCodeInterface
 {
-    private $data;
-    private $errorCorrectionLevel;
+    private string $data;
+    private Encoding $encoding;
+    private ErrorCorrectionLevel $errorCorrectionLevel;
 
-    public function __construct(string $data)
+    public function __construct(string $data, Encoding $encoding = null, ErrorCorrectionLevel $errorCorrectionLevel = null)
     {
         $this->data = $data;
-        $this->errorCorrectionLevel = ErrorCorrectionLevel::create(ErrorCorrectionLevel::HIGH);
+        $this->encoding = is_null($encoding) ? new Encoding('UTF-8') : $encoding;
+        $this->errorCorrectionLevel = is_null($errorCorrectionLevel) ? new ErrorCorrectionLevel('low') : $errorCorrectionLevel;
     }
 
     public function getData(): string
@@ -29,13 +29,13 @@ class QrCode implements QrCodeInterface
         return $this->data;
     }
 
-    public function setErrorCorrectionLevel(string $errorCorrectionLevel): void
+    public function getEncoding(): Encoding
     {
-        $this->errorCorrectionLevel = ErrorCorrectionLevel::create($errorCorrectionLevel);
+        return $this->encoding;
     }
 
-    public function getErrorCorrectionLevel(): string
+    public function getErrorCorrectionLevel(): ErrorCorrectionLevel
     {
-        return (string) $this->errorCorrectionLevel;
+        return $this->errorCorrectionLevel;
     }
 }

@@ -11,25 +11,31 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Tests;
 
-use Endroid\QrCode\Builder;
-use Endroid\QrCode\Enum\LabelAlignment;
-use Endroid\QrCode\Enum\ErrorCorrectionLevel;
+use Endroid\QrCode\Model\ErrorCorrectionLevel;
+use Endroid\QrCode\Model\Label;
+use Endroid\QrCode\Model\Logo;
+use Endroid\QrCode\Model\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\WriterInterface;
 use PHPUnit\Framework\TestCase;
 
 class QrCodeTest extends TestCase
 {
-    public function testBuilder(): void
+    /**
+     * @testdox The QR code can be created
+     */
+    public function testQrCode(): void
     {
-        $builder = Builder::create()
-            ->withData('Example data')
-            ->withSize(300)
-            ->withErrorCorrectionLevel(ErrorCorrectionLevel::HIGH)
-            ->withLabelAlignment(LabelAlignment::CENTER)
-        ;
-
-        $result = $builder->getWriter()->writeString();
-
-        dump($result);
+        $qrCode = QrCode::create('text');
+        dump($qrCode);
         die;
+
+
+
+        $logo = new Logo(__DIR__.'/../assets/symfony.png');
+        $label = new Label('label');
+
+        $writer = new PngWriter($qrCode, $logo, $label);
     }
+
 }

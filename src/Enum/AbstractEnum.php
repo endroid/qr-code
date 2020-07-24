@@ -6,40 +6,21 @@ namespace Endroid\QrCode\Enum;
 
 abstract class AbstractEnum
 {
-    private $value;
+    private string $value;
 
-    private function __construct(string $value)
+    public function __construct(string $value)
     {
-        $this->assertValid($value);
+        static::validateValue($value);
 
         $this->value = $value;
     }
 
-    public static function create(string $value): self
+    public static function validateValue(string $value): void
     {
-        return new static($value);
-    }
-
-    public static function values(): array
-    {
-        $reflectionClass = new \ReflectionClass(get_called_class());
-
-        return $reflectionClass->getConstants();
-    }
-
-    private function assertValid(string $value): void
-    {
-        foreach ($this->values() as $constantName => $constantValue) {
-            if ($value === $constantValue) {
-                return;
-            }
+        if (!in_array($value, static::values())) {
+            throw new \InvalidArgumentException(sprintf('Invalid enum value "%s": choose one of "%s"', $value, implode(', ', static::values())));
         }
-
-        throw new \InvalidArgumentException(sprintf('Invalid ErrorCorrectionLevel value "%s": choose one of "%s"', $value, implode(', ', array_values($constants))));
     }
 
-    public function __toString(): string
-    {
-        return (string) $this->value;
-    }
+    abstract public static function values(): array;
 }

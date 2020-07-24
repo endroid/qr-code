@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Builder;
 
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\QrCodeInterface;
+use Endroid\QrCode\Model\QrCode;
+use Endroid\QrCode\Model\QrCodeInterface;
 use Endroid\QrCode\Writer\ImageWriterInterface;
+use Endroid\QrCode\Writer\LogoWriterInterface;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\WriterInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class Builder implements BuilderInterface
 {
-    private $writerClass = PngWriter::class;
-    private $options;
+    private string $writerClass = PngWriter::class;
+    private array $options;
 
     private function __construct()
     {
@@ -26,12 +27,9 @@ class Builder implements BuilderInterface
         return new self();
     }
 
-    public function withWriter(string $writerClass): self
+    public function setWriter(string $writerClass): self
     {
-        $new = clone $this;
-        $new->writerClass = $writerClass;
-
-        return $new;
+        $this->writerClass = $writerClass;
     }
 
     public function withOptions(array $options): self

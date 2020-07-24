@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Builder;
 
-use Endroid\QrCode\QrCodeInterface;
+use Endroid\QrCode\Model\QrCodeInterface;
 use Endroid\QrCode\Writer\WriterInterface;
 
 interface BuilderInterface

@@ -8,10 +8,6 @@ use Zxing\QrReader;
 
 final class PngWriter extends AbstractWriter implements LabelWriterInterface, LogoWriterInterface, ValidatingWriterInterface
 {
-    use LabelWriterTrait;
-    use LogoWriterTrait;
-    use ValidatingWriterTrait;
-
     public function writeString(): string
     {
         $image = $this->createImage($qrCode->getData(), $qrCode);
