@@ -21,4 +21,9 @@ final class Logo implements LogoInterface
             throw new \Exception(sprintf('Invalid logo path "%s"', $path));
         }
     }
+
+    public function getPath(): string
+    {
+        return $this->path;
+    }
 }

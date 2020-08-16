@@ -24,6 +24,11 @@ final class QrCode implements QrCodeInterface
         $this->errorCorrectionLevel = is_null($errorCorrectionLevel) ? new ErrorCorrectionLevel('low') : $errorCorrectionLevel;
     }
 
+    public static function create(string $data, Encoding $encoding = null, ErrorCorrectionLevel $errorCorrectionLevel = null): self
+    {
+        // TODO: Implement create() method.
+    }
+
     public function getData(): string
     {
         return $this->data;

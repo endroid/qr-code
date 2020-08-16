@@ -6,4 +6,5 @@ namespace Endroid\QrCode;
 
 interface LogoInterface
 {
+    public function getPath(): string;
 }

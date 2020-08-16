@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode;
 
-final class Font implements FontInterface
+final class Font
 {
     private string $path;
     private int $size;
