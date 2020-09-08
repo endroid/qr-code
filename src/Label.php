@@ -7,14 +7,14 @@ namespace Endroid\QrCode;
 final class Label implements LabelInterface
 {
     private string $text;
-    private Font $font;
-    private LabelAlignment $alignment;
+    private FontInterface $font;
+    private LabelAlignmentInterface $alignment;
 
-    public function __construct(string $text, Font $font = null, LabelAlignment $alignment = null)
+    public function __construct(string $text, FontInterface $font = null, LabelAlignmentInterface $alignment = null)
     {
         $this->text = $text;
         $this->font = is_null($font) ? new Font(__DIR__.'/../assets/open_sans.ttf', 16) : $font;
-        $this->alignment = is_null($alignment) ? new LabelAlignment('center') : $alignment;
+        $this->alignment = is_null($alignment) ? new LabelAlignment\Center() : $alignment;
     }
 
     public function getText(): string
@@ -27,7 +27,7 @@ final class Label implements LabelInterface
         return $this->font;
     }
 
-    public function getAlignment(): LabelAlignment
+    public function getAlignment(): LabelAlignmentInterface
     {
         return $this->alignment;
     }

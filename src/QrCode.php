@@ -14,19 +14,14 @@ namespace Endroid\QrCode;
 final class QrCode implements QrCodeInterface
 {
     private string $data;
-    private Encoding $encoding;
-    private ErrorCorrectionLevel $errorCorrectionLevel;
+    private EncodingInterface $encoding;
+    private ErrorCorrectionLevelInterface $errorCorrectionLevel;
 
-    public function __construct(string $data, Encoding $encoding = null, ErrorCorrectionLevel $errorCorrectionLevel = null)
+    public function __construct(string $data, EncodingInterface $encoding = null, ErrorCorrectionLevelInterface $errorCorrectionLevel = null)
     {
         $this->data = $data;
         $this->encoding = is_null($encoding) ? new Encoding('UTF-8') : $encoding;
-        $this->errorCorrectionLevel = is_null($errorCorrectionLevel) ? new ErrorCorrectionLevel('low') : $errorCorrectionLevel;
-    }
-
-    public static function create(string $data, Encoding $encoding = null, ErrorCorrectionLevel $errorCorrectionLevel = null): self
-    {
-        // TODO: Implement create() method.
+        $this->errorCorrectionLevel = is_null($errorCorrectionLevel) ? new ErrorCorrectionLevelLow() : $errorCorrectionLevel;
     }
 
     public function getData(): string
@@ -34,12 +29,12 @@ final class QrCode implements QrCodeInterface
         return $this->data;
     }
 
-    public function getEncoding(): Encoding
+    public function getEncoding(): EncodingInterface
     {
         return $this->encoding;
     }
 
-    public function getErrorCorrectionLevel(): ErrorCorrectionLevel
+    public function getErrorCorrectionLevel(): ErrorCorrectionLevelInterface
     {
         return $this->errorCorrectionLevel;
     }

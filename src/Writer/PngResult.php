@@ -12,4 +12,9 @@ final class PngResult extends AbstractResult
     {
         return 'image/png';
     }
+
+    public function getString(): string
+    {
+        // TODO: Implement getString() method.
+    }
 }

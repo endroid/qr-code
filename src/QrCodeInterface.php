@@ -8,7 +8,7 @@ interface QrCodeInterface
 {
     public function getData(): string;
 
-    public function getEncoding(): Encoding;
+    public function getEncoding(): EncodingInterface;
 
-    public function getErrorCorrectionLevel(): ErrorCorrectionLevel;
+    public function getErrorCorrectionLevel(): ErrorCorrectionLevelInterface;
 }

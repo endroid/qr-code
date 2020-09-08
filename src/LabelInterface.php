@@ -10,5 +10,5 @@ interface LabelInterface
 
     public function getFont(): Font;
 
-    public function getAlignment(): LabelAlignment;
+    public function getAlignment(): LabelAlignmentInterface;
 }
