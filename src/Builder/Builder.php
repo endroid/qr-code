@@ -4,70 +4,104 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Builder;
 
+use Endroid\QrCode\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevelInterface;
+use Endroid\QrCode\FontInterface;
+use Endroid\QrCode\LabelAlignmentInterface;
 use Endroid\QrCode\Writer\LabelWriterInterface;
 use Endroid\QrCode\Writer\LogoWriterInterface;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ResultInterface;
 use Endroid\QrCode\Writer\WriterInterface;
 
-class Builder
+class Builder implements BuilderInterface
 {
+    private WriterInterface $writer;
     private QrCodeBuilderInterface $qrCodeBuilder;
     private LogoBuilderInterface $logoBuilder;
     private LabelBuilderInterface $labelBuilder;
-    private WriterInterface $writer;
 
-    public function __construct()
-    {
-        $this->qrCodeBuilder = new QrCodeBuilder();
-        $this->logoBuilder = new LogoBuilder();
-        $this->labelBuilder = new LabelBuilder();
+    public function __construct(
+        QrCodeBuilderInterface $qrCodeBuilder = null,
+        LogoBuilderInterface $logoBuilder = null,
+        LabelBuilderInterface $labelBuilder = null
+    ) {
         $this->writer = new PngWriter();
+        $this->qrCodeBuilder = $qrCodeBuilder instanceof QrCodeBuilderInterface ? $qrCodeBuilder : new QrCodeBuilder();
+        $this->logoBuilder = $logoBuilder instanceof LogoBuilderInterface ? $logoBuilder : new LogoBuilder();
+        $this->labelBuilder = $labelBuilder instanceof LabelBuilderInterface ? $labelBuilder : new LabelBuilder();
     }
 
-    public function withQrCode(): QrCodeBuilderInterface
+    public function writer(WriterInterface $writer): self
     {
-        return $this->qrCodeBuilder;
+        $this->writer = $writer;
+
+        return $this;
     }
 
-    public function withLogo(): LogoBuilderInterface
+    public function data(string $data): self
     {
-        return $this->logoBuilder;
+        $this->qrCodeBuilder->data($data);
+
+        return $this;
     }
 
-    public function withLabel(): LabelBuilderInterface
+    public function encoding(Encoding $encoding): self
     {
-        return $this->labelBuilder;
+        $this->qrCodeBuilder->encoding($encoding);
+
+        return $this;
     }
 
-    public function build(): ResultInterface
+    public function errorCorrectionLevel(ErrorCorrectionLevelInterface $errorCorrectionLevel): self
     {
-        $qrCode = $this->qrCodeBuilder->build();
-        $result = $this->writer->writeQrCode($qrCode);
+        $this->qrCodeBuilder->errorCorrectionLevel($errorCorrectionLevel);
 
-        if ($this->logoEnabled && $this->writer instanceof LogoWriterInterface) {
-            $result = $this->writer->writeLogo($this->buildLogo(), $result);
+        return $this;
+    }
+
+    public function logoPath(string $logoPath): self
+    {
+        $this->logoBuilder->path($logoPath);
+
+        return $this;
+    }
+
+    public function labelText(string $labelText): self
+    {
+        $this->labelBuilder->text($labelText);
+
+        return $this;
+    }
+
+    public function labelFont(FontInterface $labelFont): self
+    {
+        $this->labelBuilder->font($labelFont);
+
+        return $this;
+    }
+
+    public function labelAlignment(LabelAlignmentInterface $labelAlignment): self
+    {
+        $this->labelBuilder->alignment($labelAlignment);
+
+        return $this;
+    }
+
+    public function getResult(): ResultInterface
+    {
+        $result = $this->writer->writeQrCode($this->qrCodeBuilder->getResult());
+
+        if ($this->writer instanceof LogoWriterInterface) {
+            $logo = $this->logoBuilder->getResult();
+            $result = $this->writer->writeLogo($logo, $result);
         }
 
-        if ($this->labelEnabled && $this->writer instanceof LabelWriterInterface) {
-            $result = $this->writer->writeLabel($this->buildLabel(), $result);
+        if ($this->writer instanceof LabelWriterInterface) {
+            $label = $this->labelBuilder->getResult();
+            $result = $this->writer->writeLabel($label, $result);
         }
 
         return $result;
-    }
-
-    public function buildQrCode(): QrCodeInterface
-    {
-        return new QrCode($this->data, new Encoding($this->encoding), new ErrorCorrectionLevel($this->errorCorrectionLevel));
-    }
-
-    public function buildLogo(): LogoInterface
-    {
-        return new Logo($this->logoPath);
-    }
-
-    public function buildLabel(): LabelInterface
-    {
-        return new Label($this->labelText, new Font($this->labelFontPath, $this->labelFontSize), new LabelAlignment($this->labelAlignment));
     }
 }

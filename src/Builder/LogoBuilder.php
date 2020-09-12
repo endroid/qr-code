@@ -15,7 +15,7 @@ class LogoBuilder implements LogoBuilderInterface
         $this->path = $path;
     }
 
-    public function build(): Logo
+    public function getResult(): Logo
     {
         return new Logo($this->path);
     }
