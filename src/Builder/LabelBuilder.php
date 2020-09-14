@@ -17,19 +17,25 @@ class LabelBuilder implements LabelBuilderInterface
     public function text(string $text): self
     {
         $this->text = $text;
+
+        return $this;
     }
 
     public function font(FontInterface $font): self
     {
         $this->font = $font;
+
+        return $this;
     }
 
     public function alignment(LabelAlignmentInterface $alignment): self
     {
         $this->alignment = $alignment;
+
+        return $this;
     }
 
-    public function getResult(): Label
+    public function build(): Label
     {
         return new Label($this->text);
     }

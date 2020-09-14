@@ -13,5 +13,5 @@ interface LabelBuilderInterface
     public function text(string $text): self;
     public function font(FontInterface $font): self;
     public function alignment(LabelAlignmentInterface $alignment): self;
-    public function getResult(): LabelInterface;
+    public function build(): LabelInterface;
 }

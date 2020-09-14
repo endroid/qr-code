@@ -21,5 +21,5 @@ interface BuilderInterface
     public function labelText(string $labelText): self;
     public function labelFont(FontInterface $labelFont): self;
     public function labelAlignment(LabelAlignmentInterface $labelAlignment): self;
-    public function getResult(): ResultInterface;
+    public function build(): ResultInterface;
 }

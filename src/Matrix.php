@@ -14,11 +14,12 @@ class Matrix
     public static function fromQrCode(QrCodeInterface $qrCode): self
     {
         $baconErrorCorrectionLevel = self::getBaconErrorCorrectionLevel($qrCode->getErrorCorrectionLevel());
-        $baconQrCode = Encoder::encode($qrCode->getData(), $baconErrorCorrectionLevel, $qrCode->getEncoding());
+        $baconQrCode = Encoder::encode($qrCode->getData(), $baconErrorCorrectionLevel, $qrCode->getEncoding()->getName());
         $baconMatrix = $baconQrCode->getMatrix();
 
 
-
+        dump($baconMatrix);
+        die;
 
         $matrix = [];
         $columnCount = $baconMatrix->getWidth();

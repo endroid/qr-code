@@ -35,7 +35,7 @@ class QrCodeBuilder implements QrCodeBuilderInterface
         return $this;
     }
 
-    public function getResult(): QrCode
+    public function build(): QrCode
     {
         return new QrCode($this->data, $this->encoding, $this->errorCorrectionLevel);
     }
