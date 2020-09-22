@@ -20,9 +20,9 @@ class Builder implements BuilderInterface
     private LogoBuilderFactoryInterface $logoBuilderFactory;
     private LabelBuilderFactoryInterface $labelBuilderFactory;
 
-    private ?QrCodeBuilderInterface $qrCodeBuilder;
-    private ?LogoBuilderInterface $logoBuilder;
-    private ?LabelBuilderInterface $labelBuilder;
+    private ?QrCodeBuilderInterface $qrCodeBuilder = null;
+    private ?LogoBuilderInterface $logoBuilder = null;
+    private ?LabelBuilderInterface $labelBuilder = null;
 
     private WriterInterface $writer;
 
