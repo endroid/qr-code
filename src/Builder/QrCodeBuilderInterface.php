@@ -11,7 +11,10 @@ use Endroid\QrCode\QrCodeInterface;
 interface QrCodeBuilderInterface
 {
     public function data(string $data): self;
+
     public function encoding(Encoding $encoding): self;
+
     public function errorCorrectionLevel(ErrorCorrectionLevelInterface $errorCorrectionLevel): self;
+
     public function build(): QrCodeInterface;
 }

@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['7.2', '7.3', '7.4']
+        php-versions: ['7.3', '7.4', '8.0']
     steps:
       - uses: actions/checkout@v1
       - uses: shivammathur/setup-php@v1
@@ -18,7 +18,7 @@ jobs:
           coverage: pcov
       - name: Install dependencies
         run: |
-          curl -sS https://getcomposer.org/installer | php -- --filename=composer
+          curl -sS https://getcomposer.org/installer | php -- --filename=composer --version=2.0.0-RC1
           composer install
       - name: Check code quality
         run: |

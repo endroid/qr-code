@@ -8,5 +8,4 @@ use Endroid\QrCode\LabelAlignmentInterface;
 
 final class Center implements LabelAlignmentInterface
 {
-
 }

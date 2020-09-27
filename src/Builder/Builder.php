@@ -29,11 +29,11 @@ class Builder implements BuilderInterface
     public function __construct(
         QrCodeBuilderFactoryInterface $qrCodeBuilderFactory = null,
         LogoBuilderFactoryInterface $logoBuilderFactory = null,
-        LabelBuilderFactoryInterface $labelBuilderFactory= null
+        LabelBuilderFactoryInterface $labelBuilderFactory = null
     ) {
-        $this->qrCodeBuilderFactory = $qrCodeBuilderFactory === null ? new QrCodeBuilderFactory() : $qrCodeBuilderFactory;
-        $this->logoBuilderFactory = $logoBuilderFactory === null ? new LogoBuilderFactory() : $logoBuilderFactory;
-        $this->labelBuilderFactory = $labelBuilderFactory === null ? new LabelBuilderFactory() : $labelBuilderFactory;
+        $this->qrCodeBuilderFactory = null === $qrCodeBuilderFactory ? new QrCodeBuilderFactory() : $qrCodeBuilderFactory;
+        $this->logoBuilderFactory = null === $logoBuilderFactory ? new LogoBuilderFactory() : $logoBuilderFactory;
+        $this->labelBuilderFactory = null === $labelBuilderFactory ? new LabelBuilderFactory() : $labelBuilderFactory;
 
         $this->writer = new PngWriter();
     }

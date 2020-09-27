@@ -8,5 +8,4 @@ use Endroid\QrCode\ErrorCorrectionLevelInterface;
 
 final class High implements ErrorCorrectionLevelInterface
 {
-
 }

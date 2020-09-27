@@ -8,7 +8,7 @@ interface LabelInterface
 {
     public function getText(): string;
 
-    public function getFont(): Font;
+    public function getFont(): FontInterface;
 
     public function getAlignment(): LabelAlignmentInterface;
 }

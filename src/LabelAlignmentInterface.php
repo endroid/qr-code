@@ -6,5 +6,4 @@ namespace Endroid\QrCode;
 
 interface LabelAlignmentInterface
 {
-
 }

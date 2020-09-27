@@ -8,5 +8,5 @@ use Endroid\QrCode\LogoInterface;
 
 interface LogoWriterInterface extends WriterInterface
 {
-    public function writeLogo(LogoInterface $logo, ResultInterface $result);
+    public function writeLogo(LogoInterface $logo, ResultInterface $result): ResultInterface;
 }

@@ -22,7 +22,7 @@ final class Label implements LabelInterface
         return $this->text;
     }
 
-    public function getFont(): Font
+    public function getFont(): FontInterface
     {
         return $this->font;
     }

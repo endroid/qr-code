@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode;
 
+use Endroid\QrCode\ErrorCorrectionLevel\Low;
+
 final class QrCode implements QrCodeInterface
 {
     private string $data;
@@ -21,7 +23,7 @@ final class QrCode implements QrCodeInterface
     {
         $this->data = $data;
         $this->encoding = is_null($encoding) ? new Encoding('UTF-8') : $encoding;
-        $this->errorCorrectionLevel = is_null($errorCorrectionLevel) ? new ErrorCorrectionLevelLow() : $errorCorrectionLevel;
+        $this->errorCorrectionLevel = is_null($errorCorrectionLevel) ? new Low() : $errorCorrectionLevel;
     }
 
     public function getData(): string

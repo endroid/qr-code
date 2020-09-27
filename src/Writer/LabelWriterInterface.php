@@ -8,5 +8,5 @@ use Endroid\QrCode\LabelInterface;
 
 interface LabelWriterInterface extends WriterInterface
 {
-    public function writeLabel(LabelInterface $label, ResultInterface $result);
+    public function writeLabel(LabelInterface $label, ResultInterface $result): ResultInterface;
 }

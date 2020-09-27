@@ -7,7 +7,10 @@ namespace Endroid\QrCode\Writer;
 interface ResultInterface
 {
     public function getString(): string;
+
     public function getDataUri(): string;
+
     public function saveToFile(string $path): void;
+
     public function getMimeType(): string;
 }

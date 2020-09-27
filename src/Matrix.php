@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Endroid\QrCode;
 
 use BaconQrCode\Common\ErrorCorrectionLevel as BaconErrorCorrectionLevel;
 use BaconQrCode\Encoder\Encoder;
-use Endroid\QrCode\ErrorCorrectionLevel;
 
 class Matrix
 {
@@ -16,7 +17,6 @@ class Matrix
         $baconErrorCorrectionLevel = self::getBaconErrorCorrectionLevel($qrCode->getErrorCorrectionLevel());
         $baconQrCode = Encoder::encode($qrCode->getData(), $baconErrorCorrectionLevel, $qrCode->getEncoding()->getName());
         $baconMatrix = $baconQrCode->getMatrix();
-
 
         dump($baconMatrix);
         die;
@@ -37,7 +37,7 @@ class Matrix
         $matrix->blockCount = count($matrix[0]);
         $matrix->blockSize = $this->size / $data['block_count'];
         if ($this->roundBlockSize) {
-            switch($this->roundBlockSizeMode) {
+            switch ($this->roundBlockSizeMode) {
                 case self::ROUND_BLOCK_SIZE_MODE_ENLARGE:
                     $data['block_size'] = intval(ceil($data['block_size']));
                     $this->size = $data['block_size'] * $data['block_count'];

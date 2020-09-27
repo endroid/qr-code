@@ -14,12 +14,20 @@ use Endroid\QrCode\Writer\WriterInterface;
 interface BuilderInterface
 {
     public function writer(WriterInterface $writer): self;
+
     public function data(string $data): self;
+
     public function encoding(Encoding $encoding): self;
+
     public function errorCorrectionLevel(ErrorCorrectionLevelInterface $errorCorrectionLevel): self;
+
     public function logoPath(string $logoPath): self;
+
     public function labelText(string $labelText): self;
+
     public function labelFont(FontInterface $labelFont): self;
+
     public function labelAlignment(LabelAlignmentInterface $labelAlignment): self;
+
     public function build(): ResultInterface;
 }

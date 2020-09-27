@@ -19,7 +19,6 @@ final class PngWriter implements LogoWriterInterface, LabelWriterInterface, Vali
         dump($matrix);
         die;
 
-
         $image = $this->createImage($qrCode->getData(), $qrCode);
 
         $logoPath = $qrCode->getLogoPath();
@@ -46,19 +45,11 @@ final class PngWriter implements LogoWriterInterface, LabelWriterInterface, Vali
 
         return $string;
 
-
-
         $image = $this->createImage($qrCode->getData(), $qrCode);
-
-
-
-
 
         $string = $this->imageToString($image);
 
         imagedestroy($image);
-
-
 
         return $string;
     }

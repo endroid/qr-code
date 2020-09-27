@@ -19,8 +19,5 @@ abstract class AbstractResult implements ResultInterface
         file_put_contents($path, $string);
     }
 
-    public function getMimeType(): string
-    {
-        return 'text/plain';
-    }
+    abstract public function getMimeType(): string;
 }
