@@ -50,10 +50,10 @@ $qrCode->setMargin(10);
 // Set advanced options
 $qrCode->setWriterByName('png');
 $qrCode->setEncoding('UTF-8');
-$qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH());
+$qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH);
 $qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
 $qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
-$qrCode->setLabel('Scan the code', 16, __DIR__.'/../assets/fonts/noto_sans.otf', LabelAlignment::CENTER());
+$qrCode->setLabel('Scan the code', 16, __DIR__.'/../assets/fonts/noto_sans.otf', LabelAlignment::CENTER);
 $qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
 $qrCode->setLogoSize(150, 200);
 $qrCode->setValidateResult(false);
