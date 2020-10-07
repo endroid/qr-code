@@ -37,8 +37,9 @@ class SvgWriter extends AbstractWriter
         $svg->addChild('defs');
 
         // Block definition
+        $block_id = isset($options['rect_id']) && $options['rect_id'] ? $options['rect_id'] : 'block';
         $blockDefinition = $svg->defs->addChild('rect');
-        $blockDefinition->addAttribute('id', 'block');
+        $blockDefinition->addAttribute('id', $block_id);
         $blockDefinition->addAttribute('width', strval($data['block_size']));
         $blockDefinition->addAttribute('height', strval($data['block_size']));
         $blockDefinition->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getForegroundColor()['r'], $qrCode->getForegroundColor()['g'], $qrCode->getForegroundColor()['b']));
@@ -59,7 +60,7 @@ class SvgWriter extends AbstractWriter
                     $block = $svg->addChild('use');
                     $block->addAttribute('x', strval($data['margin_left'] + $data['block_size'] * $column));
                     $block->addAttribute('y', strval($data['margin_left'] + $data['block_size'] * $row));
-                    $block->addAttribute('xlink:href', '#block', 'http://www.w3.org/1999/xlink');
+                    $block->addAttribute('xlink:href', '#'.$block_id, 'http://www.w3.org/1999/xlink');
                 }
             }
         }
