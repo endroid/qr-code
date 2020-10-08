@@ -13,7 +13,6 @@
     ],
     "require": {
         "php": ">=7.2",
-        "ext-gd": "*",
         "bacon/bacon-qr-code": "^2.0",
         "khanamiryan/qrcode-detector-decoder": "^1.0.2",
         "symfony/options-resolver": "^3.4||^4.4||^5.0",
@@ -25,9 +24,10 @@
         "setasign/fpdf": "^1.8"
     },
     "suggest": {
+        "ext-gd": "Required for generating PNG images",
         "roave/security-advisories": "Avoids installation of package versions with vulnerabilities",
-        "symfony/security-checker": "Checks your composer.lock for vulnerabilities",
-        "setasign/fpdf": "Required to use the FPDF writer."
+        "setasign/fpdf": "Required to use the FPDF writer.",
+        "symfony/security-checker": "Checks your composer.lock for vulnerabilities"
     },
     "autoload": {
         "psr-4": {
