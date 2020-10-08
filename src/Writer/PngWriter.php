@@ -23,6 +23,10 @@ class PngWriter extends AbstractWriter
 {
     public function writeString(QrCodeInterface $qrCode): string
     {
+        if (!extension_loaded('gd')) {
+            throw new GenerateImageException('Unable to generate image: check your GD installation');
+        }
+
         $image = $this->createImage($qrCode->getData(), $qrCode);
 
         $logoPath = $qrCode->getLogoPath();
@@ -97,8 +101,9 @@ class PngWriter extends AbstractWriter
         imagefill($image, 0, 0, $backgroundColor);
         imagecopyresampled($image, $baseImage, (int) $data['margin_left'], (int) $data['margin_left'], 0, 0, (int) $data['inner_width'], (int) $data['inner_height'], imagesx($baseImage), imagesy($baseImage));
 
-        if($qrCode->getBackgroundColor()['a'] > 0)
-          imagesavealpha($image, true);
+        if ($qrCode->getBackgroundColor()['a'] > 0) {
+            imagesavealpha($image, true);
+        }
 
         return $image;
     }
