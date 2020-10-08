@@ -40,7 +40,7 @@ class WriterRegistry implements WriterRegistryInterface
             new EpsWriter(),
             new PngWriter(),
             new SvgWriter(),
-            new FpdfWriter()
+            new FpdfWriter(),
         ]);
 
         $this->setDefaultWriter('png');

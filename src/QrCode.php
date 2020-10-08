@@ -430,7 +430,7 @@ class QrCode implements QrCodeInterface
         $data['block_count'] = count($matrix[0]);
         $data['block_size'] = $this->size / $data['block_count'];
         if ($this->roundBlockSize) {
-            switch($this->roundBlockSizeMode) {
+            switch ($this->roundBlockSizeMode) {
                 case self::ROUND_BLOCK_SIZE_MODE_ENLARGE:
                     $data['block_size'] = intval(ceil($data['block_size']));
                     $this->size = $data['block_size'] * $data['block_count'];

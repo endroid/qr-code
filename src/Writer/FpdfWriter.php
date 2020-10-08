@@ -11,47 +11,34 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer;
 
-use Endroid\QrCode\Exception\GenerateImageException;
 use Endroid\QrCode\Exception\ValidationException;
 use Endroid\QrCode\QrCodeInterface;
 
 class FpdfWriter extends AbstractWriter
 {
     /**
-     * Defines as which unit the size is handled. Default is: "mm"
+     * Defines as which unit the size is handled. Default is: "mm".
      *
      * Allowed values: 'mm', 'pt', 'cm', 'in'
      */
     public const WRITER_OPTION_MEASURE_UNIT = 'fpdf_measure_unit';
 
-    public function __construct()
-    {
-    }
-
     public function writeString(QrCodeInterface $qrCode): string
     {
-        if(!\class_exists(\FPDF::class)){
-            throw new \BadMethodCallException(
-                'The Fpdf writer requires FPDF as dependency but the class "\\FPDF" couldn\'t be found.'
-            );
+        if (!\class_exists(\FPDF::class)) {
+            throw new \BadMethodCallException('The Fpdf writer requires FPDF as dependency but the class "\\FPDF" couldn\'t be found.');
         }
-        
+
         if ($qrCode->getValidateResult()) {
-            throw new ValidationException(
-                'Built-in validation reader can not check fpdf qr codes: please disable via setValidateResult(false)'
-            );
+            throw new ValidationException('Built-in validation reader can not check fpdf qr codes: please disable via setValidateResult(false)');
         }
         $foregroundColor = $qrCode->getForegroundColor();
-        if ($foregroundColor['a'] !== 0) {
-            throw new \InvalidArgumentException(
-                'The foreground color has an alpha channel, but the fpdf qr writer doesn\'t support alpha channels.'
-            );
+        if (0 !== $foregroundColor['a']) {
+            throw new \InvalidArgumentException('The foreground color has an alpha channel, but the fpdf qr writer doesn\'t support alpha channels.');
         }
         $backgroundColor = $qrCode->getBackgroundColor();
-        if ($backgroundColor['a'] !== 0) {
-            throw new \InvalidArgumentException(
-                'The foreground color has an alpha channel, but the fpdf qr writer doesn\'t support alpha channels.'
-            );
+        if (0 !== $backgroundColor['a']) {
+            throw new \InvalidArgumentException('The foreground color has an alpha channel, but the fpdf qr writer doesn\'t support alpha channels.');
         }
 
         $label = $qrCode->getLabel();
