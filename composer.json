@@ -12,8 +12,7 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
-        "ext-gd": "*",
+        "php": ">=7.3",
         "bacon/bacon-qr-code": "^2.0",
         "symfony/property-access": "^3.4||^4.4||^5.0",
         "symfony/string": "^5.1"
@@ -22,6 +21,7 @@
         "endroid/quality": "dev-master"
     },
     "suggest": {
+        "ext-gd": "Required for writing PNG images (these are generated through GD)",
         "roave/security-advisories": "Avoids installation of package versions with vulnerabilities",
         "symfony/security-checker": "Checks your composer.lock for vulnerabilities"
     },
