@@ -4,17 +4,26 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer;
 
-use Endroid\QrCode\LabelInterface;
-use Endroid\QrCode\LogoInterface;
-use Endroid\QrCode\Matrix;
-use Endroid\QrCode\QrCodeInterface;
-use Zxing\QrReader;
+use Endroid\QrCode\Exception\QrCodeException;
+use Endroid\QrCode\Label\LabelInterface;
+use Endroid\QrCode\Logo\LogoInterface;
+use Endroid\QrCode\QrCode\QrCodeInterface;
+use Endroid\QrCode\Writer\RoundBlockSizeMode\RoundBlockSizeModeInterface;
 
-final class PngWriter implements LogoWriterInterface, LabelWriterInterface, ValidatingWriterInterface
+final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWriterInterface, ValidatingWriterInterface
 {
+    use ImageWriterTrait {
+        ImageWriterTrait::__construct as initializeImageWriter;
+    }
+
+    public function __construct(int $size, int $margin, RoundBlockSizeModeInterface $roundBlockSizeMode)
+    {
+        $this->initializeImageWriter($size, $margin, $roundBlockSizeMode);
+    }
+
     public function writeQrCode(QrCodeInterface $qrCode): PngResult
     {
-        $matrix = Matrix::fromQrCode($qrCode);
+        $matrix = $this->getMatrix($qrCode);
 
         dump($matrix);
         die;
@@ -57,7 +66,7 @@ final class PngWriter implements LogoWriterInterface, LabelWriterInterface, Vali
     public function writeLogo(LogoInterface $logo, ResultInterface $result): PngResult
     {
         if (!$result instanceof PngResult) {
-            throw new \Exception('PngWriter only supports PngResult instances');
+            throw new QrCodeException('PngWriter only supports PngResult instances');
         }
 
         $image = $this->addLogo($image, $logoPath, $qrCode->getLogoWidth(), $qrCode->getLogoHeight());
@@ -66,20 +75,9 @@ final class PngWriter implements LogoWriterInterface, LabelWriterInterface, Vali
     public function writeLabel(LabelInterface $label, ResultInterface $result): PngResult
     {
         if (!$result instanceof PngResult) {
-            throw new \Exception('PngWriter only supports PngResult instances');
+            throw new QrCodeException('PngWriter only supports PngResult instances');
         }
 
         $image = $this->addLabel($image, $label, $qrCode->getLabelFontPath(), $qrCode->getLabelFontSize(), $qrCode->getLabelAlignment(), $qrCode->getLabelMargin(), $qrCode->getForegroundColor(), $qrCode->getBackgroundColor());
-    }
-
-    public function setValidateResult(bool $validateResult): void
-    {
-        if ($this->validateResult) {
-            $reader = new QrReader($string, QrReader::SOURCE_TYPE_BLOB);
-            if ($reader->text() !== $qrCode->getText()) {
-                throw new ValidationException('Built-in validation reader read "'.$reader->text().'" instead of "'.$qrCode->getText().'".
-                     Adjust your parameters to increase readability or disable built-in validation.');
-            }
-        }
     }
 }

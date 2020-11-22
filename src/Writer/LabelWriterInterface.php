@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer;
 
-use Endroid\QrCode\LabelInterface;
+use Endroid\QrCode\Label\LabelInterface;
 
-interface LabelWriterInterface extends WriterInterface
+interface LabelWriterInterface
 {
     public function writeLabel(LabelInterface $label, ResultInterface $result): ResultInterface;
 }

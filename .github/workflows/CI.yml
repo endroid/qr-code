@@ -7,20 +7,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['7.3', '7.4', '8.0']
+        php-versions: ['7.4', '8.0']
       fail-fast: false
     steps:
-      - uses: actions/checkout@v1
-      - uses: shivammathur/setup-php@v1
+      - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, gd, zip
+          extensions: gd, mbstring, pcov, zip
           ini-values: max_execution_time=600, memory_limit=-1
-          coverage: pcov
       - name: Install dependencies
         run: |
-          curl -sS https://getcomposer.org/installer | php -- --filename=composer --version=2.0.0-RC1
-          composer install
+          curl -sS https://getcomposer.org/installer | php -- --filename=composer
+          ./composer install
       - name: Check code quality
         run: |
           vendor/bin/code-quality
@@ -30,9 +29,9 @@ jobs:
           vendor/bin/functional-test
       - name: Test against lowest versions
         run: |
-          composer update --prefer-lowest
+          ./composer update --prefer-lowest
           vendor/bin/unit-test
-          vendor/bin/functional-test ^3.4
+          vendor/bin/functional-test ^4.4
       - name: Archive code coverage results
         uses: actions/upload-artifact@v1
         with:

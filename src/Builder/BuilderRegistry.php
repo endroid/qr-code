@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Builder;
 
-class BuilderRegistry implements BuilderRegistryInterface
+use Endroid\QrCode\Exception\QrCodeException;
+
+final class BuilderRegistry implements BuilderRegistryInterface
 {
     private array $builders = [];
 
     public function getBuilder(string $name): BuilderInterface
     {
         if (!isset($this->builders[$name])) {
-            throw new \Exception(sprintf('Builder with name "%s" not available from registry', $name));
+            throw new QrCodeException(sprintf('Builder with name "%s" not available from registry', $name));
         }
 
         return $this->builders[$name];

@@ -12,10 +12,9 @@
         }
     ],
     "require": {
-        "php": ">=7.3",
+        "php": "^7.4||^8.0",
         "bacon/bacon-qr-code": "^2.0",
-        "symfony/property-access": "^3.4||^4.4||^5.0",
-        "symfony/string": "^5.1"
+        "symfony/property-access": "^4.4||^5.0"
     },
     "require-dev": {
         "endroid/quality": "dev-master"

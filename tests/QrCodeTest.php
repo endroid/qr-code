@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-/*
- * (c) Jeroen van den Enden <info@endroid.nl>
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
-
 namespace Endroid\QrCode\Tests;
 
-use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Label\Alignment\Center;
+use Endroid\QrCode\Label\LabelBuilder;
+use Endroid\QrCode\Label\Margin\Margin;
+use Endroid\QrCode\Logo\LogoBuilder;
+use Endroid\QrCode\QrCode\ErrorCorrectionLevel\High;
+use Endroid\QrCode\QrCode\QrCodeBuilder;
+use Endroid\QrCode\QrCode\Encoding\Encoding;
+use Endroid\QrCode\Writer\PngWriter;
 use PHPUnit\Framework\TestCase;
 
 class QrCodeTest extends TestCase
@@ -21,8 +22,24 @@ class QrCodeTest extends TestCase
      */
     public function testQrCode(): void
     {
-        $qrCode = new QrCode('test');
+        $builder = Builder::create();
 
-        $this->assertInstanceOf(QrCode::class, $qrCode);
+        $builder
+            ->qrCode(QrCodeBuilder::create()
+                ->data('data')
+                ->encoding(new Encoding('UTF-8'))
+                ->errorCorrectionLevel(new High())
+            ->getLogoBuilder()
+                ->path(__DIR__.'/assets/symfony.png')
+                ->resizeWidth(100)
+                ->build()
+            ->getLabelBuilder()
+                ->text('My fancy label')
+                ->alignment(new Center())
+                ->margin(new Margin(5, 5, 5, 5));
+            ->build();
+
+        dump($result);
+        die;
     }
 }
