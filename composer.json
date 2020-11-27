@@ -20,7 +20,7 @@
         "myclabs/php-enum": "^1.5"
     },
     "require-dev": {
-        "endroid/quality": "dev-master",
+        "endroid/quality": "^1.3.7",
         "setasign/fpdf": "^1.8"
     },
     "suggest": {
