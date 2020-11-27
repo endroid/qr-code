@@ -13,7 +13,7 @@ to generate the matrix and [khanamiryan/qrcode-detector-decoder](https://github.
 for validating generated QR codes. Further extended with Twig extensions, generation routes, a factory and a
 Symfony bundle for easy installation and configuration.
 
-Different writers are provided to generate the QR code as PNG, SVG, EPS or in binary format.
+Different writers are provided to generate the QR code as PNG, SVG, EPS, PDF or in binary format.
 
 ## Installation
 
