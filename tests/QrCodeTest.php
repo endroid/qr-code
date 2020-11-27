@@ -120,6 +120,7 @@ class QrCodeTest extends TestCase
             'writer' => 'png',
             'size' => 300,
             'margin' => 10,
+            'round_block_size_mode' => 'shrink',
         ]);
 
         $pngData = $qrCode->writeString();
