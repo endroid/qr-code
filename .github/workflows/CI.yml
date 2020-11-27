@@ -14,13 +14,12 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, gd, zip
+          extensions: gd, mbstring, pcov, zip
           ini-values: max_execution_time=600, memory_limit=-1
-          coverage: pcov
       - name: Install dependencies
         run: |
           curl -sS https://getcomposer.org/installer | php -- --filename=composer
-          composer install
+          ./composer install
       - name: Check code quality
         run: |
           vendor/bin/code-quality
@@ -30,11 +29,11 @@ jobs:
           vendor/bin/functional-test
       - name: Test against lowest versions
         run: |
-          composer update --prefer-lowest
+          ./composer update --prefer-lowest
           vendor/bin/unit-test
-          vendor/bin/functional-test ^3.4
+          vendor/bin/functional-test ^4.4
       - name: Archive code coverage results
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: coverage
           path: tests/coverage
