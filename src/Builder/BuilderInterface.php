@@ -12,13 +12,5 @@ use Endroid\QrCode\Writer\WriterInterface;
 
 interface BuilderInterface
 {
-    public function qrCode(QrCodeInterface $qrCode): self;
-
-    public function logo(LogoInterface $logo): self;
-
-    public function label(LabelInterface $label): self;
-
-    public function writer(WriterInterface $writer): self;
-
     public function build(): ResultInterface;
 }

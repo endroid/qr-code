@@ -8,22 +8,14 @@ use Endroid\QrCode\Exception\QrCodeException;
 use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCode\QrCodeInterface;
+use Endroid\QrCode\Writer\Matrix\ImageMatrix;
 use Endroid\QrCode\Writer\RoundBlockSizeMode\RoundBlockSizeModeInterface;
 
 final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWriterInterface, ValidatingWriterInterface
 {
-    use ImageWriterTrait {
-        ImageWriterTrait::__construct as initializeImageWriter;
-    }
-
-    public function __construct(int $size, int $margin, RoundBlockSizeModeInterface $roundBlockSizeMode)
-    {
-        $this->initializeImageWriter($size, $margin, $roundBlockSizeMode);
-    }
-
     public function writeQrCode(QrCodeInterface $qrCode): PngResult
     {
-        $matrix = $this->getMatrix($qrCode);
+        $matrix = new ImageMatrix($qrCode, $this->size, $this->margin, $this->roundBlockSizeMode);
 
         dump($matrix);
         die;

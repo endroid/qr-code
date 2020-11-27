@@ -4,72 +4,149 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Builder;
 
-use Endroid\QrCode\Exception\QrCodeException;
-use Endroid\QrCode\Label\LabelInterface;
-use Endroid\QrCode\Logo\LogoInterface;
-use Endroid\QrCode\QrCode\QrCodeInterface;
+use Endroid\QrCode\Label\LabelBuilderFactory;
+use Endroid\QrCode\Label\LabelBuilderFactoryInterface;
+use Endroid\QrCode\Label\LabelBuilderInterface;
+use Endroid\QrCode\Logo\LogoBuilderFactory;
+use Endroid\QrCode\Logo\LogoBuilderFactoryInterface;
+use Endroid\QrCode\Logo\LogoBuilderInterface;
+use Endroid\QrCode\QrCode\Encoding\Encoding;
+use Endroid\QrCode\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelInterface;
+use Endroid\QrCode\Label\Font\FontInterface;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentInterface;
+use Endroid\QrCode\QrCode\QrCodeBuilderFactory;
+use Endroid\QrCode\QrCode\QrCodeBuilderFactoryInterface;
+use Endroid\QrCode\QrCode\QrCodeBuilderInterface;
 use Endroid\QrCode\Writer\LabelWriterInterface;
 use Endroid\QrCode\Writer\LogoWriterInterface;
+use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ResultInterface;
+use Endroid\QrCode\Writer\WriterBuilder;
+use Endroid\QrCode\Writer\WriterBuilderFactory;
+use Endroid\QrCode\Writer\WriterBuilderFactoryInterface;
+use Endroid\QrCode\Writer\WriterBuilderInterface;
 use Endroid\QrCode\Writer\WriterInterface;
 
-final class Builder implements BuilderInterface
+class Builder implements BuilderInterface
 {
-    private QrCodeInterface $qrCode;
-    private LogoInterface $logo;
-    private LabelInterface $label;
-    private WriterInterface $writer;
+    private QrCodeBuilderFactoryInterface $qrCodeBuilderFactory;
+    private WriterBuilderFactoryInterface $writerBuilderFactory;
+    private LogoBuilderFactoryInterface $logoBuilderFactory;
+    private LabelBuilderFactoryInterface $labelBuilderFactory;
 
-    public static function create(): self
-    {
-        return new static();
+    private QrCodeBuilderInterface $qrCodeBuilder;
+    private WriterBuilderInterface $writerBuilder;
+    private LogoBuilderInterface $logoBuilder;
+    private LabelBuilderInterface $labelBuilder;
+
+    public function __construct(
+        QrCodeBuilderFactoryInterface $qrCodeBuilderFactory = null,
+        WriterBuilderFactoryInterface $writerBuilderFactory = null,
+        LogoBuilderFactoryInterface $logoBuilderFactory = null,
+        LabelBuilderFactoryInterface $labelBuilderFactory = null
+    ) {
+        $this->qrCodeBuilderFactory = isset($qrCodeBuilderFactory) ? $qrCodeBuilderFactory : new QrCodeBuilderFactory();
+        $this->writerBuilderFactory = isset($writerBuilderFactory) ? $writerBuilderFactory : new WriterBuilderFactory();
+        $this->logoBuilderFactory = isset($logoBuilderFactory) ? $logoBuilderFactory : new LogoBuilderFactory();
+        $this->labelBuilderFactory = isset($labelBuilderFactory) ? $labelBuilderFactory : new LabelBuilderFactory();
     }
 
-    public function qrCode(QrCodeInterface $qrCode): self
+    private function getWriterBuilder(): WriterBuilderInterface
     {
-        $this->qrCode = $qrCode;
+        if (!isset($this->writerBuilder)) {
+            $this->writerBuilder = $this->writerBuilderFactory->create();
+        }
+
+        return $this->writerBuilder;
+    }
+
+    private function getQrCodeBuilder(): QrCodeBuilderInterface
+    {
+        if (!isset($this->qrCodeBuilder)) {
+            $this->qrCodeBuilder = $this->qrCodeBuilderFactory->create();
+        }
+
+        return $this->qrCodeBuilder;
+    }
+
+    public function data(string $data): self
+    {
+        $this->getQrCodeBuilder()->data($data);
 
         return $this;
     }
 
-    public function logo(LogoInterface $logo): self
+    public function encoding(Encoding $encoding): self
     {
-        $this->logo = $logo;
+        $this->getQrCodeBuilder()->encoding($encoding);
 
         return $this;
     }
 
-    public function label(LabelInterface $label): self
+    public function errorCorrectionLevel(ErrorCorrectionLevelInterface $errorCorrectionLevel): self
     {
-        $this->label = $label;
+        $this->getQrCodeBuilder()->errorCorrectionLevel($errorCorrectionLevel);
 
         return $this;
     }
 
-    public function writer(WriterInterface $writer): self
+    private function ensureLogoBuilder(): void
     {
-        $this->writer = $writer;
+        if (!$this->logoBuilder instanceof LogoBuilderInterface) {
+            $this->logoBuilder = $this->logoBuilderFactory->create();
+        }
+    }
+
+    public function logoPath(string $logoPath): self
+    {
+        $this->ensureLogoBuilder();
+        $this->logoBuilder->path($logoPath);
+
+        return $this;
+    }
+
+    private function ensureLabelBuilder(): void
+    {
+        if (!$this->labelBuilder instanceof LabelBuilderInterface) {
+            $this->labelBuilder = $this->labelBuilderFactory->create();
+        }
+    }
+
+    public function labelText(string $labelText): self
+    {
+        $this->ensureLabelBuilder();
+        $this->labelBuilder->text($labelText);
+
+        return $this;
+    }
+
+    public function labelFont(FontInterface $labelFont): self
+    {
+        $this->ensureLabelBuilder();
+        $this->labelBuilder->font($labelFont);
+
+        return $this;
+    }
+
+    public function labelAlignment(LabelAlignmentInterface $labelAlignment): self
+    {
+        $this->ensureLabelBuilder();
+        $this->labelBuilder->alignment($labelAlignment);
 
         return $this;
     }
 
     public function build(): ResultInterface
     {
-        if (!isset($this->qrCode)) {
-            throw new QrCodeException('Please provide a QR code via $builder->qrCode($qrCode)');
+        $result = $this->writer->writeQrCode($this->qrCodeBuilder->build());
+
+        if ($this->writer instanceof LogoWriterInterface) {
+            $logo = $this->logoBuilder->build();
+            $result = $this->writer->writeLogo($logo, $result);
         }
 
-        if (!isset($this->writer)) {
-            throw new QrCodeException('Please provide a writer via $builder->writer($writer)');
-        }
-
-        $result = $this->writer->writeQrCode($this->qrCode);
-
-        if (isset($this->logo) && $this->writer instanceof LogoWriterInterface) {
-            $result = $this->writer->writeLogo($this->logo, $result);
-        }
-
-        if (isset($this->label) && $this->writer instanceof LabelWriterInterface) {
+        if ($this->writer instanceof LabelWriterInterface) {
+            $label = $this->labelBuilder->build();
             $result = $this->writer->writeLabel($label, $result);
         }
 

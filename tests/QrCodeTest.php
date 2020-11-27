@@ -22,21 +22,16 @@ class QrCodeTest extends TestCase
      */
     public function testQrCode(): void
     {
-        $builder = Builder::create();
-
-        $builder
-            ->qrCode(QrCodeBuilder::create()
-                ->data('data')
-                ->encoding(new Encoding('UTF-8'))
-                ->errorCorrectionLevel(new High())
-            ->getLogoBuilder()
-                ->path(__DIR__.'/assets/symfony.png')
-                ->resizeWidth(100)
-                ->build()
-            ->getLabelBuilder()
-                ->text('My fancy label')
-                ->alignment(new Center())
-                ->margin(new Margin(5, 5, 5, 5));
+        $result = Builder::create()
+            ->data('data')
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new High())
+            ->writer(new PngWriter())
+            ->logoPath(__DIR__.'/assets/symfony.png')
+            ->logoResizeWidth(100)
+            ->labelText('My fancy label')
+            ->labelAlignment(new Center())
+            ->labelMargin(new Margin(5, 5, 5, 5))
             ->build();
 
         dump($result);
