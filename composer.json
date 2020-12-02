@@ -12,15 +12,15 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": "^7.3||^8.0",
         "bacon/bacon-qr-code": "^2.0",
         "khanamiryan/qrcode-detector-decoder": "^1.0.2",
+        "myclabs/php-enum": "^1.5",
         "symfony/options-resolver": "^3.4||^4.4||^5.0",
-        "symfony/property-access": "^3.4||^4.4||^5.0",
-        "myclabs/php-enum": "^1.5"
+        "symfony/property-access": "^3.4||^4.4||^5.0"
     },
     "require-dev": {
-        "endroid/quality": "^1.3.7",
+        "endroid/quality": "^1.5.1",
         "setasign/fpdf": "^1.8"
     },
     "suggest": {
