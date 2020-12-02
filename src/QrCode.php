@@ -33,7 +33,7 @@ class QrCode implements QrCodeInterface
     /** @var int */
     private $margin = 10;
 
-    /** @var array */
+    /** @var array<int> */
     private $foregroundColor = [
         'r' => 0,
         'g' => 0,
@@ -41,7 +41,7 @@ class QrCode implements QrCodeInterface
         'a' => 0,
     ];
 
-    /** @var array */
+    /** @var array<int> */
     private $backgroundColor = [
         'r' => 255,
         'g' => 255,
@@ -80,7 +80,7 @@ class QrCode implements QrCodeInterface
 
     private $labelAlignment;
 
-    /** @var array */
+    /** @var array<string, int> */
     private $labelMargin = [
         't' => 0,
         'r' => 10,
@@ -94,7 +94,7 @@ class QrCode implements QrCodeInterface
     /** @var WriterInterface|null */
     private $writer;
 
-    /** @var array */
+    /** @var array<mixed> */
     private $writerOptions = [];
 
     /** @var bool */
@@ -140,6 +140,7 @@ class QrCode implements QrCodeInterface
         return $this->margin;
     }
 
+    /** @param array<int> $foregroundColor */
     public function setForegroundColor(array $foregroundColor): void
     {
         if (!isset($foregroundColor['a'])) {
@@ -158,6 +159,7 @@ class QrCode implements QrCodeInterface
         return $this->foregroundColor;
     }
 
+    /** @param array<int> $backgroundColor */
     public function setBackgroundColor(array $backgroundColor): void
     {
         if (!isset($backgroundColor['a'])) {
@@ -256,6 +258,7 @@ class QrCode implements QrCodeInterface
         return $this->logoHeight;
     }
 
+    /** @param array<string, int> $labelMargin */
     public function setLabel(string $label, int $labelFontSize = null, string $labelFontPath = null, string $labelAlignment = null, array $labelMargin = null): void
     {
         $this->label = $label;
@@ -318,6 +321,7 @@ class QrCode implements QrCodeInterface
         return $this->labelAlignment->getValue();
     }
 
+    /** @param array<string, int> $labelMargin */
     public function setLabelMargin(array $labelMargin): void
     {
         $this->labelMargin = array_merge($this->labelMargin, $labelMargin);
@@ -351,6 +355,7 @@ class QrCode implements QrCodeInterface
         return $this->writerRegistry->getDefaultWriter();
     }
 
+    /** @param array<string, mixed> $writerOptions */
     public function setWriterOptions(array $writerOptions): void
     {
         $this->writerOptions = $writerOptions;

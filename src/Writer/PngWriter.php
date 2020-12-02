@@ -54,6 +54,11 @@ class PngWriter extends AbstractWriter
         return $string;
     }
 
+    /**
+     * @param array<mixed> $data
+     *
+     * @return resource
+     */
     private function createImage(array $data, QrCodeInterface $qrCode)
     {
         $baseSize = $qrCode->getRoundBlockSize() ? $data['block_size'] : 25;
@@ -66,6 +71,11 @@ class PngWriter extends AbstractWriter
         return $interpolatedImage;
     }
 
+    /**
+     * @param array<mixed> $data
+     *
+     * @return resource
+     */
     private function createBaseImage(int $baseSize, array $data, QrCodeInterface $qrCode)
     {
         $image = imagecreatetruecolor($data['block_count'] * $baseSize, $data['block_count'] * $baseSize);
@@ -89,6 +99,12 @@ class PngWriter extends AbstractWriter
         return $image;
     }
 
+    /**
+     * @param resource     $baseImage
+     * @param array<mixed> $data
+     *
+     * @return resource
+     */
     private function createInterpolatedImage($baseImage, array $data, QrCodeInterface $qrCode)
     {
         $image = imagecreatetruecolor($data['outer_width'], $data['outer_height']);
@@ -108,6 +124,11 @@ class PngWriter extends AbstractWriter
         return $image;
     }
 
+    /**
+     * @param resource $sourceImage
+     *
+     * @return resource
+     */
     private function addLogo($sourceImage, string $logoPath, int $logoWidth = null, int $logoHeight = null)
     {
         $mimeType = $this->getMimeType($logoPath);
@@ -143,6 +164,14 @@ class PngWriter extends AbstractWriter
         return $sourceImage;
     }
 
+    /**
+     * @param resource   $sourceImage
+     * @param array<int> $labelMargin
+     * @param array<int> $foregroundColor
+     * @param array<int> $backgroundColor
+     *
+     * @return resource
+     */
     private function addLabel($sourceImage, string $label, string $labelFontPath, int $labelFontSize, string $labelAlignment, array $labelMargin, array $foregroundColor, array $backgroundColor)
     {
         if (!function_exists('imagettfbbox')) {
@@ -192,6 +221,9 @@ class PngWriter extends AbstractWriter
         return $targetImage;
     }
 
+    /**
+     * @param resource $image
+     */
     private function imageToString($image): string
     {
         ob_start();

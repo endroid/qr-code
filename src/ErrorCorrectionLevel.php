@@ -19,6 +19,9 @@ use MyCLabs\Enum\Enum;
  * @method static ErrorCorrectionLevel MEDIUM()
  * @method static ErrorCorrectionLevel QUARTILE()
  * @method static ErrorCorrectionLevel HIGH()
+ *
+ * @extends Enum<string>
+ * @psalm-immutable
  */
 class ErrorCorrectionLevel extends Enum
 {

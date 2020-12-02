@@ -15,5 +15,6 @@ use Endroid\QrCode\QrCodeInterface;
 
 interface QrCodeFactoryInterface
 {
+    /** @param array<string, mixed> $options */
     public function create(string $text = '', array $options = []): QrCodeInterface;
 }

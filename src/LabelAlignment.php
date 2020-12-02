@@ -17,6 +17,9 @@ use MyCLabs\Enum\Enum;
  * @method static LabelAlignment LEFT()
  * @method static LabelAlignment CENTER()
  * @method static LabelAlignment RIGHT()
+ *
+ * @extends Enum<string>
+ * @psalm-immutable
  */
 class LabelAlignment extends Enum
 {

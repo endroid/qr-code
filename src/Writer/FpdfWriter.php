@@ -89,14 +89,8 @@ class FpdfWriter extends AbstractWriter
         return $fpdf->Output('S');
     }
 
-    protected function addLogo(
-        \FPDF $fpdf,
-        string $logoPath,
-        ?int $logoWidth,
-        ?int $logoHeight,
-        int $imageWidth,
-        int $imageHeight
-    ) {
+    protected function addLogo(\FPDF $fpdf, string $logoPath, ?int $logoWidth, ?int $logoHeight, int $imageWidth, int $imageHeight): void
+    {
         if (null === $logoHeight || null === $logoWidth) {
             [$logoSourceWidth, $logoSourceHeight] = \getimagesize($logoPath);
 

@@ -26,9 +26,10 @@ class QrCodeFactory implements QrCodeFactoryInterface
     /** @var OptionsResolver */
     private $optionsResolver;
 
+    /** @var array<string, mixed> */
     private $defaultOptions;
 
-    /** @var array */
+    /** @var array<int, string> */
     private $definedOptions = [
         'writer',
         'writer_options',
@@ -51,6 +52,7 @@ class QrCodeFactory implements QrCodeFactoryInterface
         'validate_result',
     ];
 
+    /** @param array<string, mixed> $defaultOptions */
     public function __construct(array $defaultOptions = [], WriterRegistryInterface $writerRegistry = null)
     {
         $this->defaultOptions = $defaultOptions;

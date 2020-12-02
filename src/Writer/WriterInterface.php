@@ -25,6 +25,7 @@ interface WriterInterface
 
     public static function supportsExtension(string $extension): bool;
 
+    /** @return array<string> */
     public static function getSupportedExtensions(): array;
 
     public function getName(): string;

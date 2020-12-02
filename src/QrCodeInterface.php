@@ -19,8 +19,10 @@ interface QrCodeInterface
 
     public function getMargin(): int;
 
+    /** @return array<int> */
     public function getForegroundColor(): array;
 
+    /** @return array<int> */
     public function getBackgroundColor(): array;
 
     public function getEncoding(): string;
@@ -43,10 +45,12 @@ interface QrCodeInterface
 
     public function getLabelAlignment(): string;
 
+    /** @return array<int> */
     public function getLabelMargin(): array;
 
     public function getValidateResult(): bool;
 
+    /** @return array<mixed> */
     public function getWriterOptions(): array;
 
     public function getContentType(): string;
@@ -59,5 +63,6 @@ interface QrCodeInterface
 
     public function writeFile(string $path): void;
 
+    /** @return array<mixed> */
     public function getData(): array;
 }
