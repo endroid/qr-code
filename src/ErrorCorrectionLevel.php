@@ -34,6 +34,7 @@ class ErrorCorrectionLevel extends Enum
     {
         $name = strtoupper(substr($this->getValue(), 0, 1));
 
+        /** @psalm-suppress ImpureMethodCall */
         return BaconErrorCorrectionLevel::valueOf($name);
     }
 }
