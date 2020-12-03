@@ -86,7 +86,15 @@ class PngWriter extends AbstractWriter
         }
 
         $foregroundColor = imagecolorallocatealpha($image, $qrCode->getForegroundColor()['r'], $qrCode->getForegroundColor()['g'], $qrCode->getForegroundColor()['b'], $qrCode->getForegroundColor()['a']);
+        if ($foregroundColor === false) {
+            throw new GenerateImageException('Unable to generate image: problem allocating foreground color');
+        }
+
         $backgroundColor = imagecolorallocatealpha($image, $qrCode->getBackgroundColor()['r'], $qrCode->getBackgroundColor()['g'], $qrCode->getBackgroundColor()['b'], $qrCode->getBackgroundColor()['a']);
+        if ($backgroundColor === false) {
+            throw new GenerateImageException('Unable to generate image: problem allocating background color');
+        }
+
         imagefill($image, 0, 0, $backgroundColor);
 
         foreach ($data['matrix'] as $row => $values) {
@@ -115,6 +123,10 @@ class PngWriter extends AbstractWriter
         }
 
         $backgroundColor = imagecolorallocatealpha($image, $qrCode->getBackgroundColor()['r'], $qrCode->getBackgroundColor()['g'], $qrCode->getBackgroundColor()['b'], $qrCode->getBackgroundColor()['a']);
+        if ($backgroundColor === false) {
+            throw new GenerateImageException('Unable to generate image: problem allocating background color');
+        }
+        
         imagefill($image, 0, 0, $backgroundColor);
         imagecopyresampled($image, $baseImage, (int) $data['margin_left'], (int) $data['margin_left'], 0, 0, (int) $data['inner_width'], (int) $data['inner_height'], imagesx($baseImage), imagesy($baseImage));
 
@@ -180,6 +192,10 @@ class PngWriter extends AbstractWriter
         }
 
         $labelBox = imagettfbbox($labelFontSize, 0, $labelFontPath, $label);
+        if ($labelBox === false) {
+            throw new GenerateImageException('Unable to generate image: problem making label box');
+        }
+
         $labelBoxWidth = intval($labelBox[2] - $labelBox[0]);
         $labelBoxHeight = intval($labelBox[0] - $labelBox[7]);
 
@@ -196,7 +212,15 @@ class PngWriter extends AbstractWriter
         }
 
         $foregroundColor = imagecolorallocate($targetImage, $foregroundColor['r'], $foregroundColor['g'], $foregroundColor['b']);
+        if ($foregroundColor === false) {
+            throw new GenerateImageException('Unable to generate image: problem allocating foreground color');
+        }
+
         $backgroundColor = imagecolorallocate($targetImage, $backgroundColor['r'], $backgroundColor['g'], $backgroundColor['b']);
+        if ($backgroundColor === false) {
+            throw new GenerateImageException('Unable to generate image: problem allocating background color');
+        }
+
         imagefill($targetImage, 0, 0, $backgroundColor);
 
         // Copy source image to target image
