@@ -17,6 +17,7 @@ use Endroid\QrCode\Exception\MissingLogoHeightException;
 use Endroid\QrCode\Exception\ValidationException;
 use Endroid\QrCode\LabelAlignment;
 use Endroid\QrCode\QrCodeInterface;
+use GdImage;
 use Zxing\QrReader;
 
 class PngWriter extends AbstractWriter
@@ -57,7 +58,7 @@ class PngWriter extends AbstractWriter
     /**
      * @param array<mixed> $data
      *
-     * @return resource
+     * @return GdImage
      */
     private function createImage(array $data, QrCodeInterface $qrCode)
     {
@@ -74,7 +75,7 @@ class PngWriter extends AbstractWriter
     /**
      * @param array<mixed> $data
      *
-     * @return resource
+     * @return GdImage
      */
     private function createBaseImage(int $baseSize, array $data, QrCodeInterface $qrCode)
     {
@@ -100,10 +101,10 @@ class PngWriter extends AbstractWriter
     }
 
     /**
-     * @param resource     $baseImage
+     * @param GdImage      $baseImage
      * @param array<mixed> $data
      *
-     * @return resource
+     * @return GdImage
      */
     private function createInterpolatedImage($baseImage, array $data, QrCodeInterface $qrCode)
     {
@@ -125,9 +126,9 @@ class PngWriter extends AbstractWriter
     }
 
     /**
-     * @param resource $sourceImage
+     * @param GdImage $sourceImage
      *
-     * @return resource
+     * @return GdImage
      */
     private function addLogo($sourceImage, string $logoPath, int $logoWidth = null, int $logoHeight = null)
     {
@@ -165,12 +166,12 @@ class PngWriter extends AbstractWriter
     }
 
     /**
-     * @param resource   $sourceImage
+     * @param GdImage    $sourceImage
      * @param array<int> $labelMargin
      * @param array<int> $foregroundColor
      * @param array<int> $backgroundColor
      *
-     * @return resource
+     * @return GdImage
      */
     private function addLabel($sourceImage, string $label, string $labelFontPath, int $labelFontSize, string $labelAlignment, array $labelMargin, array $foregroundColor, array $backgroundColor)
     {
@@ -222,7 +223,7 @@ class PngWriter extends AbstractWriter
     }
 
     /**
-     * @param resource $image
+     * @param GdImage $image
      */
     private function imageToString($image): string
     {
