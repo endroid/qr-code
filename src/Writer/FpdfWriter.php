@@ -42,9 +42,7 @@ class FpdfWriter extends AbstractWriter
         }
 
         $label = $qrCode->getLabel();
-        if (null !== $label) {
-            throw new \InvalidArgumentException('The fpdf qr writer doesn\'t support a label.');
-        }
+        $labelHeight = $label !== null ? 30 : 0;
 
         $data = $qrCode->getData();
         $options = $qrCode->getWriterOptions();
@@ -52,7 +50,7 @@ class FpdfWriter extends AbstractWriter
         $fpdf = new \FPDF(
             'P',
             $options[self::WRITER_OPTION_MEASURE_UNIT] ?? 'mm',
-            [$data['outer_width'], $data['outer_height']]
+            [$data['outer_width'], $data['outer_height'] + $labelHeight]
         );
         $fpdf->AddPage();
 
@@ -85,6 +83,12 @@ class FpdfWriter extends AbstractWriter
                 $data['outer_height']
             );
         }
+
+        if (null !== $label) {
+            $fpdf->setY($data['outer_height'] + 5);
+            $fpdf->SetFont('Helvetica', null, $qrCode->getLabelFontSize());
+            $fpdf->Cell(0, 0, $label, 0, 0, strtoupper($qrCode->getLabelAlignment()[0]));
+	}
 
         return $fpdf->Output('S');
     }
