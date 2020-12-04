@@ -256,7 +256,7 @@ class QrCodeTest extends TestCase
 
         $image = imagecreatefromstring(file_get_contents($filename));
 
-        $this->assertTrue(is_resource($image));
+        $this->assertTrue($image !== false);
 
         imagedestroy($image);
     }
