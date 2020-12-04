@@ -41,7 +41,9 @@ class PngWriter extends AbstractWriter
 
         $string = $this->imageToString($image);
 
-        imagedestroy($image);
+        if (PHP_VERSION_ID < 80000) {
+            imagedestroy($image);
+        }
 
         if ($qrCode->getValidateResult()) {
             $reader = new QrReader($string, QrReader::SOURCE_TYPE_BLOB);
@@ -57,7 +59,7 @@ class PngWriter extends AbstractWriter
     /**
      * @param array<mixed> $data
      *
-     * @return resource
+     * @return mixed
      */
     private function createImage(array $data, QrCodeInterface $qrCode)
     {
@@ -66,7 +68,9 @@ class PngWriter extends AbstractWriter
         $baseImage = $this->createBaseImage($baseSize, $data, $qrCode);
         $interpolatedImage = $this->createInterpolatedImage($baseImage, $data, $qrCode);
 
-        imagedestroy($baseImage);
+        if (PHP_VERSION_ID < 80000) {
+            imagedestroy($baseImage);
+        }
 
         return $interpolatedImage;
     }
@@ -74,18 +78,26 @@ class PngWriter extends AbstractWriter
     /**
      * @param array<mixed> $data
      *
-     * @return resource
+     * @return mixed
      */
     private function createBaseImage(int $baseSize, array $data, QrCodeInterface $qrCode)
     {
         $image = imagecreatetruecolor($data['block_count'] * $baseSize, $data['block_count'] * $baseSize);
 
-        if (!is_resource($image)) {
+        if (!$image) {
             throw new GenerateImageException('Unable to generate image: check your GD installation');
         }
 
         $foregroundColor = imagecolorallocatealpha($image, $qrCode->getForegroundColor()['r'], $qrCode->getForegroundColor()['g'], $qrCode->getForegroundColor()['b'], $qrCode->getForegroundColor()['a']);
+        if (!is_int($foregroundColor)) {
+            throw new GenerateImageException('Foreground color could not be allocated');
+        }
+
         $backgroundColor = imagecolorallocatealpha($image, $qrCode->getBackgroundColor()['r'], $qrCode->getBackgroundColor()['g'], $qrCode->getBackgroundColor()['b'], $qrCode->getBackgroundColor()['a']);
+        if (!is_int($backgroundColor)) {
+            throw new GenerateImageException('Background color could not be allocated');
+        }
+
         imagefill($image, 0, 0, $backgroundColor);
 
         foreach ($data['matrix'] as $row => $values) {
@@ -100,20 +112,24 @@ class PngWriter extends AbstractWriter
     }
 
     /**
-     * @param resource     $baseImage
+     * @param mixed        $baseImage
      * @param array<mixed> $data
      *
-     * @return resource
+     * @return mixed
      */
     private function createInterpolatedImage($baseImage, array $data, QrCodeInterface $qrCode)
     {
         $image = imagecreatetruecolor($data['outer_width'], $data['outer_height']);
 
-        if (!is_resource($image)) {
+        if (!$image) {
             throw new GenerateImageException('Unable to generate image: check your GD installation');
         }
 
         $backgroundColor = imagecolorallocatealpha($image, $qrCode->getBackgroundColor()['r'], $qrCode->getBackgroundColor()['g'], $qrCode->getBackgroundColor()['b'], $qrCode->getBackgroundColor()['a']);
+        if (!is_int($backgroundColor)) {
+            throw new GenerateImageException('Background color could not be allocated');
+        }
+
         imagefill($image, 0, 0, $backgroundColor);
         imagecopyresampled($image, $baseImage, (int) $data['margin_left'], (int) $data['margin_left'], 0, 0, (int) $data['inner_width'], (int) $data['inner_height'], imagesx($baseImage), imagesy($baseImage));
 
@@ -125,9 +141,9 @@ class PngWriter extends AbstractWriter
     }
 
     /**
-     * @param resource $sourceImage
+     * @param mixed $sourceImage
      *
-     * @return resource
+     * @return mixed
      */
     private function addLogo($sourceImage, string $logoPath, int $logoWidth = null, int $logoHeight = null)
     {
@@ -138,7 +154,7 @@ class PngWriter extends AbstractWriter
             throw new MissingLogoHeightException('SVG Logos require an explicit height set via setLogoSize($width, $height)');
         }
 
-        if (!is_resource($logoImage)) {
+        if (!$logoImage) {
             throw new GenerateImageException('Unable to generate image: check your GD installation or logo path');
         }
 
@@ -159,18 +175,20 @@ class PngWriter extends AbstractWriter
 
         imagecopyresampled($sourceImage, $logoImage, intval($logoX), intval($logoY), 0, 0, $logoWidth, $logoHeight, $logoSourceWidth, $logoSourceHeight);
 
-        imagedestroy($logoImage);
+        if (PHP_VERSION_ID < 80000) {
+            imagedestroy($logoImage);
+        }
 
         return $sourceImage;
     }
 
     /**
-     * @param resource   $sourceImage
+     * @param mixed      $sourceImage
      * @param array<int> $labelMargin
      * @param array<int> $foregroundColor
      * @param array<int> $backgroundColor
      *
-     * @return resource
+     * @return mixed
      */
     private function addLabel($sourceImage, string $label, string $labelFontPath, int $labelFontSize, string $labelAlignment, array $labelMargin, array $foregroundColor, array $backgroundColor)
     {
@@ -179,6 +197,10 @@ class PngWriter extends AbstractWriter
         }
 
         $labelBox = imagettfbbox($labelFontSize, 0, $labelFontPath, $label);
+        if (!$labelBox) {
+            throw new GenerateImageException('Unable to add label: check your GD installation');
+        }
+
         $labelBoxWidth = intval($labelBox[2] - $labelBox[0]);
         $labelBoxHeight = intval($labelBox[0] - $labelBox[7]);
 
@@ -190,18 +212,28 @@ class PngWriter extends AbstractWriter
         // Create empty target image
         $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
 
-        if (!is_resource($targetImage)) {
+        if (!$targetImage) {
             throw new GenerateImageException('Unable to generate image: check your GD installation');
         }
 
         $foregroundColor = imagecolorallocate($targetImage, $foregroundColor['r'], $foregroundColor['g'], $foregroundColor['b']);
+        if (!is_int($foregroundColor)) {
+            throw new GenerateImageException('Foreground color could not be allocated');
+        }
+
         $backgroundColor = imagecolorallocate($targetImage, $backgroundColor['r'], $backgroundColor['g'], $backgroundColor['b']);
+        if (!is_int($backgroundColor)) {
+            throw new GenerateImageException('Background color could not be allocated');
+        }
+
         imagefill($targetImage, 0, 0, $backgroundColor);
 
         // Copy source image to target image
         imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $sourceWidth, $sourceHeight, $sourceWidth, $sourceHeight);
 
-        imagedestroy($sourceImage);
+        if (PHP_VERSION_ID < 80000) {
+            imagedestroy($sourceImage);
+        }
 
         switch ($labelAlignment) {
             case LabelAlignment::LEFT:
@@ -222,7 +254,7 @@ class PngWriter extends AbstractWriter
     }
 
     /**
-     * @param resource $image
+     * @param mixed $image
      */
     private function imageToString($image): string
     {

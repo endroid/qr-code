@@ -29,7 +29,10 @@ abstract class AbstractWriter implements WriterInterface
 
     private function getMimeTypeFromUrl(string $url): string
     {
-        $headers = get_headers($url, 1);
+        /** @var mixed $format */
+        $format = PHP_VERSION > 80000 ? true : 1;
+
+        $headers = get_headers($url, $format);
 
         if (!is_array($headers) || !isset($headers['Content-Type'])) {
             throw new InvalidLogoException(sprintf('Content type could not be determined for logo URL "%s"', $url));
