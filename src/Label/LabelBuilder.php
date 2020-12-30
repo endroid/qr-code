@@ -10,7 +10,8 @@ use Endroid\QrCode\Label\Margin\Margin;
 
 final class LabelBuilder implements LabelBuilderInterface
 {
-    private string $text;
+    /** @var string */
+    private $text;
     private ?FontInterface $font = null;
     private ?LabelAlignmentInterface $alignment = null;
     private ?Margin $margin = null;

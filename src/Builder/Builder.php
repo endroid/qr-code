@@ -29,15 +29,15 @@ use Endroid\QrCode\Writer\WriterInterface;
 
 class Builder implements BuilderInterface
 {
-    private QrCodeBuilderFactoryInterface $qrCodeBuilderFactory;
-    private WriterBuilderFactoryInterface $writerBuilderFactory;
-    private LogoBuilderFactoryInterface $logoBuilderFactory;
-    private LabelBuilderFactoryInterface $labelBuilderFactory;
+    private $qrCodeBuilderFactory;
+    private $writerBuilderFactory;
+    private $logoBuilderFactory;
+    private $labelBuilderFactory;
 
-    private QrCodeBuilderInterface $qrCodeBuilder;
-    private WriterBuilderInterface $writerBuilder;
-    private LogoBuilderInterface $logoBuilder;
-    private LabelBuilderInterface $labelBuilder;
+    private $qrCodeBuilder;
+    private $writerBuilder;
+    private $logoBuilder;
+    private $labelBuilder;
 
     public function __construct(
         QrCodeBuilderFactoryInterface $qrCodeBuilderFactory = null,

@@ -12,7 +12,7 @@ use Endroid\QrCode\Writer\Matrix\ImageMatrix;
 
 final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWriterInterface, ValidatingWriterInterface
 {
-    public function writeQrCode(QrCodeInterface $qrCode): PngResult
+    public function writeQrCode(QrCodeInterface $qrCode): ResultInterface
     {
         $matrix = new ImageMatrix($qrCode, $this->size, $this->margin, $this->roundBlockSizeMode);
 
@@ -54,7 +54,7 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
         return $string;
     }
 
-    public function writeLogo(LogoInterface $logo, ResultInterface $result): PngResult
+    public function writeLogo(LogoInterface $logo, ResultInterface $result): ResultInterface
     {
         if (!$result instanceof PngResult) {
             throw new QrCodeException('PngWriter only supports PngResult instances');
@@ -63,7 +63,7 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
         $image = $this->addLogo($image, $logoPath, $qrCode->getLogoWidth(), $qrCode->getLogoHeight());
     }
 
-    public function writeLabel(LabelInterface $label, ResultInterface $result): PngResult
+    public function writeLabel(LabelInterface $label, ResultInterface $result): ResultInterface
     {
         if (!$result instanceof PngResult) {
             throw new QrCodeException('PngWriter only supports PngResult instances');

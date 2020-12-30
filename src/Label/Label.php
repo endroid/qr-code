@@ -13,10 +13,17 @@ use Endroid\QrCode\Label\Margin\MarginInterface;
 
 final class Label implements LabelInterface
 {
-    private string $text;
-    private FontInterface $font;
-    private LabelAlignmentInterface $alignment;
-    private MarginInterface $margin;
+    /** @var string */
+    private $text;
+
+    /** @var FontInterface */
+    private $font;
+
+    /** @var LabelAlignmentInterface */
+    private $alignment;
+
+    /** @var MarginInterface */
+    private $margin;
 
     public function __construct(
         string $text,

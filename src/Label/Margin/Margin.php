@@ -6,10 +6,17 @@ namespace Endroid\QrCode\Label\Margin;
 
 final class Margin implements MarginInterface
 {
-    private int $top;
-    private int $right;
-    private int $bottom;
-    private int $left;
+    /** @var int */
+    private $top;
+
+    /** @var int */
+    private $right;
+
+    /** @var int */
+    private $bottom;
+
+    /** @var int */
+    private $left;
 
     public function __construct(int $top, int $right, int $bottom, int $left)
     {
