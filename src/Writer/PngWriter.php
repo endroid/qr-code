@@ -9,7 +9,6 @@ use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCode\QrCodeInterface;
 use Endroid\QrCode\Writer\Matrix\ImageMatrix;
-use Endroid\QrCode\Writer\RoundBlockSizeMode\RoundBlockSizeModeInterface;
 
 final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWriterInterface, ValidatingWriterInterface
 {

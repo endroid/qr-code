@@ -12,8 +12,7 @@ use Endroid\QrCode\Logo\LogoBuilder;
 use Endroid\QrCode\QrCode\ErrorCorrectionLevel\High;
 use Endroid\QrCode\QrCode\QrCodeBuilder;
 use Endroid\QrCode\QrCode\Encoding\Encoding;
-use Endroid\QrCode\Writer\PngWriter;
-use PHPUnit\Framework\TestCase;
+use Endroid\QrCode\Writer\ResultInterface;
 
 class QrCodeTest extends TestCase
 {
@@ -34,7 +33,6 @@ class QrCodeTest extends TestCase
             ->labelMargin(new Margin(5, 5, 5, 5))
             ->build();
 
-        dump($result);
-        die;
+        $this->assertInstanceOf(ResultInterface::class, $result);
     }
 }
