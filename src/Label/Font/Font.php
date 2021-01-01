@@ -25,7 +25,7 @@ final class Font implements FontInterface
     private function validatePath(string $path): void
     {
         if (!file_exists($path)) {
-            throw new QrCodeException(sprintf('Invalid font path "%s"', $path));
+            throw new \Exception(sprintf('Invalid font path "%s"', $path));
         }
     }
 

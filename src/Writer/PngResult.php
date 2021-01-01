@@ -18,6 +18,11 @@ final class PngResult extends AbstractResult
         return 'image/png';
     }
 
+    public function getImage()
+    {
+        return $this->image;
+    }
+
     public function getString(): string
     {
         ob_start();

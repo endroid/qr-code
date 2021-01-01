@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Endroid\QrCode\Writer;
 
 use Endroid\QrCode\Bacon\MatrixFactory;
-use Endroid\QrCode\Exception\GenerateImageException;
-use Endroid\QrCode\Exception\MissingLogoHeightException;
-use Endroid\QrCode\Exception\QrCodeException;
 use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCodeInterface;
@@ -110,77 +107,46 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
     public function writeLogo(LogoInterface $logo, ResultInterface $result): ResultInterface
     {
         if (!$result instanceof PngResult) {
-            throw new \Exception('PngWriter can only handle PngResult');
+            throw new \Exception('Unable to write logo: instance of PngResult expected');
         }
 
-        $mimeType = $this->getMimeType($logoPath);
-        $logoImage = imagecreatefromstring(strval(file_get_contents($logoPath)));
+        $image = $result->getImage();
+        $logoImage = $logo->readImage();
 
-        if ('image/svg+xml' === $mimeType && (null === $logoHeight || null === $logoWidth)) {
-            throw new MissingLogoHeightException('SVG Logos require an explicit height set via setLogoSize($width, $height)');
-        }
-
-        if (!$logoImage) {
-            throw new GenerateImageException('Unable to generate image: check your GD installation or logo path');
-        }
-
-        $logoSourceWidth = imagesx($logoImage);
-        $logoSourceHeight = imagesy($logoImage);
-
-        if (null === $logoWidth) {
-            $logoWidth = $logoSourceWidth;
-        }
-
-        if (null === $logoHeight) {
-            $aspectRatio = $logoWidth / $logoSourceWidth;
-            $logoHeight = intval($logoSourceHeight * $aspectRatio);
-        }
-
-        $logoX = imagesx($sourceImage) / 2 - $logoWidth / 2;
-        $logoY = imagesy($sourceImage) / 2 - $logoHeight / 2;
-
-        imagecopyresampled($sourceImage, $logoImage, intval($logoX), intval($logoY), 0, 0, $logoWidth, $logoHeight, $logoSourceWidth, $logoSourceHeight);
+        imagecopyresampled(
+            $image,
+            $logoImage,
+            intval(imagesx($image) / 2 - $logo->getTargetWidth() / 2),
+            intval(imagesy($image) / 2 - $logo->getTargetHeight() / 2),
+            0,
+            0,
+            $logo->getTargetWidth(),
+            $logo->getTargetHeight(),
+            imagesx($logoImage),
+            imagesy($logoImage)
+        );
 
         if (PHP_VERSION_ID < 80000) {
             imagedestroy($logoImage);
         }
 
-        ///
-
-        $image = $this->createImage($qrCode->getData(), $qrCode);
-
-        $logoPath = $qrCode->getLogoPath();
-        if (null !== $logoPath) {
-            $image = $this->addLogo($image, $logoPath, $qrCode->getLogoWidth(), $qrCode->getLogoHeight());
-        }
-
-        $label = $qrCode->getLabel();
-        if (null !== $label) {
-            $image = $this->addLabel($image, $label, $qrCode->getLabelFontPath(), $qrCode->getLabelFontSize(), $qrCode->getLabelAlignment(), $qrCode->getLabelMargin(), $qrCode->getForegroundColor(), $qrCode->getBackgroundColor());
-        }
-
-        $string = $this->imageToString($image);
-
-        imagedestroy($image);
-
-        if ($qrCode->getValidateResult()) {
-            $reader = new QrReader($string, QrReader::SOURCE_TYPE_BLOB);
-            if ($reader->text() !== $qrCode->getText()) {
-                throw new ValidationException('Built-in validation reader read "'.$reader->text().'" instead of "'.$qrCode->getText().'".
-                     Adjust your parameters to increase readability or disable built-in validation.');
-            }
-        }
-
-        return $string;
-
-        $image = $this->createImage($qrCode->getData(), $qrCode);
-
-        $string = $this->imageToString($image);
-
-        imagedestroy($image);
-
-        return $string;
+        return $result;
     }
+
+    ///
+
+//        imagedestroy($image);
+//
+//        if ($qrCode->getValidateResult()) {
+//            $reader = new QrReader($string, QrReader::SOURCE_TYPE_BLOB);
+//            if ($reader->text() !== $qrCode->getText()) {
+//                throw new ValidationException('Built-in validation reader read "'.$reader->text().'" instead of "'.$qrCode->getText().'".
+//                     Adjust your parameters to increase readability or disable built-in validation.');
+//            }
+//        }
+//
+//        return $string;
+//    }
 
     public function writeLabel(LabelInterface $label, ResultInterface $result): ResultInterface
     {
