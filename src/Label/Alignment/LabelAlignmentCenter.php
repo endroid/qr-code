@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Label\Alignment;
 
-final class Center implements LabelAlignmentInterface
+final class LabelAlignmentCenter implements LabelAlignmentInterface
 {
 }

@@ -4,51 +4,40 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Builder;
 
-use Endroid\QrCode\Label\LabelBuilderFactory;
-use Endroid\QrCode\Label\LabelBuilderFactoryInterface;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentInterface;
+use Endroid\QrCode\Label\Font\FontInterface;
 use Endroid\QrCode\Label\LabelBuilderInterface;
-use Endroid\QrCode\Logo\LogoBuilderFactory;
-use Endroid\QrCode\Logo\LogoBuilderFactoryInterface;
 use Endroid\QrCode\Logo\LogoBuilderInterface;
 use Endroid\QrCode\QrCode\Encoding\Encoding;
 use Endroid\QrCode\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelInterface;
-use Endroid\QrCode\Label\Font\FontInterface;
-use Endroid\QrCode\Label\Alignment\LabelAlignmentInterface;
-use Endroid\QrCode\QrCode\QrCodeBuilderFactory;
-use Endroid\QrCode\QrCode\QrCodeBuilderFactoryInterface;
 use Endroid\QrCode\QrCode\QrCodeBuilderInterface;
 use Endroid\QrCode\Writer\LabelWriterInterface;
 use Endroid\QrCode\Writer\LogoWriterInterface;
-use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ResultInterface;
-use Endroid\QrCode\Writer\WriterBuilder;
-use Endroid\QrCode\Writer\WriterBuilderFactory;
-use Endroid\QrCode\Writer\WriterBuilderFactoryInterface;
 use Endroid\QrCode\Writer\WriterBuilderInterface;
-use Endroid\QrCode\Writer\WriterInterface;
 
 class Builder implements BuilderInterface
 {
-    private $qrCodeBuilderFactory;
-    private $writerBuilderFactory;
-    private $logoBuilderFactory;
-    private $labelBuilderFactory;
+    public static function create(): self
+    {
+        return new static();
+    }
 
-    private $qrCodeBuilder;
-    private $writerBuilder;
-    private $logoBuilder;
-    private $labelBuilder;
+    public function build(): ResultInterface
+    {
+        $result = $this->writer->writeQrCode();
 
-    public function __construct(
-        QrCodeBuilderFactoryInterface $qrCodeBuilderFactory = null,
-        WriterBuilderFactoryInterface $writerBuilderFactory = null,
-        LogoBuilderFactoryInterface $logoBuilderFactory = null,
-        LabelBuilderFactoryInterface $labelBuilderFactory = null
-    ) {
-        $this->qrCodeBuilderFactory = isset($qrCodeBuilderFactory) ? $qrCodeBuilderFactory : new QrCodeBuilderFactory();
-        $this->writerBuilderFactory = isset($writerBuilderFactory) ? $writerBuilderFactory : new WriterBuilderFactory();
-        $this->logoBuilderFactory = isset($logoBuilderFactory) ? $logoBuilderFactory : new LogoBuilderFactory();
-        $this->labelBuilderFactory = isset($labelBuilderFactory) ? $labelBuilderFactory : new LabelBuilderFactory();
+        if ($this->writer instanceof LogoWriterInterface) {
+            $logo = $this->logoBuilder->build();
+            $result = $this->writer->writeLogo($logo, $result);
+        }
+
+        if ($this->writer instanceof LabelWriterInterface) {
+            $label = $this->labelBuilder->build();
+            $result = $this->writer->writeLabel($label, $result);
+        }
+
+        return $result;
     }
 
     private function getWriterBuilder(): WriterBuilderInterface
@@ -134,22 +123,5 @@ class Builder implements BuilderInterface
         $this->labelBuilder->alignment($labelAlignment);
 
         return $this;
-    }
-
-    public function build(): ResultInterface
-    {
-        $result = $this->writer->writeQrCode($this->qrCodeBuilder->build());
-
-        if ($this->writer instanceof LogoWriterInterface) {
-            $logo = $this->logoBuilder->build();
-            $result = $this->writer->writeLogo($logo, $result);
-        }
-
-        if ($this->writer instanceof LabelWriterInterface) {
-            $label = $this->labelBuilder->build();
-            $result = $this->writer->writeLabel($label, $result);
-        }
-
-        return $result;
     }
 }

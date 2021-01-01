@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Endroid\QrCode\QrCode;
+namespace Endroid\QrCode;
 
 final class QrCodeBuilderFactory implements QrCodeBuilderFactoryInterface
 {

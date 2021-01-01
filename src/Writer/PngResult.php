@@ -8,6 +8,11 @@ final class PngResult extends AbstractResult
 {
     private $image;
 
+    public function __construct($image)
+    {
+        $this->image = $image;
+    }
+
     public function getMimeType(): string
     {
         return 'image/png';
@@ -15,6 +20,9 @@ final class PngResult extends AbstractResult
 
     public function getString(): string
     {
-        // TODO: Implement getString() method.
+        ob_start();
+        imagepng($this->image);
+
+        return ob_get_clean();
     }
 }

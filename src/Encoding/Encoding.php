@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Endroid\QrCode\QrCode\Encoding;
-
-use Endroid\QrCode\Exception\QrCodeException;
+namespace Endroid\QrCode\Encoding;
 
 final class Encoding implements EncodingInterface
 {
-    private string $value;
+    /** @var string */
+    private $value;
 
     public function __construct(string $value)
     {
         if (!in_array($value, mb_list_encodings())) {
-            throw new QrCodeException(sprintf('Invalid encoding "%s"', $value));
+            throw new \Exception(sprintf('Invalid encoding "%s"', $value));
         }
 
         $this->value = $value;

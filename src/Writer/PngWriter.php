@@ -4,20 +4,148 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer;
 
+use Endroid\QrCode\Bacon\MatrixFactory;
+use Endroid\QrCode\Exception\GenerateImageException;
+use Endroid\QrCode\Exception\MissingLogoHeightException;
 use Endroid\QrCode\Exception\QrCodeException;
 use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
-use Endroid\QrCode\QrCode\QrCodeInterface;
-use Endroid\QrCode\Writer\Matrix\ImageMatrix;
+use Endroid\QrCode\QrCodeInterface;
 
 final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWriterInterface, ValidatingWriterInterface
 {
+    private const BASE_BLOCK_SIZE = 50;
+
     public function writeQrCode(QrCodeInterface $qrCode): ResultInterface
     {
-        $matrix = new ImageMatrix($qrCode, $this->size, $this->margin, $this->roundBlockSizeMode);
+        if (!extension_loaded('gd')) {
+            throw new \Exception('Unable to generate image: check your GD installation');
+        }
 
-        dump($matrix);
-        die;
+        $matrixFactory = new MatrixFactory();
+        $matrix = $matrixFactory->create($qrCode);
+
+        $baseImage = imagecreatetruecolor($matrix->getBlockCount() * self::BASE_BLOCK_SIZE, $matrix->getBlockCount() * self::BASE_BLOCK_SIZE);
+
+        if (!$baseImage) {
+            throw new \Exception('Unable to generate image: check your GD installation');
+        }
+
+        /** @var int $foregroundColor */
+        $foregroundColor = imagecolorallocatealpha(
+            $baseImage,
+            $qrCode->getForegroundColor()->getRed(),
+            $qrCode->getForegroundColor()->getGreen(),
+            $qrCode->getForegroundColor()->getBlue(),
+            $qrCode->getForegroundColor()->getAlpha()
+        );
+
+        /** @var int $backgroundColor */
+        $backgroundColor = imagecolorallocatealpha(
+            $baseImage,
+            $qrCode->getBackgroundColor()->getRed(),
+            $qrCode->getBackgroundColor()->getGreen(),
+            $qrCode->getBackgroundColor()->getBlue(),
+            $qrCode->getBackgroundColor()->getAlpha()
+        );
+
+        imagefill($baseImage, 0, 0, $backgroundColor);
+
+        foreach ($matrix->getIterator() as $rowIndex => $rowIterator) {
+            foreach ($rowIterator as $columnIndex => $value) {
+                if (1 === $value) {
+                    imagefilledrectangle(
+                        $baseImage,
+                        $columnIndex * self::BASE_BLOCK_SIZE,
+                        $rowIndex * self::BASE_BLOCK_SIZE,
+                        ($columnIndex + 1) * self::BASE_BLOCK_SIZE,
+                        ($rowIndex + 1) * self::BASE_BLOCK_SIZE,
+                        $foregroundColor
+                    );
+                }
+            }
+        }
+
+        $interpolatedImage = imagecreatetruecolor($matrix->getOuterSize(), $matrix->getOuterSize());
+
+        if (!$interpolatedImage) {
+            throw new \Exception('Unable to generate image: check your GD installation');
+        }
+
+        /** @var int $backgroundColor */
+        $backgroundColor = imagecolorallocatealpha(
+            $interpolatedImage,
+            $qrCode->getBackgroundColor()->getRed(),
+            $qrCode->getBackgroundColor()->getGreen(),
+            $qrCode->getBackgroundColor()->getBlue(),
+            $qrCode->getBackgroundColor()->getAlpha()
+        );
+
+        imagefill($interpolatedImage, 0, 0, $backgroundColor);
+
+        imagecopyresampled(
+            $interpolatedImage,
+            $baseImage,
+            $matrix->getMarginLeft(),
+            $matrix->getMarginLeft(),
+            0,
+            0,
+            $matrix->getInnerSize(),
+            $matrix->getInnerSize(),
+            imagesx($baseImage),
+            imagesy($baseImage)
+        );
+
+        if (PHP_VERSION_ID < 80000) {
+            imagedestroy($baseImage);
+        }
+
+        if ($qrCode->getBackgroundColor()->getAlpha() > 0) {
+            imagesavealpha($interpolatedImage, true);
+        }
+
+        return new PngResult($interpolatedImage);
+    }
+
+    public function writeLogo(LogoInterface $logo, ResultInterface $result): ResultInterface
+    {
+        if (!$result instanceof PngResult) {
+            throw new \Exception('PngWriter can only handle PngResult');
+        }
+
+        $mimeType = $this->getMimeType($logoPath);
+        $logoImage = imagecreatefromstring(strval(file_get_contents($logoPath)));
+
+        if ('image/svg+xml' === $mimeType && (null === $logoHeight || null === $logoWidth)) {
+            throw new MissingLogoHeightException('SVG Logos require an explicit height set via setLogoSize($width, $height)');
+        }
+
+        if (!$logoImage) {
+            throw new GenerateImageException('Unable to generate image: check your GD installation or logo path');
+        }
+
+        $logoSourceWidth = imagesx($logoImage);
+        $logoSourceHeight = imagesy($logoImage);
+
+        if (null === $logoWidth) {
+            $logoWidth = $logoSourceWidth;
+        }
+
+        if (null === $logoHeight) {
+            $aspectRatio = $logoWidth / $logoSourceWidth;
+            $logoHeight = intval($logoSourceHeight * $aspectRatio);
+        }
+
+        $logoX = imagesx($sourceImage) / 2 - $logoWidth / 2;
+        $logoY = imagesy($sourceImage) / 2 - $logoHeight / 2;
+
+        imagecopyresampled($sourceImage, $logoImage, intval($logoX), intval($logoY), 0, 0, $logoWidth, $logoHeight, $logoSourceWidth, $logoSourceHeight);
+
+        if (PHP_VERSION_ID < 80000) {
+            imagedestroy($logoImage);
+        }
+
+        ///
 
         $image = $this->createImage($qrCode->getData(), $qrCode);
 
@@ -52,15 +180,6 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
         imagedestroy($image);
 
         return $string;
-    }
-
-    public function writeLogo(LogoInterface $logo, ResultInterface $result): ResultInterface
-    {
-        if (!$result instanceof PngResult) {
-            throw new QrCodeException('PngWriter only supports PngResult instances');
-        }
-
-        $image = $this->addLogo($image, $logoPath, $qrCode->getLogoWidth(), $qrCode->getLogoHeight());
     }
 
     public function writeLabel(LabelInterface $label, ResultInterface $result): ResultInterface

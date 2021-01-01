@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Endroid\QrCode\QrCode\ErrorCorrectionLevel;
+namespace Endroid\QrCode\ErrorCorrectionLevel;
 
 interface ErrorCorrectionLevelInterface
 {

@@ -4,26 +4,19 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Logo;
 
-use Endroid\QrCode\Exception\QrCodeException;
-
 final class Logo implements LogoInterface
 {
-    private string $path;
-    private ?int $resizeWidth;
+    /** @var string */
+    private $path;
 
-    public function __construct(string $path, int $resizeWidth = null)
+    public function __construct(string $path)
     {
-        $this->validatePath($path);
-
         $this->path = $path;
-        $this->resizeWidth = $resizeWidth;
     }
 
-    private function validatePath(string $path): void
+    public static function create(string $path): self
     {
-        if (!file_exists($path)) {
-            throw new QrCodeException(sprintf('Invalid logo path "%s"', $path));
-        }
+        return new self($path);
     }
 
     public function getPath(): string
@@ -31,8 +24,10 @@ final class Logo implements LogoInterface
         return $this->path;
     }
 
-    public function getResizeWidth(): ?int
+    public function setPath(string $path): self
     {
-        return $this->resizeWidth;
+        $this->path = $path;
+
+        return $this;
     }
 }

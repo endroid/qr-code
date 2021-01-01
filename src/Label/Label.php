@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Label;
 
-use Endroid\QrCode\Label\Alignment\Center;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Label\Alignment\LabelAlignmentInterface;
 use Endroid\QrCode\Label\Font\Font;
 use Endroid\QrCode\Label\Font\FontInterface;
@@ -33,8 +33,13 @@ final class Label implements LabelInterface
     ) {
         $this->text = $text;
         $this->font = isset($font) ? $font : new Font(__DIR__.'/../../assets/open_sans.ttf', 16);
-        $this->alignment = isset($alignment) ? $alignment : new Center();
+        $this->alignment = isset($alignment) ? $alignment : new LabelAlignmentCenter();
         $this->margin = isset($margin) ? $margin : new Margin(0, 10, 10, 10);
+    }
+
+    public static function create(string $text): self
+    {
+        return new self($text);
     }
 
     public function getText(): string
@@ -42,9 +47,23 @@ final class Label implements LabelInterface
         return $this->text;
     }
 
+    public function setText(string $text): self
+    {
+        $this->text = $text;
+
+        return $this;
+    }
+
     public function getFont(): FontInterface
     {
         return $this->font;
+    }
+
+    public function setFont(FontInterface $font): self
+    {
+        $this->font = $font;
+
+        return $this;
     }
 
     public function getAlignment(): LabelAlignmentInterface
@@ -52,8 +71,22 @@ final class Label implements LabelInterface
         return $this->alignment;
     }
 
+    public function setAlignment(LabelAlignmentInterface $alignment): self
+    {
+        $this->alignment = $alignment;
+
+        return $this;
+    }
+
     public function getMargin(): MarginInterface
     {
         return $this->margin;
+    }
+
+    public function setMargin(MarginInterface $margin): self
+    {
+        $this->margin = $margin;
+
+        return $this;
     }
 }
