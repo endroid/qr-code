@@ -134,21 +134,6 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
         return $result;
     }
 
-    ///
-
-//        imagedestroy($image);
-//
-//        if ($qrCode->getValidateResult()) {
-//            $reader = new QrReader($string, QrReader::SOURCE_TYPE_BLOB);
-//            if ($reader->text() !== $qrCode->getText()) {
-//                throw new ValidationException('Built-in validation reader read "'.$reader->text().'" instead of "'.$qrCode->getText().'".
-//                     Adjust your parameters to increase readability or disable built-in validation.');
-//            }
-//        }
-//
-//        return $string;
-//    }
-
     public function writeLabel(LabelInterface $label, ResultInterface $result): ResultInterface
     {
         if (!$result instanceof PngResult) {
@@ -160,6 +145,11 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
         }
 
         $labelBox = imagettfbbox($label->getFont()->getSize(), 0, $label->getFont()->getPath(), $label->getText());
+
+        if (!is_array($labelBox)) {
+            throw new \Exception('Unable to generate label image box: check your FreeType installation');
+        }
+
         $labelBoxWidth = intval($labelBox[2] - $labelBox[0]);
         $labelBoxHeight = intval($labelBox[0] - $labelBox[7]);
 
@@ -222,5 +212,17 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
         imagettftext($image, $label->getFont()->getSize(), 0, $x, $y, $textColor, $label->getFont()->getPath(), $label->getText());
 
         return $result;
+    }
+
+    public function validateResult(ResultInterface $result): void
+    {
+//        $string = $result->getString();
+//
+//        $reader = new QrReader($string, QrReader::SOURCE_TYPE_BLOB);
+//            if ($reader->text() !== $qrCode->getText()) {
+//                throw new ValidationException('Built-in validation reader read "'.$reader->text().'" instead of "'.$qrCode->getText().'".
+//                     Adjust your parameters to increase readability or disable built-in validation.');
+//            }
+//        }
     }
 }

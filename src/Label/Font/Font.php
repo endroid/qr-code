@@ -12,7 +12,7 @@ final class Font implements FontInterface
     /** @var int */
     private $size;
 
-    public function __construct(string $path, int $size)
+    public function __construct(string $path, int $size = 16)
     {
         $this->validatePath($path);
 

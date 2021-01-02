@@ -4,124 +4,250 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Builder;
 
+use Endroid\QrCode\Color\ColorInterface;
+use Endroid\QrCode\Encoding\EncodingInterface;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelInterface;
 use Endroid\QrCode\Label\Alignment\LabelAlignmentInterface;
 use Endroid\QrCode\Label\Font\FontInterface;
-use Endroid\QrCode\Label\LabelBuilderInterface;
-use Endroid\QrCode\Logo\LogoBuilderInterface;
-use Endroid\QrCode\QrCode\Encoding\Encoding;
-use Endroid\QrCode\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelInterface;
-use Endroid\QrCode\QrCode\QrCodeBuilderInterface;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Label\LabelInterface;
+use Endroid\QrCode\Label\Margin\MarginInterface;
+use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\Logo\LogoInterface;
+use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\LabelWriterInterface;
 use Endroid\QrCode\Writer\LogoWriterInterface;
+use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ResultInterface;
-use Endroid\QrCode\Writer\WriterBuilderInterface;
+use Endroid\QrCode\Writer\RoundBlockSizeMode\RoundBlockSizeModeInterface;
+use Endroid\QrCode\Writer\ValidatingWriterInterface;
+use Endroid\QrCode\Writer\WriterInterface;
 
 class Builder implements BuilderInterface
 {
+    /** @var array<mixed> */
+    private $options;
+
+    public function __construct()
+    {
+        $this->options = [
+            'writer' => new PngWriter(),
+            'qrCodeClass' => QrCode::class,
+            'logoClass' => Logo::class,
+            'labelClass' => Label::class,
+            'validateResult' => false,
+        ];
+    }
+
     public static function create(): self
     {
-        return new static();
+        return new self();
     }
 
-    public function build(): ResultInterface
+    public function writer(WriterInterface $writer): self
     {
-        $result = $this->writer->writeQrCode();
-
-        if ($this->writer instanceof LogoWriterInterface) {
-            $logo = $this->logoBuilder->build();
-            $result = $this->writer->writeLogo($logo, $result);
-        }
-
-        if ($this->writer instanceof LabelWriterInterface) {
-            $label = $this->labelBuilder->build();
-            $result = $this->writer->writeLabel($label, $result);
-        }
-
-        return $result;
-    }
-
-    private function getWriterBuilder(): WriterBuilderInterface
-    {
-        if (!isset($this->writerBuilder)) {
-            $this->writerBuilder = $this->writerBuilderFactory->create();
-        }
-
-        return $this->writerBuilder;
-    }
-
-    private function getQrCodeBuilder(): QrCodeBuilderInterface
-    {
-        if (!isset($this->qrCodeBuilder)) {
-            $this->qrCodeBuilder = $this->qrCodeBuilderFactory->create();
-        }
-
-        return $this->qrCodeBuilder;
-    }
-
-    public function data(string $data): self
-    {
-        $this->getQrCodeBuilder()->data($data);
+        $this->options['writer'] = $writer;
 
         return $this;
     }
 
-    public function encoding(Encoding $encoding): self
+    public function data(string $data): self
     {
-        $this->getQrCodeBuilder()->encoding($encoding);
+        $this->options['data'] = $data;
+
+        return $this;
+    }
+
+    public function encoding(EncodingInterface $encoding): self
+    {
+        $this->options['encoding'] = $encoding;
 
         return $this;
     }
 
     public function errorCorrectionLevel(ErrorCorrectionLevelInterface $errorCorrectionLevel): self
     {
-        $this->getQrCodeBuilder()->errorCorrectionLevel($errorCorrectionLevel);
+        $this->options['errorCorrectionLevel'] = $errorCorrectionLevel;
 
         return $this;
     }
 
-    private function ensureLogoBuilder(): void
+    public function size(int $size): self
     {
-        if (!$this->logoBuilder instanceof LogoBuilderInterface) {
-            $this->logoBuilder = $this->logoBuilderFactory->create();
-        }
+        $this->options['size'] = $size;
+
+        return $this;
+    }
+
+    public function margin(int $margin): self
+    {
+        $this->options['margin'] = $margin;
+
+        return $this;
+    }
+
+    public function roundBlockSizeMode(RoundBlockSizeModeInterface $roundBlockSizeMode): self
+    {
+        $this->options['roundBlockSizeMode'] = $roundBlockSizeMode;
+
+        return $this;
+    }
+
+    public function foregroundColor(ColorInterface $foregroundColor): self
+    {
+        $this->options['foregroundColor'] = $foregroundColor;
+
+        return $this;
+    }
+
+    public function backgroundColor(ColorInterface $backgroundColor): self
+    {
+        $this->options['backgroundColor'] = $backgroundColor;
+
+        return $this;
     }
 
     public function logoPath(string $logoPath): self
     {
-        $this->ensureLogoBuilder();
-        $this->logoBuilder->path($logoPath);
+        $this->options['logoPath'] = $logoPath;
 
         return $this;
     }
 
-    private function ensureLabelBuilder(): void
+    public function logoResizeToWidth(string $logoResizeToWidth): self
     {
-        if (!$this->labelBuilder instanceof LabelBuilderInterface) {
-            $this->labelBuilder = $this->labelBuilderFactory->create();
-        }
+        $this->options['logoResizeToWidth'] = $logoResizeToWidth;
+
+        return $this;
+    }
+
+    public function logoResizeToHeight(string $logoResizeToHeight): self
+    {
+        $this->options['logoResizeToHeight'] = $logoResizeToHeight;
+
+        return $this;
     }
 
     public function labelText(string $labelText): self
     {
-        $this->ensureLabelBuilder();
-        $this->labelBuilder->text($labelText);
+        $this->options['labelText'] = $labelText;
 
         return $this;
     }
 
     public function labelFont(FontInterface $labelFont): self
     {
-        $this->ensureLabelBuilder();
-        $this->labelBuilder->font($labelFont);
+        $this->options['labelFont'] = $labelFont;
 
         return $this;
     }
 
     public function labelAlignment(LabelAlignmentInterface $labelAlignment): self
     {
-        $this->ensureLabelBuilder();
-        $this->labelBuilder->alignment($labelAlignment);
+        $this->options['labelAlignment'] = $labelAlignment;
 
         return $this;
+    }
+
+    public function labelMargin(MarginInterface $labelMargin): self
+    {
+        $this->options['labelMargin'] = $labelMargin;
+
+        return $this;
+    }
+
+    public function labelTextColor(ColorInterface $labelTextColor): self
+    {
+        $this->options['labelTextColor'] = $labelTextColor;
+
+        return $this;
+    }
+
+    public function labelBackgroundColor(ColorInterface $labelBackgroundColor): self
+    {
+        $this->options['labelBackgroundColor'] = $labelBackgroundColor;
+
+        return $this;
+    }
+
+    public function validateResult(bool $validateResult): self
+    {
+        $this->options['validateResult'] = $validateResult;
+
+        return $this;
+    }
+
+    public function build(): ResultInterface
+    {
+        if (!isset($this->options['writer']) || !$this->options['writer'] instanceof WriterInterface) {
+            throw new \Exception('Pass a valid writer via $builder->writer()');
+        }
+
+        $writer = $this->options['writer'];
+
+        $qrCode = $this->buildObject($this->options['qrCodeClass']);
+        $result = $writer->writeQrCode($qrCode);
+
+        if ($writer instanceof LogoWriterInterface) {
+            $logo = $this->buildObject($this->options['logoClass'], 'logo');
+            if ($logo instanceof LogoInterface) {
+                $result = $writer->writeLogo($logo, $result);
+            }
+        }
+
+        if ($writer instanceof LabelWriterInterface) {
+            $label = $this->buildObject($this->options['labelClass'], 'label');
+            if ($label instanceof LabelInterface) {
+                $result = $writer->writeLabel($label, $result);
+            }
+        }
+
+        if ($this->options['validateResult']) {
+            if (!$writer instanceof ValidatingWriterInterface) {
+                throw new \Exception('Unable to validate result with '.get_class($writer));
+            }
+            $writer->validateResult($result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param class-string $class
+     *
+     * @return mixed
+     */
+    private function buildObject(string $class, string $prefix = null)
+    {
+        /** @var \ReflectionClass<object> $reflectionClass */
+        $reflectionClass = new \ReflectionClass($class);
+
+        $arguments = [];
+        $hasBuilderOptions = false;
+        $missingRequiredArguments = [];
+        /** @var \ReflectionMethod $constructor */
+        $constructor = $reflectionClass->getConstructor();
+        $constructorParameters = $constructor->getParameters();
+        foreach ($constructorParameters as $parameter) {
+            $optionName = null === $prefix ? $parameter->getName() : $prefix.ucfirst($parameter->getName());
+            if (isset($this->options[$optionName])) {
+                $hasBuilderOptions = true;
+                $arguments[] = $this->options[$optionName];
+            } elseif ($parameter->isDefaultValueAvailable()) {
+                $arguments[] = $parameter->getDefaultValue();
+            } else {
+                $missingRequiredArguments[] = $optionName;
+            }
+        }
+
+        if (!$hasBuilderOptions) {
+            return null;
+        }
+
+        if (count($missingRequiredArguments) > 0) {
+            throw new \Exception(sprintf('Missing required arguments: %s', implode(', ', $missingRequiredArguments)));
+        }
+
+        return $reflectionClass->newInstanceArgs($arguments);
     }
 }

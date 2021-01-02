@@ -11,7 +11,7 @@ use Endroid\QrCode\Writer\RoundBlockSizeMode\RoundBlockSizeModeShrink;
 
 class Matrix implements MatrixInterface
 {
-    /** @var array<array<int>> */
+    /** @var array<int, array<int, int>> */
     private $blockValues = [];
 
     /** @var float */
