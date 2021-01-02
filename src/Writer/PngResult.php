@@ -23,6 +23,11 @@ final class PngResult extends AbstractResult
         return $this->image;
     }
 
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+
     public function getString(): string
     {
         ob_start();

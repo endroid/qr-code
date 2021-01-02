@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Label\Font;
 
-use Endroid\QrCode\Exception\QrCodeException;
-
 final class Font implements FontInterface
 {
     /** @var string */
