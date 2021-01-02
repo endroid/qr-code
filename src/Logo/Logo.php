@@ -69,6 +69,7 @@ final class Logo implements LogoInterface
         return $this;
     }
 
+    /** @return mixed */
     public function readImage()
     {
         if (!is_file($this->path)) {

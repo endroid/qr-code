@@ -6,11 +6,10 @@ namespace Endroid\QrCode\Matrix;
 
 interface MatrixInterface
 {
-    public function getIterator(): \ArrayIterator;
+    /** @return array<array<int>> */
+    public function getBlockValues(): array;
 
     public function getBlockCount(): int;
-
-    public function getBlockValue(int $rowIndex, int $columnIndex): int;
 
     public function getBlockSize(): float;
 

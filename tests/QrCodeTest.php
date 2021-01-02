@@ -17,78 +17,62 @@ use Endroid\QrCode\ErrorCorrectionLevel\High;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\QrCodeBuilder;
 use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\Writer\BinaryResult;
 use Endroid\QrCode\Writer\BinaryWriter;
 use Endroid\QrCode\Writer\LabelWriterInterface;
 use Endroid\QrCode\Writer\LogoWriterInterface;
+use Endroid\QrCode\Writer\PngResult;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ResultInterface;
 use Endroid\QrCode\Writer\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\WriterInterface;
+use Endroid\QrCodeBundle\Response\QrCodeResponse;
 use PHPUnit\Framework\TestCase;
 
 final class QrCodeTest extends TestCase
 {
     /**
-     * @testdox The QR code can be written using all packed writers
+     * @testdox Write as $resultClass with content type $contentType
+     * @dataProvider getWriters()
      */
-    public function testQrCode(): void
+    public function testQrCode(WriterInterface $writer, string $resultClass, string $contentType): void
     {
-        // Create generic QR Code
         $qrCode = QrCode::create('Data')
             ->setEncoding(new Encoding('UTF-8'))
             ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->setSize(300)
             ->setMargin(10)
             ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
-            ->setForegroundColor(new Color(100, 100, 100))
-            ->setBackgroundColor(new Color(255, 0, 255))
+            ->setForegroundColor(new Color(0, 0, 0))
+            ->setBackgroundColor(new Color(255, 255, 255))
         ;
 
-        $this->assertInstanceOf(QrCode::class, $qrCode);
-
         // Create generic logo
-        $logo = Logo::create(__DIR__.'/assets/symfony.png');
-
-        $this->assertInstanceOf(Logo::class, $logo);
+        $logo = Logo::create(__DIR__.'/assets/symfony.png')
+            ->setResizeToWidth(200)
+        ;
 
         // Create generic label
-        $label = Label::create('Label');
+        $label = Label::create('Label')
+            ->setTextColor(new Color(255, 0, 0))
+            ->setBackgroundColor(new Color(0, 0, 0))
+        ;
 
-        $this->assertInstanceOf(Label::class, $label);
-
-        foreach ($this->getWriters() as $writer) {
-            $result = $writer->writeQrCode($qrCode);
-            if ($writer instanceof LogoWriterInterface) {
-//                $result = $writer->writeLogo($logo);
-            }
-            if ($writer instanceof LabelWriterInterface) {
-//                $result = $writer->writeLabel($label);
-            }
-            $this->assertInstanceOf(ResultInterface::class, $result);
-            $result->getString();
+        $result = $writer->writeQrCode($qrCode);
+        if ($writer instanceof LogoWriterInterface) {
+            $result = $writer->writeLogo($logo, $result);
+        }
+        if ($writer instanceof LabelWriterInterface) {
+            $result = $writer->writeLabel($label, $result);
         }
 
-
-
-//        $result = Builder::create()
-//            ->data('data')
-//            ->encoding(new Encoding('UTF-8'))
-//            ->errorCorrectionLevel(new High())
-//            ->writer(new PngWriter())
-//            ->logoPath()
-//            ->logoResizeWidth(100)
-//            ->labelText('My fancy label')
-//            ->labelAlignment(new Center())
-//            ->labelMargin(new Margin(5, 5, 5, 5))
-//            ->build();
-//
-//        $this->assertInstanceOf(ResultInterface::class, $result);
+        $this->assertInstanceOf($resultClass, $result);
+        $this->assertEquals($contentType, $result->getMimeType());
     }
 
-    /** @return WriterInterface[] */
-    private function getWriters(): iterable
+    public function getWriters(): iterable
     {
-//        yield new BinaryWriter();
-        yield new PngWriter();
+        yield [new BinaryWriter(), BinaryResult::class, 'text/plain'];
+        yield [new PngWriter(), PngResult::class, 'image/png'];
     }
 }

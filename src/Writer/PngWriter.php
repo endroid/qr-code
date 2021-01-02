@@ -50,8 +50,8 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
 
         imagefill($baseImage, 0, 0, $backgroundColor);
 
-        foreach ($matrix->getIterator() as $rowIndex => $rowIterator) {
-            foreach ($rowIterator as $columnIndex => $value) {
+        foreach ($matrix->getBlockValues() as $rowIndex => $row) {
+            foreach ($row as $columnIndex => $value) {
                 if (1 === $value) {
                     imagefilledrectangle(
                         $baseImage,

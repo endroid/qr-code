@@ -6,8 +6,10 @@ namespace Endroid\QrCode\Writer;
 
 final class PngResult extends AbstractResult
 {
+    /** @var mixed */
     private $image;
 
+    /** @param mixed $image */
     public function __construct($image)
     {
         $this->image = $image;
@@ -18,12 +20,14 @@ final class PngResult extends AbstractResult
         return 'image/png';
     }
 
+    /** @return mixed */
     public function getImage()
     {
         return $this->image;
     }
 
-    public function setImage($image)
+    /** @param mixed $image */
+    public function setImage($image): void
     {
         $this->image = $image;
     }
@@ -33,6 +37,6 @@ final class PngResult extends AbstractResult
         ob_start();
         imagepng($this->image);
 
-        return ob_get_clean();
+        return strval(ob_get_clean());
     }
 }

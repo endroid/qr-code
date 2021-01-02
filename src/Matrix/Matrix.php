@@ -29,6 +29,7 @@ class Matrix implements MatrixInterface
     /** @var int */
     private $marginRight;
 
+    /** @param array<array<int>> $blockValues */
     public function __construct(array $blockValues, int $size, int $margin, RoundBlockSizeModeInterface $roundBlockSizeMode)
     {
         $this->blockValues = $blockValues;
@@ -54,15 +55,9 @@ class Matrix implements MatrixInterface
         $this->marginRight = $this->outerSize - $this->innerSize - $this->marginLeft;
     }
 
-    /** @return \ArrayIterator<\ArrayIterator> */
-    public function getIterator(): \ArrayIterator
+    public function getBlockValues(): array
     {
-        $rowIterators = [];
-        foreach ($this->blockValues as $row) {
-            $rowIterators[] = new \ArrayIterator($row);
-        }
-
-        return new \ArrayIterator($rowIterators);
+        return $this->blockValues;
     }
 
     public function getBlockCount(): int

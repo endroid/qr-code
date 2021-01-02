@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer;
 
-use Endroid\QrCode\Matrix\Matrix;
+use Endroid\QrCode\Matrix\MatrixInterface;
 
 final class BinaryResult extends AbstractResult
 {
     private $matrix;
 
-    public function __construct(Matrix $matrix)
+    public function __construct(MatrixInterface $matrix)
     {
         $this->matrix = $matrix;
     }
@@ -22,8 +22,8 @@ final class BinaryResult extends AbstractResult
 
     public function getString(): string
     {
-        return implode("\n", array_map(function (\ArrayIterator $rowIterator) {
-            return implode('', $rowIterator->getArrayCopy());
-        }, $this->matrix->getIterator()->getArrayCopy()));
+        $rows = array_map('implode', $this->matrix->getBlockValues());
+
+        return implode("\n", $rows);
     }
 }

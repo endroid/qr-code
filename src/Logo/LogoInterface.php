@@ -8,6 +8,7 @@ interface LogoInterface
 {
     public function getPath(): string;
 
+    /** @return mixed */
     public function readImage();
 
     public function getTargetWidth(): int;
