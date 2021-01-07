@@ -70,7 +70,7 @@ class PngWriter extends AbstractWriter
     {
         $image = imagecreatetruecolor($data['block_count'] * $baseSize, $data['block_count'] * $baseSize);
 
-        if (!is_resource($image)) {
+        if (!is_resource($image) && (version_compare(phpversion(), '8', '>=') && !is_object($image))) {
             throw new GenerateImageException('Unable to generate image: check your GD installation');
         }
 
@@ -93,7 +93,7 @@ class PngWriter extends AbstractWriter
     {
         $image = imagecreatetruecolor($data['outer_width'], $data['outer_height']);
 
-        if (!is_resource($image)) {
+        if (!is_resource($image) && (version_compare(phpversion(), '8', '>=') && !is_object($image))) {
             throw new GenerateImageException('Unable to generate image: check your GD installation');
         }
 
@@ -117,7 +117,7 @@ class PngWriter extends AbstractWriter
             throw new MissingLogoHeightException('SVG Logos require an explicit height set via setLogoSize($width, $height)');
         }
 
-        if (!is_resource($logoImage)) {
+        if (!is_resource($logoImage) && (version_compare(phpversion(), '8', '>=') && !is_object($logoImage))) {
             throw new GenerateImageException('Unable to generate image: check your GD installation or logo path');
         }
 
@@ -161,7 +161,7 @@ class PngWriter extends AbstractWriter
         // Create empty target image
         $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
 
-        if (!is_resource($targetImage)) {
+        if (!is_resource($targetImage) && (version_compare(phpversion(), '8', '>=') && !is_object($targetImage))) {
             throw new GenerateImageException('Unable to generate image: check your GD installation');
         }
 

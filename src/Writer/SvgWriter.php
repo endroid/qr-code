@@ -104,7 +104,7 @@ class SvgWriter extends AbstractWriter
         if (null === $logoHeight || null === $logoWidth) {
             $logoImage = imagecreatefromstring(strval($imageData));
 
-            if (!is_resource($logoImage)) {
+            if (!is_resource($logoImage) && (version_compare(phpversion(), '8', '>=') && !is_object($logoImage))) {
                 throw new GenerateImageException('Unable to generate image: check your GD installation or logo path');
             }
 
