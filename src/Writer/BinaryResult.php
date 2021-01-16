@@ -22,8 +22,14 @@ final class BinaryResult extends AbstractResult
 
     public function getString(): string
     {
-        $rows = array_map('implode', $this->matrix->getBlockValues());
+        $binaryString = '';
+        for ($rowIndex = 0; $rowIndex < $this->matrix->getBlockCount(); $rowIndex++) {
+            for ($columnIndex = 0; $columnIndex < $this->matrix->getBlockCount(); $columnIndex) {
+                $binaryString .= $this->matrix->getBlockValue($rowIndex, $columnIndex);
+            }
+            $binaryString .= "\n";
+        }
 
-        return implode("\n", $rows);
+        return $binaryString;
     }
 }

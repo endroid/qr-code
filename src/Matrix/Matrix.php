@@ -55,19 +55,14 @@ class Matrix implements MatrixInterface
         $this->marginRight = $this->outerSize - $this->innerSize - $this->marginLeft;
     }
 
-    public function getBlockValues(): array
+    public function getBlockValue(int $rowIndex, int $columnIndex): int
     {
-        return $this->blockValues;
+        return $this->blockValues[$rowIndex][$columnIndex];
     }
 
     public function getBlockCount(): int
     {
         return count($this->blockValues[0]);
-    }
-
-    public function getBlockValue(int $rowIndex, int $columnIndex): int
-    {
-        return $this->blockValues[$rowIndex][$columnIndex];
     }
 
     public function getBlockSize(): float

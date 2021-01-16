@@ -10,6 +10,8 @@ use Endroid\QrCode\Label\Alignment\LabelAlignmentRight;
 use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCodeInterface;
+use Libern\QRCodeReader\QRCodeReader;
+use Zxing\QrReader;
 
 final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWriterInterface, ValidatingWriterInterface
 {
@@ -50,9 +52,9 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
 
         imagefill($baseImage, 0, 0, $backgroundColor);
 
-        foreach ($matrix->getBlockValues() as $rowIndex => $row) {
-            foreach ($row as $columnIndex => $value) {
-                if (1 === $value) {
+        for ($rowIndex = 0; $rowIndex < $matrix->getBlockCount(); $rowIndex++) {
+            for ($columnIndex = 0; $columnIndex < $matrix->getBlockCount(); $columnIndex++) {
+                if (1 === $matrix->getBlockValue($rowIndex, $columnIndex)) {
                     imagefilledrectangle(
                         $baseImage,
                         $columnIndex * self::BASE_BLOCK_SIZE,

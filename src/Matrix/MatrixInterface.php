@@ -6,8 +6,7 @@ namespace Endroid\QrCode\Matrix;
 
 interface MatrixInterface
 {
-    /** @return array<int, array<int, int>> */
-    public function getBlockValues(): array;
+    public function getBlockValue(int $rowIndex, int $columnIndex): int;
 
     public function getBlockCount(): int;
 

@@ -11,9 +11,16 @@
             "email": "info@endroid.nl"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/remicollet/php-qrcode-detector-decoder"
+        }
+    ],
     "require": {
         "php": "^7.3||^8.0",
         "bacon/bacon-qr-code": "^2.0",
+        "khanamiryan/qrcode-detector-decoder": "dev-issue-php8",
         "symfony/property-access": "^3.4||^4.4||^5.0"
     },
     "require-dev": {
