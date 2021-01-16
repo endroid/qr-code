@@ -206,7 +206,7 @@ class Builder implements BuilderInterface
             if (!$writer instanceof ValidatingWriterInterface) {
                 throw new \Exception('Unable to validate result with '.get_class($writer));
             }
-            $writer->validateResult($result);
+            $writer->validateResult($result, $qrCode->getData());
         }
 
         return $result;

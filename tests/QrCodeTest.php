@@ -6,6 +6,7 @@ namespace Endroid\QrCode\Tests;
 
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
 use Endroid\QrCode\Label\Alignment\Center;
 use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Label\Font\NotoSans;
@@ -42,7 +43,7 @@ final class QrCodeTest extends TestCase
     {
         $qrCode = QrCode::create('Data')
             ->setEncoding(new Encoding('UTF-8'))
-            ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
             ->setSize(300)
             ->setMargin(10)
             ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
@@ -51,7 +52,7 @@ final class QrCodeTest extends TestCase
 
         // Create generic logo
         $logo = Logo::create(__DIR__ . '/assets/symfony.png')
-            ->setResizeToWidth(200);
+            ->setResizeToWidth(50);
 
         // Create generic label
         $label = Label::create('Label')
@@ -69,7 +70,7 @@ final class QrCodeTest extends TestCase
         }
 
         if ($writer instanceof ValidatingWriterInterface) {
-            $writer->validateResult($result);
+            $writer->validateResult($result, $qrCode->getData());
         }
 
         $this->assertInstanceOf($resultClass, $result);

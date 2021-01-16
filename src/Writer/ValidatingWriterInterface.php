@@ -6,5 +6,5 @@ namespace Endroid\QrCode\Writer;
 
 interface ValidatingWriterInterface
 {
-    public function validateResult(ResultInterface $result): void;
+    public function validateResult(ResultInterface $result, string $expectedData): void;
 }

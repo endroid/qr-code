@@ -10,7 +10,6 @@ use Endroid\QrCode\Label\Alignment\LabelAlignmentRight;
 use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCodeInterface;
-use Libern\QRCodeReader\QRCodeReader;
 use Zxing\QrReader;
 
 final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWriterInterface, ValidatingWriterInterface
@@ -52,8 +51,8 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
 
         imagefill($baseImage, 0, 0, $backgroundColor);
 
-        for ($rowIndex = 0; $rowIndex < $matrix->getBlockCount(); $rowIndex++) {
-            for ($columnIndex = 0; $columnIndex < $matrix->getBlockCount(); $columnIndex++) {
+        for ($rowIndex = 0; $rowIndex < $matrix->getBlockCount(); ++$rowIndex) {
+            for ($columnIndex = 0; $columnIndex < $matrix->getBlockCount(); ++$columnIndex) {
                 if (1 === $matrix->getBlockValue($rowIndex, $columnIndex)) {
                     imagefilledrectangle(
                         $baseImage,
@@ -216,15 +215,14 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
         return $result;
     }
 
-    public function validateResult(ResultInterface $result): void
+    public function validateResult(ResultInterface $result, string $expectedData): void
     {
-//        $string = $result->getString();
-//
-//        $reader = new QrReader($string, QrReader::SOURCE_TYPE_BLOB);
-//            if ($reader->text() !== $qrCode->getText()) {
-//                throw new ValidationException('Built-in validation reader read "'.$reader->text().'" instead of "'.$qrCode->getText().'".
-//                     Adjust your parameters to increase readability or disable built-in validation.');
-//            }
-//        }
+        $string = $result->getString();
+
+        $reader = new QrReader($string, QrReader::SOURCE_TYPE_BLOB);
+        if ($reader->text() !== $expectedData) {
+            throw new \Exception('Built-in validation reader read "'.$reader->text().'" instead of "'.$expectedData.'".
+                 Adjust your parameters to increase readability or disable built-in validation.');
+        }
     }
 }
