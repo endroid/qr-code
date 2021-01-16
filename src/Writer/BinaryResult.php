@@ -24,7 +24,7 @@ final class BinaryResult extends AbstractResult
     {
         $binaryString = '';
         for ($rowIndex = 0; $rowIndex < $this->matrix->getBlockCount(); ++$rowIndex) {
-            for ($columnIndex = 0; $columnIndex < $this->matrix->getBlockCount(); $columnIndex) {
+            for ($columnIndex = 0; $columnIndex < $this->matrix->getBlockCount(); ++$columnIndex) {
                 $binaryString .= $this->matrix->getBlockValue($rowIndex, $columnIndex);
             }
             $binaryString .= "\n";
