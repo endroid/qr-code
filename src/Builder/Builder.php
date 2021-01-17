@@ -15,11 +15,11 @@ use Endroid\QrCode\Label\Margin\MarginInterface;
 use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCode;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeInterface;
 use Endroid\QrCode\Writer\LabelWriterInterface;
 use Endroid\QrCode\Writer\LogoWriterInterface;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ResultInterface;
-use Endroid\QrCode\Writer\RoundBlockSizeMode\RoundBlockSizeModeInterface;
 use Endroid\QrCode\Writer\ValidatingWriterInterface;
 use Endroid\QrCode\Writer\WriterInterface;
 
@@ -185,6 +185,10 @@ class Builder implements BuilderInterface
 
         $writer = $this->options['writer'];
 
+        if ($this->options['validateResult'] && !$writer instanceof ValidatingWriterInterface) {
+            throw new \Exception('Unable to validate result with '.get_class($writer));
+        }
+
         $qrCode = $this->buildObject($this->options['qrCodeClass']);
         $result = $writer->writeQrCode($qrCode);
 
@@ -202,10 +206,7 @@ class Builder implements BuilderInterface
             }
         }
 
-        if ($this->options['validateResult']) {
-            if (!$writer instanceof ValidatingWriterInterface) {
-                throw new \Exception('Unable to validate result with '.get_class($writer));
-            }
+        if ($this->options['validateResult'] && $writer instanceof ValidatingWriterInterface) {
             $writer->validateResult($result, $qrCode->getData());
         }
 

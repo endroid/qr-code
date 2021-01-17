@@ -13,4 +13,7 @@ interface MarginInterface
     public function getBottom(): int;
 
     public function getLeft(): int;
+
+    /** @return array<string, int> */
+    public function toArray(): array;
 }

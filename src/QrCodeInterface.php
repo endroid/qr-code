@@ -7,7 +7,7 @@ namespace Endroid\QrCode;
 use Endroid\QrCode\Color\ColorInterface;
 use Endroid\QrCode\Encoding\EncodingInterface;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelInterface;
-use Endroid\QrCode\Writer\RoundBlockSizeMode\RoundBlockSizeModeInterface;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeInterface;
 
 interface QrCodeInterface
 {

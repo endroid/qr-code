@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Endroid\QrCode\Writer\RoundBlockSizeMode;
+namespace Endroid\QrCode\RoundBlockSizeMode;
 
 final class RoundBlockSizeModeEnlarge implements RoundBlockSizeModeInterface
 {

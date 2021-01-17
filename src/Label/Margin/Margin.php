@@ -45,4 +45,15 @@ final class Margin implements MarginInterface
     {
         return $this->left;
     }
+
+    /** @return array<string, int> */
+    public function toArray(): array
+    {
+        return [
+            'top' => $this->top,
+            'right' => $this->right,
+            'bottom' => $this->bottom,
+            'left' => $this->left,
+        ];
+    }
 }

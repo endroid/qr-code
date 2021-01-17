@@ -45,4 +45,20 @@ final class Color implements ColorInterface
     {
         return $this->alpha;
     }
+
+    public function getOpacity(): float
+    {
+        return 1 - $this->alpha / 127;
+    }
+
+    /** @return array<string, int> */
+    public function toArray(): array
+    {
+        return [
+            'red' => $this->red,
+            'green' => $this->green,
+            'blue' => $this->blue,
+            'alpha' => $this->alpha,
+        ];
+    }
 }

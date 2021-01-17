@@ -13,4 +13,9 @@ interface ColorInterface
     public function getBlue(): int;
 
     public function getAlpha(): int;
+
+    public function getOpacity(): float;
+
+    /** @return array<string, int> */
+    public function toArray(): array;
 }

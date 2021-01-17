@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Matrix;
 
-use Endroid\QrCode\Writer\RoundBlockSizeMode\RoundBlockSizeModeEnlarge;
-use Endroid\QrCode\Writer\RoundBlockSizeMode\RoundBlockSizeModeInterface;
-use Endroid\QrCode\Writer\RoundBlockSizeMode\RoundBlockSizeModeMargin;
-use Endroid\QrCode\Writer\RoundBlockSizeMode\RoundBlockSizeModeShrink;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeEnlarge;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeInterface;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeShrink;
 
 class Matrix implements MatrixInterface
 {

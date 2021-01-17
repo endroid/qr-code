@@ -219,6 +219,14 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
     {
         $string = $result->getString();
 
+        if (!class_exists(QrReader::class)) {
+            throw new \Exception('Please install khanamiryan/qrcode-detector-decoder to validate images');
+        }
+
+        if (PHP_VERSION_ID >= 80000) {
+            throw new \Exception('The validator is not compatible with PHP 8 yet, see https://github.com/khanamiryan/php-qrcode-detector-decoder/pull/103');
+        }
+
         $reader = new QrReader($string, QrReader::SOURCE_TYPE_BLOB);
         if ($reader->text() !== $expectedData) {
             throw new \Exception('Built-in validation reader read "'.$reader->text().'" instead of "'.$expectedData.'".
