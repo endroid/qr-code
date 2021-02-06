@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Endroid\QrCode\Writer;
+namespace Endroid\QrCode\Writer\Result;
 
 use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;

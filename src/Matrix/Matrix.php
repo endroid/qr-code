@@ -9,7 +9,7 @@ use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeInterface;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeShrink;
 
-class Matrix implements MatrixInterface
+final class Matrix implements MatrixInterface
 {
     /** @var array<int, array<int, int>> */
     private $blockValues = [];

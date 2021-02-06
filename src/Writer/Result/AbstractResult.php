@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Endroid\QrCode\Writer;
+namespace Endroid\QrCode\Writer\Result;
+
+use Endroid\QrCode\Writer\Result\ResultInterface;
 
 abstract class AbstractResult implements ResultInterface
 {
-    abstract public function getString(): string;
-
     public function getDataUri(): string
     {
         return 'data:'.$this->getMimeType().';base64,'.base64_encode($this->getString());
@@ -18,6 +18,4 @@ abstract class AbstractResult implements ResultInterface
         $string = $this->getString();
         file_put_contents($path, $string);
     }
-
-    abstract public function getMimeType(): string;
 }

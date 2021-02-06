@@ -7,16 +7,17 @@ namespace Endroid\QrCode\Writer;
 use Endroid\QrCode\Bacon\MatrixFactory;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCodeInterface;
+use Endroid\QrCode\Writer\Result\ResultInterface;
+use Endroid\QrCode\Writer\Result\SvgResult;
 
 final class SvgWriter implements WriterInterface, LogoWriterInterface
 {
-    /** @param array<mixed> $options */
+    public const WRITER_OPTION_BLOCK_ID = 'block_id';
+
     public function writeQrCode(QrCodeInterface $qrCode, array $options = []): ResultInterface
     {
-        $this->options = $options;
-
-        if (!isset($this->options['block_id'])) {
-            $this->options['block_id'] = 'block';
+        if (!isset($options[self::WRITER_OPTION_BLOCK_ID])) {
+            $options[self::WRITER_OPTION_BLOCK_ID] = 'block';
         }
 
         $matrixFactory = new MatrixFactory();
@@ -29,9 +30,8 @@ final class SvgWriter implements WriterInterface, LogoWriterInterface
         $xml->addAttribute('viewBox', '0 0 '.$matrix->getOuterSize().' '.$matrix->getOuterSize());
         $xml->addChild('defs');
 
-        $blockId = isset($options['block_id']) && $options['block_id'] ? $options['rect_id'] : 'block';
         $blockDefinition = $xml->defs->addChild('rect');
-        $blockDefinition->addAttribute('id', $blockId);
+        $blockDefinition->addAttribute('id', $options[self::WRITER_OPTION_BLOCK_ID]);
         $blockDefinition->addAttribute('width', strval($matrix->getBlockSize()));
         $blockDefinition->addAttribute('height', strval($matrix->getBlockSize()));
         $blockDefinition->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getForegroundColor()->getRed(), $qrCode->getForegroundColor()->getGreen(), $qrCode->getForegroundColor()->getBlue()));
@@ -51,7 +51,7 @@ final class SvgWriter implements WriterInterface, LogoWriterInterface
                     $block = $xml->addChild('use');
                     $block->addAttribute('x', strval($matrix->getMarginLeft() + $matrix->getBlockSize() * $columnIndex));
                     $block->addAttribute('y', strval($matrix->getMarginLeft() + $matrix->getBlockSize() * $rowIndex));
-                    $block->addAttribute('xlink:href', '#'.$blockId, 'http://www.w3.org/1999/xlink');
+                    $block->addAttribute('xlink:href', '#'.$options[self::WRITER_OPTION_BLOCK_ID], 'http://www.w3.org/1999/xlink');
                 }
             }
         }
@@ -59,11 +59,13 @@ final class SvgWriter implements WriterInterface, LogoWriterInterface
         return new SvgResult($xml);
     }
 
-    public function writeLogo(LogoInterface $logo, ResultInterface $result): ResultInterface
+    public function writeLogo(LogoInterface $logo, ResultInterface $result, array $options = []): ResultInterface
     {
         if (!$result instanceof SvgResult) {
             throw new \Exception('Unable to write logo: instance of SvgResult expected');
         }
+
+        // @todo Implement write SVG logo
 
         return $result;
     }

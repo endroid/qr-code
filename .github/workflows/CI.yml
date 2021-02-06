@@ -54,6 +54,13 @@ jobs:
           vendor/bin/unit-test
           vendor/bin/functional-test ^3.4
 
+      - name: Archive logs
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs
+          path: vendor/endroid/quality/application/var/log
+
       - name: Archive code coverage results
         uses: actions/upload-artifact@v2
         with:

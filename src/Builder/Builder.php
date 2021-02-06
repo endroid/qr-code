@@ -19,11 +19,11 @@ use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeInterface;
 use Endroid\QrCode\Writer\LabelWriterInterface;
 use Endroid\QrCode\Writer\LogoWriterInterface;
 use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Writer\ResultInterface;
+use Endroid\QrCode\Writer\Result\ResultInterface;
 use Endroid\QrCode\Writer\ValidatingWriterInterface;
 use Endroid\QrCode\Writer\WriterInterface;
 
-class Builder implements BuilderInterface
+final class Builder implements BuilderInterface
 {
     /** @var array<mixed> */
     private $options;
@@ -32,6 +32,7 @@ class Builder implements BuilderInterface
     {
         $this->options = [
             'writer' => new PngWriter(),
+            'writerOptions' => [],
             'qrCodeClass' => QrCode::class,
             'logoClass' => Logo::class,
             'labelClass' => Label::class,
@@ -47,6 +48,14 @@ class Builder implements BuilderInterface
     public function writer(WriterInterface $writer): self
     {
         $this->options['writer'] = $writer;
+
+        return $this;
+    }
+
+    /** @param array<mixed> $writerOptions */
+    public function writerOptions(array $writerOptions): self
+    {
+        $this->options['writerOptions'] = $writerOptions;
 
         return $this;
     }
@@ -190,20 +199,24 @@ class Builder implements BuilderInterface
         }
 
         $qrCode = $this->buildObject($this->options['qrCodeClass']);
-        $result = $writer->writeQrCode($qrCode);
+        $result = $writer->writeQrCode($qrCode, $this->options['writerOptions']);
 
-        if ($writer instanceof LogoWriterInterface) {
-            $logo = $this->buildObject($this->options['logoClass'], 'logo');
-            if ($logo instanceof LogoInterface) {
-                $result = $writer->writeLogo($logo, $result);
+        // Write logo only if logo is defined and writer has logo writing capabilities
+        $logo = $this->buildObject($this->options['logoClass'], 'logo');
+        if ($logo instanceof LogoInterface) {
+            if (!$writer instanceof LogoWriterInterface) {
+                throw new \Exception('Unable to write logo with '.get_class($writer));
             }
+            $result = $writer->writeLogo($logo, $result, $this->options['writerOptions']);
         }
 
-        if ($writer instanceof LabelWriterInterface) {
-            $label = $this->buildObject($this->options['labelClass'], 'label');
-            if ($label instanceof LabelInterface) {
-                $result = $writer->writeLabel($label, $result);
+        // Write label only if label is defined and writer has label writing capabilities
+        $label = $this->buildObject($this->options['labelClass'], 'label');
+        if ($label instanceof LabelInterface) {
+            if (!$writer instanceof LabelWriterInterface) {
+                throw new \Exception('Unable to write label with '.get_class($writer));
             }
+            $result = $writer->writeLabel($label, $result, $this->options['writerOptions']);
         }
 
         if ($this->options['validateResult'] && $writer instanceof ValidatingWriterInterface) {

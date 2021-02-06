@@ -15,17 +15,18 @@ use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
-use Endroid\QrCode\Writer\BinaryResult;
+use Endroid\QrCode\Writer\PdfWriter;
+use Endroid\QrCode\Writer\Result\BinaryResult;
 use Endroid\QrCode\Writer\BinaryWriter;
-use Endroid\QrCode\Writer\DebugResult;
+use Endroid\QrCode\Writer\Result\DebugResult;
 use Endroid\QrCode\Writer\DebugWriter;
-use Endroid\QrCode\Writer\EpsResult;
+use Endroid\QrCode\Writer\Result\EpsResult;
 use Endroid\QrCode\Writer\EpsWriter;
 use Endroid\QrCode\Writer\LabelWriterInterface;
 use Endroid\QrCode\Writer\LogoWriterInterface;
-use Endroid\QrCode\Writer\PngResult;
+use Endroid\QrCode\Writer\Result\PngResult;
 use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Writer\SvgResult;
+use Endroid\QrCode\Writer\Result\SvgResult;
 use Endroid\QrCode\Writer\SvgWriter;
 use Endroid\QrCode\Writer\ValidatingWriterInterface;
 use Endroid\QrCode\Writer\WriterInterface;
@@ -68,7 +69,7 @@ final class QrCodeTest extends TestCase
         }
 
         if ($writer instanceof ValidatingWriterInterface) {
-            if (PHP_VERSION_ID >= 80000) {
+            if ($writer instanceof PngWriter && PHP_VERSION_ID >= 80000) {
                 $this->expectException(\Exception::class);
             }
             $writer->validateResult($result, $qrCode->getData());
@@ -84,63 +85,8 @@ final class QrCodeTest extends TestCase
         yield [new BinaryWriter(), BinaryResult::class, 'text/plain'];
         yield [new DebugWriter(), DebugResult::class, 'text/plain'];
         yield [new EpsWriter(), EpsResult::class, 'image/eps'];
-//        yield [new PdfWriter(), PdfResult::class, ''];
+        yield [new PdfWriter(), PdfResult::class, ''];
         yield [new PngWriter(), PngResult::class, 'image/png'];
         yield [new SvgWriter(), SvgResult::class, 'image/svg+xml'];
-    }
-
-    /**
-     * @testdox Write advanced example via builder
-     */
-    public function testBuilder(): void
-    {
-        $result = Builder::create()
-            ->data('Custom QR code contents')
-            ->encoding(new Encoding('UTF-8'))
-            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-            ->size(300)
-            ->margin(10)
-            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
-            ->logoPath(__DIR__.'/assets/symfony.png')
-            ->labelText('This is the label')
-            ->labelFont(new NotoSans(20))
-            ->labelAlignment(new LabelAlignmentCenter())
-            ->build()
-        ;
-
-        $this->assertInstanceOf(PngResult::class, $result);
-        $this->assertEquals('image/png', $result->getMimeType());
-    }
-
-    /**
-     * @testdox Can write $name
-     * @dataProvider dataProvider
-     */
-    public function testReadability(string $name, string $data): void
-    {
-        if (PHP_VERSION_ID >= 80000) {
-            $this->expectException(\Exception::class);
-        }
-
-        $result = Builder::create()
-            ->data($data)
-            ->validateResult(true)
-            ->build()
-        ;
-
-        $this->assertInstanceOf(PngResult::class, $result);
-        $this->assertEquals('image/png', $result->getMimeType());
-    }
-
-    public function dataProvider(): iterable
-    {
-        yield ['small data', 'Tiny'];
-        yield ['data containing spaces', 'This one has spaces'];
-        yield ['a large random character string', 'd2llMS9uU01BVmlvalM2YU9BUFBPTTdQMmJabHpqdndt'];
-        yield ['a URL containing query parameters', 'https://this.is.an/url?with=query&string=attached'];
-        yield ['a long number', '11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111'];
-        yield ['serialized data', '{"i":"serialized.data","v":1,"t":1,"d":"4AEPc9XuIQ0OjsZoSRWp9DRWlN6UyDvuMlyOYy8XjOw="}'];
-        yield ['special characters', 'Spëci&al ch@ract3rs'];
-        yield ['chinese characters', '有限公司'];
     }
 }

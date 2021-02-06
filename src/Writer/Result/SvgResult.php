@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Endroid\QrCode\Writer;
+namespace Endroid\QrCode\Writer\Result;
 
 final class SvgResult extends AbstractResult
 {

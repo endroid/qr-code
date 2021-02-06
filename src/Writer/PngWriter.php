@@ -10,13 +10,13 @@ use Endroid\QrCode\Label\Alignment\LabelAlignmentRight;
 use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCodeInterface;
+use Endroid\QrCode\Writer\Result\PngResult;
+use Endroid\QrCode\Writer\Result\ResultInterface;
 use Zxing\QrReader;
 
 final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWriterInterface, ValidatingWriterInterface
 {
-    private const BASE_BLOCK_SIZE = 50;
-
-    public function writeQrCode(QrCodeInterface $qrCode): ResultInterface
+    public function writeQrCode(QrCodeInterface $qrCode, array $options = []): ResultInterface
     {
         if (!extension_loaded('gd')) {
             throw new \Exception('Unable to generate image: check your GD installation');
@@ -25,7 +25,8 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
         $matrixFactory = new MatrixFactory();
         $matrix = $matrixFactory->create($qrCode);
 
-        $baseImage = imagecreatetruecolor($matrix->getBlockCount() * self::BASE_BLOCK_SIZE, $matrix->getBlockCount() * self::BASE_BLOCK_SIZE);
+        $baseBlockSize = 50;
+        $baseImage = imagecreatetruecolor($matrix->getBlockCount() * $baseBlockSize, $matrix->getBlockCount() * $baseBlockSize);
 
         if (!$baseImage) {
             throw new \Exception('Unable to generate image: check your GD installation');
@@ -56,10 +57,10 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
                 if (1 === $matrix->getBlockValue($rowIndex, $columnIndex)) {
                     imagefilledrectangle(
                         $baseImage,
-                        $columnIndex * self::BASE_BLOCK_SIZE,
-                        $rowIndex * self::BASE_BLOCK_SIZE,
-                        ($columnIndex + 1) * self::BASE_BLOCK_SIZE,
-                        ($rowIndex + 1) * self::BASE_BLOCK_SIZE,
+                        $columnIndex * $baseBlockSize,
+                        $rowIndex * $baseBlockSize,
+                        ($columnIndex + 1) * $baseBlockSize,
+                        ($rowIndex + 1) * $baseBlockSize,
                         $foregroundColor
                     );
                 }
@@ -107,7 +108,7 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
         return new PngResult($interpolatedImage);
     }
 
-    public function writeLogo(LogoInterface $logo, ResultInterface $result): ResultInterface
+    public function writeLogo(LogoInterface $logo, ResultInterface $result, array $options = []): ResultInterface
     {
         if (!$result instanceof PngResult) {
             throw new \Exception('Unable to write logo: instance of PngResult expected');
@@ -135,7 +136,7 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
         return $result;
     }
 
-    public function writeLabel(LabelInterface $label, ResultInterface $result): ResultInterface
+    public function writeLabel(LabelInterface $label, ResultInterface $result, array $options = []): ResultInterface
     {
         if (!$result instanceof PngResult) {
             throw new \Exception('Unable to write label: instance of PngResult expected');
@@ -220,7 +221,7 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
         $string = $result->getString();
 
         if (!class_exists(QrReader::class)) {
-            throw new \Exception('Please install khanamiryan/qrcode-detector-decoder to validate images');
+            throw new \Exception('Please install khanamiryan/qrcode-detector-decoder or disable image validation');
         }
 
         if (PHP_VERSION_ID >= 80000) {
