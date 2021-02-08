@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Endroid\QrCode\Writer;
 
 use Endroid\QrCode\Bacon\MatrixFactory;
@@ -72,7 +74,7 @@ final class PdfWriter implements WriterInterface, LabelWriterInterface, LogoWrit
     public function writeLabel(LabelInterface $label, ResultInterface $result, array $options = []): ResultInterface
     {
         $label = $qrCode->getLabel();
-        $labelHeight = $label !== null ? 30 : 0;
+        $labelHeight = null !== $label ? 30 : 0;
 
         if (null !== $label) {
             $fpdf->setY($data['outer_height'] + 5);
@@ -94,5 +96,23 @@ final class PdfWriter implements WriterInterface, LabelWriterInterface, LogoWrit
                 $data['outer_height']
             );
         }
+
+        if (null === $logoHeight || null === $logoWidth) {
+            [$logoSourceWidth, $logoSourceHeight] = \getimagesize($logoPath);
+
+            if (null === $logoWidth) {
+                $logoWidth = (int) $logoSourceWidth;
+            }
+
+            if (null === $logoHeight) {
+                $aspectRatio = $logoWidth / $logoSourceWidth;
+                $logoHeight = (int) ($logoSourceHeight * $aspectRatio);
+            }
+        }
+
+        $logoX = $imageWidth / 2 - (int) $logoWidth / 2;
+        $logoY = $imageHeight / 2 - (int) $logoHeight / 2;
+
+        $fpdf->Image($logoPath, $logoX, $logoY, $logoWidth, $logoHeight);
     }
 }

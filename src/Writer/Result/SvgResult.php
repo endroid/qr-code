@@ -9,9 +9,13 @@ final class SvgResult extends AbstractResult
     /** @var \SimpleXMLElement */
     private $xml;
 
-    public function __construct(\SimpleXMLElement $xml)
+    /** @var bool */
+    private $excludeXmlDeclaration;
+
+    public function __construct(\SimpleXMLElement $xml, bool $excludeXmlDeclaration = false)
     {
         $this->xml = $xml;
+        $this->excludeXmlDeclaration = $excludeXmlDeclaration;
     }
 
     public function getMimeType(): string
@@ -24,12 +28,16 @@ final class SvgResult extends AbstractResult
         return $this->xml;
     }
 
-    public function getString(): string
+    public function getString(array $options = []): string
     {
         $string = $this->xml->asXML();
 
         if (!is_string($string)) {
             throw new \Exception('Could not save SVG XML to string');
+        }
+
+        if ($this->excludeXmlDeclaration) {
+            $string = str_replace("<?xml version=\"1.0\"?>\n", '', $string);
         }
 
         return $string;

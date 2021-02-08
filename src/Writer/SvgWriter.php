@@ -13,11 +13,17 @@ use Endroid\QrCode\Writer\Result\SvgResult;
 final class SvgWriter implements WriterInterface, LogoWriterInterface
 {
     public const WRITER_OPTION_BLOCK_ID = 'block_id';
+    public const WRITER_OPTION_EXCLUDE_XML_DECLARATION = 'exclude_xml_declaration';
+    public const WRITER_OPTION_FORCE_XLINK_HREF = 'force_xlink_href';
 
     public function writeQrCode(QrCodeInterface $qrCode, array $options = []): ResultInterface
     {
         if (!isset($options[self::WRITER_OPTION_BLOCK_ID])) {
             $options[self::WRITER_OPTION_BLOCK_ID] = 'block';
+        }
+
+        if (!isset($options[self::WRITER_OPTION_EXCLUDE_XML_DECLARATION])) {
+            $options[self::WRITER_OPTION_EXCLUDE_XML_DECLARATION] = false;
         }
 
         $matrixFactory = new MatrixFactory();
@@ -56,13 +62,73 @@ final class SvgWriter implements WriterInterface, LogoWriterInterface
             }
         }
 
-        return new SvgResult($xml);
+        return new SvgResult($xml, $options[self::WRITER_OPTION_EXCLUDE_XML_DECLARATION]);
     }
 
     public function writeLogo(LogoInterface $logo, ResultInterface $result, array $options = []): ResultInterface
     {
         if (!$result instanceof SvgResult) {
             throw new \Exception('Unable to write logo: instance of SvgResult expected');
+        }
+
+        if (!isset($options[self::WRITER_OPTION_FORCE_XLINK_HREF])) {
+            $options[self::WRITER_OPTION_FORCE_XLINK_HREF] = false;
+        }
+
+        $xml = $result->getXml();
+
+        $mimeType = $this->getMimeType($logoPath);
+        $imageData = file_get_contents($logoPath);
+
+        if (!is_string($imageData)) {
+            throw new GenerateImageException('Unable to read image data: check your logo path');
+        }
+
+        if ('image/svg+xml' === $mimeType && (null === $logoHeight || null === $logoWidth)) {
+            throw new MissingLogoHeightException('SVG Logos require an explicit height set via setLogoSize($width, $height)');
+        }
+
+        if (null === $logoHeight || null === $logoWidth) {
+            $logoImage = imagecreatefromstring(strval($imageData));
+
+            if (!$logoImage) {
+                throw new GenerateImageException('Unable to generate image: check your GD installation or logo path');
+            }
+
+            /** @var mixed $logoImage */
+            $logoSourceWidth = imagesx($logoImage);
+            $logoSourceHeight = imagesy($logoImage);
+
+            if (PHP_VERSION_ID < 80000) {
+                imagedestroy($logoImage);
+            }
+
+            if (null === $logoWidth) {
+                $logoWidth = $logoSourceWidth;
+            }
+
+            if (null === $logoHeight) {
+                $aspectRatio = $logoWidth / $logoSourceWidth;
+                $logoHeight = intval($logoSourceHeight * $aspectRatio);
+            }
+        }
+
+        $logoX = $imageWidth / 2 - $logoWidth / 2;
+        $logoY = $imageHeight / 2 - $logoHeight / 2;
+
+        $imageDefinition = $svg->addChild('image');
+        $imageDefinition->addAttribute('x', strval($logoX));
+        $imageDefinition->addAttribute('y', strval($logoY));
+        $imageDefinition->addAttribute('width', strval($logoWidth));
+        $imageDefinition->addAttribute('height', strval($logoHeight));
+        $imageDefinition->addAttribute('preserveAspectRatio', 'none');
+
+        // xlink:href is actually deprecated, but still required when placing the qr code in a pdf.
+        // SimpleXML strips out the xlink part by using addAttribute(), so it must be set directly.
+        if ($forceXlinkHref) {
+            $imageDefinition['xlink:href'] = 'data:'.$mimeType.';base64,'.base64_encode($imageData);
+        } else {
+            $imageDefinition->addAttribute('href', 'data:'.$mimeType.';base64,'.base64_encode($imageData));
         }
 
         // @todo Implement write SVG logo

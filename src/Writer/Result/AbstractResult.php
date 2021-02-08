@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer\Result;
 
-use Endroid\QrCode\Writer\Result\ResultInterface;
-
 abstract class AbstractResult implements ResultInterface
 {
     public function getDataUri(): string
