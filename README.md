@@ -90,21 +90,18 @@ $result = Builder::create()
 
 ```php
 
-// Set additional writer options (SvgWriter example)
-$qrCode->
-
 // Directly output the QR code
-header('Content-Type: '.$qrCode->getContentType());
-echo $qrCode->writeString();
+header('Content-Type: '.$result->getMimeType());
+echo $result->getString();
 
 // Save it to a file
-$qrCode->writeFile(__DIR__.'/qrcode.png');
+$result->saveToFile(__DIR__.'/qrcode.png');
 
 // Generate a data URI to include image data inline (i.e. inside an <img> tag)
-$dataUri = $qrCode->writeDataUri();
+$dataUri = $result->getDataUri();
 ```
 
-![QR Code](https://endroid.nl/qr-code/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png)
+![QR Code](https://endroid.nl/qr-code/default/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes)
 
 ### Writer options
 
