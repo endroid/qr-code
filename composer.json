@@ -20,8 +20,9 @@
         "symfony/property-access": "^3.4||^4.4||^5.0"
     },
     "require-dev": {
-        "endroid/quality": "^1.5.2",
-        "setasign/fpdf": "^1.8"
+        "ext-gd": "*",
+        "endroid/quality": "dev-master",
+        "setasign/fpdf": "^1.8.2"
     },
     "suggest": {
         "ext-gd": "Required for generating PNG images",
