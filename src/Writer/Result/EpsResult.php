@@ -15,13 +15,13 @@ final class EpsResult extends AbstractResult
         $this->lines = $lines;
     }
 
-    public function getMimeType(): string
-    {
-        return 'image/eps';
-    }
-
     public function getString(): string
     {
         return implode("\n", $this->lines);
+    }
+
+    public function getMimeType(): string
+    {
+        return 'image/eps';
     }
 }

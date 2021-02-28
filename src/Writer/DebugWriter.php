@@ -10,33 +10,11 @@ use Endroid\QrCode\QrCodeInterface;
 use Endroid\QrCode\Writer\Result\DebugResult;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 
-final class DebugWriter implements WriterInterface, LabelWriterInterface, LogoWriterInterface, ValidatingWriterInterface
+final class DebugWriter implements WriterInterface, ValidatingWriterInterface
 {
-    public function writeQrCode(QrCodeInterface $qrCode, array $options = []): ResultInterface
+    public function write(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = []): ResultInterface
     {
-        return new DebugResult($qrCode);
-    }
-
-    public function writeLabel(LabelInterface $label, ResultInterface $result, array $options = []): ResultInterface
-    {
-        if (!$result instanceof DebugResult) {
-            throw new \Exception('Unable to write logo: instance of DebugResult expected');
-        }
-
-        $result->setLabel($label);
-
-        return $result;
-    }
-
-    public function writeLogo(LogoInterface $logo, ResultInterface $result, array $options = []): ResultInterface
-    {
-        if (!$result instanceof DebugResult) {
-            throw new \Exception('Unable to write logo: instance of DebugResult expected');
-        }
-
-        $result->setLogo($logo);
-
-        return $result;
+        return new DebugResult($qrCode, $logo, $label, $options);
     }
 
     public function validateResult(ResultInterface $result, string $expectedData): void

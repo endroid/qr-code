@@ -13,38 +13,30 @@ final class DebugResult extends AbstractResult
     /** @var QrCodeInterface */
     private $qrCode;
 
-    /** @var LogoInterface */
+    /** @var LogoInterface|null */
     private $logo;
 
-    /** @var LabelInterface */
+    /** @var LabelInterface|null */
     private $label;
+
+    /** @var array<mixed> */
+    private $options;
 
     /** @var bool */
     private $validateResult = false;
 
-    public function __construct(QrCodeInterface $qrCode)
+    /** @param array<mixed> $options */
+    public function __construct(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = [])
     {
         $this->qrCode = $qrCode;
-    }
-
-    public function setLogo(LogoInterface $logo): void
-    {
         $this->logo = $logo;
-    }
-
-    public function setLabel(LabelInterface $label): void
-    {
         $this->label = $label;
+        $this->options = $options;
     }
 
     public function setValidateResult(bool $validateResult): void
     {
         $this->validateResult = $validateResult;
-    }
-
-    public function getMimeType(): string
-    {
-        return 'text/plain';
     }
 
     public function getString(): string
@@ -60,8 +52,11 @@ final class DebugResult extends AbstractResult
         $debugLines[] = 'Foreground color: ['.implode(', ', $this->qrCode->getForegroundColor()->toArray()).']';
         $debugLines[] = 'Background color: ['.implode(', ', $this->qrCode->getBackgroundColor()->toArray()).']';
 
+        foreach ($this->options as $key => $value) {
+            $debugLines[] = 'Writer option: '.$key.': '.$value;
+        }
+
         if (isset($this->logo)) {
-            $this->logo->readImage();
             $debugLines[] = 'Logo path: '.$this->logo->getPath();
             $debugLines[] = 'Logo target width: '.$this->logo->getTargetWidth();
             $debugLines[] = 'Logo target height: '.$this->logo->getTargetHeight();
@@ -80,5 +75,10 @@ final class DebugResult extends AbstractResult
         $debugLines[] = 'Validate result: '.($this->validateResult ? 'true' : 'false');
 
         return implode("\n", $debugLines);
+    }
+
+    public function getMimeType(): string
+    {
+        return 'text/plain';
     }
 }

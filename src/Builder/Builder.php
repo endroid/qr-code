@@ -16,8 +16,6 @@ use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeInterface;
-use Endroid\QrCode\Writer\LabelWriterInterface;
-use Endroid\QrCode\Writer\LogoWriterInterface;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 use Endroid\QrCode\Writer\ValidatingWriterInterface;
@@ -198,26 +196,16 @@ final class Builder implements BuilderInterface
             throw new \Exception('Unable to validate result with '.get_class($writer));
         }
 
+        /** @var QrCode $qrCode */
         $qrCode = $this->buildObject($this->options['qrCodeClass']);
-        $result = $writer->writeQrCode($qrCode, $this->options['writerOptions']);
 
-        // Write logo only if logo is defined and writer has logo writing capabilities
+        /** @var LogoInterface|null $logo */
         $logo = $this->buildObject($this->options['logoClass'], 'logo');
-        if ($logo instanceof LogoInterface) {
-            if (!$writer instanceof LogoWriterInterface) {
-                throw new \Exception('Unable to write logo with '.get_class($writer));
-            }
-            $result = $writer->writeLogo($logo, $result, $this->options['writerOptions']);
-        }
 
-        // Write label only if label is defined and writer has label writing capabilities
+        /** @var LabelInterface|null $label */
         $label = $this->buildObject($this->options['labelClass'], 'label');
-        if ($label instanceof LabelInterface) {
-            if (!$writer instanceof LabelWriterInterface) {
-                throw new \Exception('Unable to write label with '.get_class($writer));
-            }
-            $result = $writer->writeLabel($label, $result, $this->options['writerOptions']);
-        }
+
+        $result = $writer->write($qrCode, $logo, $label, $this->options['writerOptions']);
 
         if ($this->options['validateResult'] && $writer instanceof ValidatingWriterInterface) {
             $writer->validateResult($result, $qrCode->getData());
@@ -231,7 +219,7 @@ final class Builder implements BuilderInterface
      *
      * @return mixed
      */
-    private function buildObject(string $class, string $prefix = null)
+    private function buildObject(string $class, string $optionsPrefix = null)
     {
         /** @var \ReflectionClass<object> $reflectionClass */
         $reflectionClass = new \ReflectionClass($class);
@@ -243,7 +231,7 @@ final class Builder implements BuilderInterface
         $constructor = $reflectionClass->getConstructor();
         $constructorParameters = $constructor->getParameters();
         foreach ($constructorParameters as $parameter) {
-            $optionName = null === $prefix ? $parameter->getName() : $prefix.ucfirst($parameter->getName());
+            $optionName = null === $optionsPrefix ? $parameter->getName() : $optionsPrefix.ucfirst($parameter->getName());
             if (isset($this->options[$optionName])) {
                 $hasBuilderOptions = true;
                 $arguments[] = $this->options[$optionName];

@@ -14,9 +14,9 @@ use Endroid\QrCode\Writer\Result\PngResult;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 use Zxing\QrReader;
 
-final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWriterInterface, ValidatingWriterInterface
+final class PngWriter implements WriterInterface, ValidatingWriterInterface
 {
-    public function writeQrCode(QrCodeInterface $qrCode, array $options = []): ResultInterface
+    public function write(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = []): ResultInterface
     {
         if (!extension_loaded('gd')) {
             throw new \Exception('Unable to generate image: check your GD installation');
@@ -105,22 +105,29 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
             imagesavealpha($interpolatedImage, true);
         }
 
-        return new PngResult($interpolatedImage);
-    }
+        $result = new PngResult($interpolatedImage);
 
-    public function writeLogo(LogoInterface $logo, ResultInterface $result, array $options = []): ResultInterface
-    {
-        if (!$result instanceof PngResult) {
-            throw new \Exception('Unable to write logo: instance of PngResult expected');
+        if ($logo instanceof LogoInterface) {
+            $result = $this->addLogo($logo, $result);
         }
 
-        $logoImage = $logo->readImage();
+        if ($label instanceof LabelInterface) {
+            $result = $this->addLabel($label, $result);
+        }
+
+        return $result;
+    }
+
+    public function addLogo(LogoInterface $logo, PngResult $result): PngResult
+    {
+        $logoImage = $logo->getImage();
+        $targetImage = $result->getImage();
 
         imagecopyresampled(
-            $result->getImage(),
+            $targetImage,
             $logoImage,
-            intval(imagesx($result->getImage()) / 2 - $logo->getTargetWidth() / 2),
-            intval(imagesy($result->getImage()) / 2 - $logo->getTargetHeight() / 2),
+            intval(imagesx($targetImage) / 2 - $logo->getTargetWidth() / 2),
+            intval(imagesy($targetImage) / 2 - $logo->getTargetHeight() / 2),
             0,
             0,
             $logo->getTargetWidth(),
@@ -133,14 +140,12 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
             imagedestroy($logoImage);
         }
 
-        return $result;
+        return new PngResult($targetImage);
     }
 
-    public function writeLabel(LabelInterface $label, ResultInterface $result, array $options = []): ResultInterface
+    private function addLabel(LabelInterface $label, PngResult $result): PngResult
     {
-        if (!$result instanceof PngResult) {
-            throw new \Exception('Unable to write label: instance of PngResult expected');
-        }
+        $sourceImage = $result->getImage();
 
         if (!function_exists('imagettfbbox')) {
             throw new \Exception('Function "imagettfbbox" does not exist: check your FreeType installation');
@@ -155,18 +160,18 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
         $labelBoxWidth = intval($labelBox[2] - $labelBox[0]);
         $labelBoxHeight = intval($labelBox[0] - $labelBox[7]);
 
-        $targetWidth = imagesx($result->getImage());
-        $targetHeight = imagesy($result->getImage()) + $labelBoxHeight + $label->getMargin()->getTop() + $label->getMargin()->getBottom();
+        $targetWidth = imagesx($sourceImage);
+        $targetHeight = imagesy($sourceImage) + $labelBoxHeight + $label->getMargin()->getTop() + $label->getMargin()->getBottom();
 
-        $image = imagecreatetruecolor($targetWidth, $targetHeight);
+        $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
 
-        if (!$image) {
+        if (!$targetImage) {
             throw new \Exception('Unable to generate image: check your GD installation');
         }
 
         /** @var int $textColor */
         $textColor = imagecolorallocate(
-            $image,
+            $targetImage,
             $label->getTextColor()->getRed(),
             $label->getTextColor()->getGreen(),
             $label->getTextColor()->getBlue()
@@ -174,33 +179,31 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
 
         /** @var int $backgroundColor */
         $backgroundColor = imagecolorallocate(
-            $image,
+            $targetImage,
             $label->getBackgroundColor()->getRed(),
             $label->getBackgroundColor()->getGreen(),
             $label->getBackgroundColor()->getBlue()
         );
 
-        imagefill($image, 0, 0, $backgroundColor);
+        imagefill($targetImage, 0, 0, $backgroundColor);
 
         // Copy source image to target image
         imagecopyresampled(
-            $image,
-            $result->getImage(),
+            $targetImage,
+            $sourceImage,
             0,
             0,
             0,
             0,
-            imagesx($result->getImage()),
-            imagesy($result->getImage()),
-            imagesx($result->getImage()),
-            imagesy($result->getImage())
+            imagesx($sourceImage),
+            imagesy($sourceImage),
+            imagesx($sourceImage),
+            imagesy($sourceImage)
         );
 
         if (PHP_VERSION_ID < 80000) {
-            imagedestroy($result->getImage());
+            imagedestroy($sourceImage);
         }
-
-        $result->setImage($image);
 
         $x = intval($targetWidth / 2 - $labelBoxWidth / 2);
         $y = $targetHeight - $label->getMargin()->getBottom();
@@ -211,9 +214,9 @@ final class PngWriter implements WriterInterface, LabelWriterInterface, LogoWrit
             $x = $targetWidth - $labelBoxWidth - $label->getMargin()->getRight();
         }
 
-        imagettftext($image, $label->getFont()->getSize(), 0, $x, $y, $textColor, $label->getFont()->getPath(), $label->getText());
+        imagettftext($targetImage, $label->getFont()->getSize(), 0, $x, $y, $textColor, $label->getFont()->getPath(), $label->getText());
 
-        return $result;
+        return new PngResult($targetImage);
     }
 
     public function validateResult(ResultInterface $result, string $expectedData): void

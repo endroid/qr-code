@@ -23,49 +23,75 @@ Use [Composer](https://getcomposer.org/) to install the library.
 $ composer require endroid/qr-code
 ```
 
-## Basic usage
+## Usage: without using builder
 
 ```php
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
 use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\PngWriter;
 
-$qrCode = new QrCode('Life is too short to be generating QR codes');
+$writer = new PngWriter();
 
-header('Content-Type: '.$qrCode->getContentType());
-echo $qrCode->writeString();
+// Create QR code
+$qrCode = QrCode::create('Data')
+    ->setEncoding(new Encoding('UTF-8'))
+    ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
+    ->setSize(300)
+    ->setMargin(10)
+    ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+    ->setForegroundColor(new Color(0, 0, 0))
+    ->setBackgroundColor(new Color(255, 255, 255));
+
+// Create generic logo
+$logo = Logo::create(__DIR__.'/assets/symfony.png')
+    ->setResizeToWidth(50);
+
+// Create generic label
+$label = Label::create('Label')
+    ->setTextColor(new Color(255, 0, 0))
+    ->setBackgroundColor(new Color(0, 0, 0));
+
+$result = $writer->write($qrCode, $logo, $label);
 ```
 
-## Advanced usage
+## Usage: using the builder
 
 ```php
-use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\LabelAlignment;
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Response\QrCodeResponse;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
+use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\PngWriter;
 
-// Create a basic QR code
-$qrCode = new QrCode('Life is too short to be generating QR codes');
-$qrCode->setSize(300);
-$qrCode->setMargin(10); 
+$result = Builder::create()
+    ->writer(new PngWriter())
+    ->writerOptions([])
+    ->data('Custom QR code contents')
+    ->encoding(new Encoding('UTF-8'))
+    ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+    ->size(300)
+    ->margin(10)
+    ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
+    ->logoPath(__DIR__.'/assets/symfony.png')
+    ->labelText('This is the label')
+    ->labelFont(new NotoSans(20))
+    ->labelAlignment(new LabelAlignmentCenter())
+    ->build();
+```
 
-// Set advanced options
-$qrCode->setWriterByName('png');
-$qrCode->setEncoding('UTF-8');
-$qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH());
-$qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
-$qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
-$qrCode->setLabel('Scan the code', 16, __DIR__.'/../assets/fonts/noto_sans.otf', LabelAlignment::CENTER());
-$qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
-$qrCode->setLogoSize(150, 200);
-$qrCode->setValidateResult(false);
+## Usage: working with results
 
-// Round block sizes to improve readability and make the blocks sharper in pixel based outputs (like png).
-// There are three approaches:
-$qrCode->setRoundBlockSize(true, QrCode::ROUND_BLOCK_SIZE_MODE_MARGIN); // The size of the qr code is shrinked, if necessary, but the size of the final image remains unchanged due to additional margin being added (default)
-$qrCode->setRoundBlockSize(true, QrCode::ROUND_BLOCK_SIZE_MODE_ENLARGE); // The size of the qr code and the final image is enlarged, if necessary
-$qrCode->setRoundBlockSize(true, QrCode::ROUND_BLOCK_SIZE_MODE_SHRINK); // The size of the qr code and the final image is shrinked, if necessary
+```php
 
 // Set additional writer options (SvgWriter example)
-$qrCode->setWriterOptions(['exclude_xml_declaration' => true]);
+$qrCode->
 
 // Directly output the QR code
 header('Content-Type: '.$qrCode->getContentType());
@@ -80,12 +106,37 @@ $dataUri = $qrCode->writeDataUri();
 
 ![QR Code](https://endroid.nl/qr-code/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes.png)
 
+### Writer options
+
+```php
+use Endroid\QrCode\Writer\SvgWriter;
+
+$builder->setWriterOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true]);
+```
+
 ### Encoding
-You can pick one of these values for encoding:
 
-`ISO-8859-1`, `ISO-8859-2`, `ISO-8859-3`, `ISO-8859-4`, `ISO-8859-5`, `ISO-8859-6`, `ISO-8859-7`, `ISO-8859-8`, `ISO-8859-9`, `ISO-8859-10`, `ISO-8859-11`, `ISO-8859-12`, `ISO-8859-13`, `ISO-8859-14`, `ISO-8859-15`, `ISO-8859-16`, `Shift_JIS`, `windows-1250`, `windows-1251`, `windows-1252`, `windows-1256`, `UTF-16BE`, `UTF-8`, `US-ASCII`, `GBK` `EUC-KR`
+If you use a barcode scanner you can have some troubles while reading the
+generated QR codes. Depending on the encoding you chose you will have an extra
+amount of data corresponding to the ECI block. Some barcode scanner are not
+programmed to interpret this block of information. To ensure a maximum
+compatibility you can use the `ISO-8859-1` encoding that is the default
+encoding used by barcode scanners (if your character set supports it,
+i.e. no Chinese characters are present).
 
-If you use a barcode scanner you can have some troubles while reading the generated QR codes. Depending on the encoding you chose you will have an extra amount of data corresponding to the ECI block. Some barcode scanner are not programmed to interpret this block of information. For exemple the ECI block for `UTF-8` is `000026` so the above exemple will produce : `\000026Life is too short to be generating QR codes`. To ensure a maximum compatibility you can use the `ISO-8859-1` encoding that is the default encoding used by barcode scanners.
+### Round block size mode
+
+By default block sizes are rounded to guarantee sharp images and improve
+readability. However some other rounding variants are available.
+
+* RoundBlockSizeModeMargin (default): the size of the QR code is shrunk if
+  necessary but the size of the final image remains unchanged due to additional
+  margin being added.
+* RoundBlockSizeModeEnlarge: the size of the QR code and the final image are
+  enlarged when rounding differences occur.
+* RoundBlockSizeModeShrink: the size of the QR code and the final image are
+  shrunk when rounding differences occur.
+* RoundBlockSizeModeNone: No rounding.
 
 ## Readability
 
@@ -95,15 +146,16 @@ can tweak these parameters if you are looking for optimal results. You can also
 check $qrCode->getRoundBlockSize() value to see if block dimensions are rounded
 so that the image is more sharp and readable. Please note that rounding block
 size can result in additional padding to compensate for the rounding difference.
+And finally the encoding (default UTF-8 to support large character sets) can be
+set to `ISO-8859-1` if possible to improve readability.
 
 ## Built-in validation reader
 
 You can enable the built-in validation reader (disabled by default) by calling
 setValidateResult(true). This validation reader does not guarantee that the QR
 code will be readable by all readers but it helps you provide a minimum level
-of quality.
-
-Take note that the validator can consume quite amount of additional resources.
+of quality. Take note that the validator can consume quite amount of additional
+resources and it should be installed separately only if you use it.
 
 ## Symfony integration
 
@@ -111,8 +163,8 @@ The [endroid/qr-code-bundle](https://github.com/endroid/qr-code-bundle)
 integrates the QR code library in Symfony for an even better experience.
 
 * Configure your defaults (like image size, default writer etc.)
-* Generate QR codes quickly from anywhere via the factory service
-* Generate QR codes directly by typing an URL like /qr-code/\<text>.png?size=300
+* Support for multiple configurations and injection via aliases
+* Generate QR codes for defined configurations via URL like /qr-code/<config>/Hello
 * Generate QR codes or URLs directly from Twig using dedicated functions
  
 Read the [bundle documentation](https://github.com/endroid/qr-code-bundle)

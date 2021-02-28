@@ -14,13 +14,13 @@ final class PdfResult extends AbstractResult
         $this->fpdf = $fpdf;
     }
 
-    public function getMimeType(): string
-    {
-        return 'application/pdf';
-    }
-
     public function getString(): string
     {
         return $this->fpdf->Output('S');
+    }
+
+    public function getMimeType(): string
+    {
+        return 'application/pdf';
     }
 }

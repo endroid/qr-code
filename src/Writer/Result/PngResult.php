@@ -15,21 +15,10 @@ final class PngResult extends AbstractResult
         $this->image = $image;
     }
 
-    public function getMimeType(): string
-    {
-        return 'image/png';
-    }
-
     /** @return mixed */
     public function getImage()
     {
         return $this->image;
-    }
-
-    /** @param mixed $image */
-    public function setImage($image): void
-    {
-        $this->image = $image;
     }
 
     public function getString(): string
@@ -38,5 +27,10 @@ final class PngResult extends AbstractResult
         imagepng($this->image);
 
         return strval(ob_get_clean());
+    }
+
+    public function getMimeType(): string
+    {
+        return 'image/png';
     }
 }

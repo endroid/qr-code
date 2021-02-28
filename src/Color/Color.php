@@ -51,7 +51,6 @@ final class Color implements ColorInterface
         return 1 - $this->alpha / 127;
     }
 
-    /** @return array<string, int> */
     public function toArray(): array
     {
         return [

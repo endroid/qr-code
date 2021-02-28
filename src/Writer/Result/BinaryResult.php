@@ -15,11 +15,6 @@ final class BinaryResult extends AbstractResult
         $this->matrix = $matrix;
     }
 
-    public function getMimeType(): string
-    {
-        return 'text/plain';
-    }
-
     public function getString(): string
     {
         $binaryString = '';
@@ -31,5 +26,10 @@ final class BinaryResult extends AbstractResult
         }
 
         return $binaryString;
+    }
+
+    public function getMimeType(): string
+    {
+        return 'text/plain';
     }
 }

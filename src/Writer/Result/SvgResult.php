@@ -18,17 +18,12 @@ final class SvgResult extends AbstractResult
         $this->excludeXmlDeclaration = $excludeXmlDeclaration;
     }
 
-    public function getMimeType(): string
-    {
-        return 'image/svg+xml';
-    }
-
     public function getXml(): \SimpleXMLElement
     {
         return $this->xml;
     }
 
-    public function getString(array $options = []): string
+    public function getString(): string
     {
         $string = $this->xml->asXML();
 
@@ -41,5 +36,10 @@ final class SvgResult extends AbstractResult
         }
 
         return $string;
+    }
+
+    public function getMimeType(): string
+    {
+        return 'image/svg+xml';
     }
 }

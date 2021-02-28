@@ -18,8 +18,6 @@ use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeShrink;
 use Endroid\QrCode\Writer\BinaryWriter;
 use Endroid\QrCode\Writer\DebugWriter;
 use Endroid\QrCode\Writer\EpsWriter;
-use Endroid\QrCode\Writer\LabelWriterInterface;
-use Endroid\QrCode\Writer\LogoWriterInterface;
 use Endroid\QrCode\Writer\PdfWriter;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\Result\BinaryResult;
@@ -59,15 +57,7 @@ final class QrCodeTest extends TestCase
             ->setTextColor(new Color(255, 0, 0))
             ->setBackgroundColor(new Color(0, 0, 0));
 
-        $result = $writer->writeQrCode($qrCode);
-
-        if ($writer instanceof LogoWriterInterface) {
-            $result = $writer->writeLogo($logo, $result);
-        }
-
-        if ($writer instanceof LabelWriterInterface) {
-            $result = $writer->writeLabel($label, $result);
-        }
+        $result = $writer->write($qrCode, $logo, $label);
 
         if ($writer instanceof ValidatingWriterInterface) {
             if ($writer instanceof PngWriter && PHP_VERSION_ID >= 80000) {
@@ -104,8 +94,8 @@ final class QrCodeTest extends TestCase
 
         $image = imagecreatefromstring($imageData);
 
-        $this->assertTrue(imagesx($image) === 430);
-        $this->assertTrue(imagesy($image) === 430);
+        $this->assertTrue(430 === imagesx($image));
+        $this->assertTrue(430 === imagesy($image));
     }
 
     /**
@@ -135,5 +125,53 @@ final class QrCodeTest extends TestCase
         yield [400, 5, new RoundBlockSizeModeMargin(), 410];
         yield [400, 0, new RoundBlockSizeModeShrink(), 377];
         yield [400, 5, new RoundBlockSizeModeShrink(), 387];
+    }
+
+    /**
+     * @testdox Invalid logo path results in exception
+     */
+    public function testInvalidLogoPath(): void
+    {
+        $writer = new SvgWriter();
+        $qrCode = QrCode::create('QR Code');
+
+        $logo = Logo::create('/my/invalid/path.png');
+        $this->expectExceptionMessage('Could not determine mime type');
+        $writer->write($qrCode, $logo);
+    }
+
+    /**
+     * @testdox Invalid logo data results in exception
+     */
+    public function testInvalidLogoData(): void
+    {
+        $writer = new SvgWriter();
+        $qrCode = QrCode::create('QR Code');
+
+        $logo = Logo::create(__DIR__.'/QrCodeTest.php');
+        $this->expectExceptionMessage('Logo path is not an image');
+        $writer->write($qrCode, $logo);
+    }
+
+    /**
+     * @testdox Result can be saved to file
+     */
+    public function testSaveToFile(): void
+    {
+        $path = __DIR__.'/test-save-to-file.png';
+
+        $writer = new PngWriter();
+        $qrCode = new QrCode('QR Code');
+        $writer->write($qrCode)->saveToFile($path);
+
+        $image = imagecreatefromstring(file_get_contents($path));
+
+        $this->assertTrue(false !== $image);
+
+        if (PHP_VERSION_ID < 80000) {
+            imagedestroy($image);
+        }
+
+        unlink($path);
     }
 }
