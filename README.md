@@ -23,7 +23,34 @@ Use [Composer](https://getcomposer.org/) to install the library.
 $ composer require endroid/qr-code
 ```
 
-## Usage: without using builder
+## Usage: using the builder
+
+```php
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
+use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\PngWriter;
+
+$result = Builder::create()
+    ->writer(new PngWriter())
+    ->writerOptions([])
+    ->data('Custom QR code contents')
+    ->encoding(new Encoding('UTF-8'))
+    ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+    ->size(300)
+    ->margin(10)
+    ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
+    ->logoPath(__DIR__.'/assets/symfony.png')
+    ->labelText('This is the label')
+    ->labelFont(new NotoSans(20))
+    ->labelAlignment(new LabelAlignmentCenter())
+    ->build();
+```
+
+## Usage: without using the builder
 
 ```php
 use Endroid\QrCode\Color\Color;
@@ -57,33 +84,6 @@ $label = Label::create('Label')
     ->setBackgroundColor(new Color(0, 0, 0));
 
 $result = $writer->write($qrCode, $logo, $label);
-```
-
-## Usage: using the builder
-
-```php
-use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
-use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
-use Endroid\QrCode\Label\Font\NotoSans;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
-use Endroid\QrCode\Writer\PngWriter;
-
-$result = Builder::create()
-    ->writer(new PngWriter())
-    ->writerOptions([])
-    ->data('Custom QR code contents')
-    ->encoding(new Encoding('UTF-8'))
-    ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-    ->size(300)
-    ->margin(10)
-    ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
-    ->logoPath(__DIR__.'/assets/symfony.png')
-    ->labelText('This is the label')
-    ->labelFont(new NotoSans(20))
-    ->labelAlignment(new LabelAlignmentCenter())
-    ->build();
 ```
 
 ## Usage: working with results
@@ -126,14 +126,14 @@ i.e. no Chinese characters are present).
 By default block sizes are rounded to guarantee sharp images and improve
 readability. However some other rounding variants are available.
 
-* RoundBlockSizeModeMargin (default): the size of the QR code is shrunk if
-  necessary but the size of the final image remains unchanged due to additional
-  margin being added.
-* RoundBlockSizeModeEnlarge: the size of the QR code and the final image are
-  enlarged when rounding differences occur.
-* RoundBlockSizeModeShrink: the size of the QR code and the final image are
+* `margin (default)`: the size of the QR code is shrunk if necessary but the size
+  of the final image remains unchanged due to additional margin being added.
+* `enlarge`: the size of the QR code and the final image are enlarged when
+  rounding differences occur.
+* `shrink`: the size of the QR code and the final image are
   shrunk when rounding differences occur.
-* RoundBlockSizeModeNone: No rounding.
+* `none`: No rounding. This mode can be used when blocks don't need to be rounded
+  to pixes (for instance SVG).
 
 ## Readability
 
