@@ -38,12 +38,12 @@ final class Builder implements BuilderInterface
         ];
     }
 
-    public static function create(): self
+    public static function create(): BuilderInterface
     {
         return new self();
     }
 
-    public function writer(WriterInterface $writer): self
+    public function writer(WriterInterface $writer): BuilderInterface
     {
         $this->options['writer'] = $writer;
 
@@ -51,133 +51,133 @@ final class Builder implements BuilderInterface
     }
 
     /** @param array<mixed> $writerOptions */
-    public function writerOptions(array $writerOptions): self
+    public function writerOptions(array $writerOptions): BuilderInterface
     {
         $this->options['writerOptions'] = $writerOptions;
 
         return $this;
     }
 
-    public function data(string $data): self
+    public function data(string $data): BuilderInterface
     {
         $this->options['data'] = $data;
 
         return $this;
     }
 
-    public function encoding(EncodingInterface $encoding): self
+    public function encoding(EncodingInterface $encoding): BuilderInterface
     {
         $this->options['encoding'] = $encoding;
 
         return $this;
     }
 
-    public function errorCorrectionLevel(ErrorCorrectionLevelInterface $errorCorrectionLevel): self
+    public function errorCorrectionLevel(ErrorCorrectionLevelInterface $errorCorrectionLevel): BuilderInterface
     {
         $this->options['errorCorrectionLevel'] = $errorCorrectionLevel;
 
         return $this;
     }
 
-    public function size(int $size): self
+    public function size(int $size): BuilderInterface
     {
         $this->options['size'] = $size;
 
         return $this;
     }
 
-    public function margin(int $margin): self
+    public function margin(int $margin): BuilderInterface
     {
         $this->options['margin'] = $margin;
 
         return $this;
     }
 
-    public function roundBlockSizeMode(RoundBlockSizeModeInterface $roundBlockSizeMode): self
+    public function roundBlockSizeMode(RoundBlockSizeModeInterface $roundBlockSizeMode): BuilderInterface
     {
         $this->options['roundBlockSizeMode'] = $roundBlockSizeMode;
 
         return $this;
     }
 
-    public function foregroundColor(ColorInterface $foregroundColor): self
+    public function foregroundColor(ColorInterface $foregroundColor): BuilderInterface
     {
         $this->options['foregroundColor'] = $foregroundColor;
 
         return $this;
     }
 
-    public function backgroundColor(ColorInterface $backgroundColor): self
+    public function backgroundColor(ColorInterface $backgroundColor): BuilderInterface
     {
         $this->options['backgroundColor'] = $backgroundColor;
 
         return $this;
     }
 
-    public function logoPath(string $logoPath): self
+    public function logoPath(string $logoPath): BuilderInterface
     {
         $this->options['logoPath'] = $logoPath;
 
         return $this;
     }
 
-    public function logoResizeToWidth(string $logoResizeToWidth): self
+    public function logoResizeToWidth(string $logoResizeToWidth): BuilderInterface
     {
         $this->options['logoResizeToWidth'] = $logoResizeToWidth;
 
         return $this;
     }
 
-    public function logoResizeToHeight(string $logoResizeToHeight): self
+    public function logoResizeToHeight(string $logoResizeToHeight): BuilderInterface
     {
         $this->options['logoResizeToHeight'] = $logoResizeToHeight;
 
         return $this;
     }
 
-    public function labelText(string $labelText): self
+    public function labelText(string $labelText): BuilderInterface
     {
         $this->options['labelText'] = $labelText;
 
         return $this;
     }
 
-    public function labelFont(FontInterface $labelFont): self
+    public function labelFont(FontInterface $labelFont): BuilderInterface
     {
         $this->options['labelFont'] = $labelFont;
 
         return $this;
     }
 
-    public function labelAlignment(LabelAlignmentInterface $labelAlignment): self
+    public function labelAlignment(LabelAlignmentInterface $labelAlignment): BuilderInterface
     {
         $this->options['labelAlignment'] = $labelAlignment;
 
         return $this;
     }
 
-    public function labelMargin(MarginInterface $labelMargin): self
+    public function labelMargin(MarginInterface $labelMargin): BuilderInterface
     {
         $this->options['labelMargin'] = $labelMargin;
 
         return $this;
     }
 
-    public function labelTextColor(ColorInterface $labelTextColor): self
+    public function labelTextColor(ColorInterface $labelTextColor): BuilderInterface
     {
         $this->options['labelTextColor'] = $labelTextColor;
 
         return $this;
     }
 
-    public function labelBackgroundColor(ColorInterface $labelBackgroundColor): self
+    public function labelBackgroundColor(ColorInterface $labelBackgroundColor): BuilderInterface
     {
         $this->options['labelBackgroundColor'] = $labelBackgroundColor;
 
         return $this;
     }
 
-    public function validateResult(bool $validateResult): self
+    public function validateResult(bool $validateResult): BuilderInterface
     {
         $this->options['validateResult'] = $validateResult;
 

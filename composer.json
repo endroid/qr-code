@@ -19,6 +19,7 @@
         "ext-gd": "*",
         "endroid/quality": "dev-master",
         "khanamiryan/qrcode-detector-decoder": "^1.0.4",
+        "phpunit/phpunit": "^9.5",
         "setasign/fpdf": "^1.8.2"
     },
     "suggest": {
