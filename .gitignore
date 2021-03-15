@@ -2,4 +2,3 @@
 /composer.lock
 /tests/coverage/
 /vendor/
-.phpunit.result.cache
