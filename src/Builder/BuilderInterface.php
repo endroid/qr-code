@@ -16,48 +16,48 @@ use Endroid\QrCode\Writer\WriterInterface;
 
 interface BuilderInterface
 {
-	public static function create(): BuilderInterface;
+    public static function create(): BuilderInterface;
 
-	public function writer(WriterInterface $writer): BuilderInterface;
+    public function writer(WriterInterface $writer): BuilderInterface;
 
-	/** @param array<mixed> $writerOptions */
-	public function writerOptions(array $writerOptions): BuilderInterface;
+    /** @param array<mixed> $writerOptions */
+    public function writerOptions(array $writerOptions): BuilderInterface;
 
-	public function data(string $data): BuilderInterface;
+    public function data(string $data): BuilderInterface;
 
-	public function encoding(EncodingInterface $encoding): BuilderInterface;
+    public function encoding(EncodingInterface $encoding): BuilderInterface;
 
-	public function errorCorrectionLevel(ErrorCorrectionLevelInterface $errorCorrectionLevel): BuilderInterface;
+    public function errorCorrectionLevel(ErrorCorrectionLevelInterface $errorCorrectionLevel): BuilderInterface;
 
-	public function size(int $size): BuilderInterface;
+    public function size(int $size): BuilderInterface;
 
-	public function margin(int $margin): BuilderInterface;
+    public function margin(int $margin): BuilderInterface;
 
-	public function roundBlockSizeMode(RoundBlockSizeModeInterface $roundBlockSizeMode): BuilderInterface;
+    public function roundBlockSizeMode(RoundBlockSizeModeInterface $roundBlockSizeMode): BuilderInterface;
 
-	public function foregroundColor(ColorInterface $foregroundColor): BuilderInterface;
+    public function foregroundColor(ColorInterface $foregroundColor): BuilderInterface;
 
-	public function backgroundColor(ColorInterface $backgroundColor): BuilderInterface;
+    public function backgroundColor(ColorInterface $backgroundColor): BuilderInterface;
 
-	public function logoPath(string $logoPath): BuilderInterface;
+    public function logoPath(string $logoPath): BuilderInterface;
 
-	public function logoResizeToWidth(string $logoResizeToWidth): BuilderInterface;
+    public function logoResizeToWidth(string $logoResizeToWidth): BuilderInterface;
 
-	public function logoResizeToHeight(string $logoResizeToHeight): BuilderInterface;
+    public function logoResizeToHeight(string $logoResizeToHeight): BuilderInterface;
 
-	public function labelText(string $labelText): BuilderInterface;
+    public function labelText(string $labelText): BuilderInterface;
 
-	public function labelFont(FontInterface $labelFont): BuilderInterface;
+    public function labelFont(FontInterface $labelFont): BuilderInterface;
 
-	public function labelAlignment(LabelAlignmentInterface $labelAlignment): BuilderInterface;
+    public function labelAlignment(LabelAlignmentInterface $labelAlignment): BuilderInterface;
 
-	public function labelMargin(MarginInterface $labelMargin): BuilderInterface;
+    public function labelMargin(MarginInterface $labelMargin): BuilderInterface;
 
-	public function labelTextColor(ColorInterface $labelTextColor): BuilderInterface;
+    public function labelTextColor(ColorInterface $labelTextColor): BuilderInterface;
 
-	public function labelBackgroundColor(ColorInterface $labelBackgroundColor): BuilderInterface;
+    public function labelBackgroundColor(ColorInterface $labelBackgroundColor): BuilderInterface;
 
-	public function validateResult(bool $validateResult): BuilderInterface;
+    public function validateResult(bool $validateResult): BuilderInterface;
 
-	public function build(): ResultInterface;
+    public function build(): ResultInterface;
 }
