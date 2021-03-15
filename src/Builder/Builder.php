@@ -21,7 +21,7 @@ use Endroid\QrCode\Writer\Result\ResultInterface;
 use Endroid\QrCode\Writer\ValidatingWriterInterface;
 use Endroid\QrCode\Writer\WriterInterface;
 
-final class Builder implements BuilderInterface
+class Builder implements BuilderInterface
 {
     /** @var array<mixed> */
     private $options;
