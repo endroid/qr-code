@@ -121,14 +121,14 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    public function logoResizeToWidth(string $logoResizeToWidth): BuilderInterface
+    public function logoResizeToWidth(int $logoResizeToWidth): BuilderInterface
     {
         $this->options['logoResizeToWidth'] = $logoResizeToWidth;
 
         return $this;
     }
 
-    public function logoResizeToHeight(string $logoResizeToHeight): BuilderInterface
+    public function logoResizeToHeight(int $logoResizeToHeight): BuilderInterface
     {
         $this->options['logoResizeToHeight'] = $logoResizeToHeight;
 
