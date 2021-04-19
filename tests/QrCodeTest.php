@@ -173,4 +173,17 @@ final class QrCodeTest extends TestCase
 
         unlink($path);
     }
+
+    /**
+     * @testdox Line breaks are not supported
+     */
+    public function testLabelLineBreaks(): void
+    {
+        $qrCode = QrCode::create('QR Code');
+        $label = Label::create("this\none has\nline breaks in it");
+
+        $writer = new PngWriter();
+        $this->expectExceptionMessage('Label does not support line breaks');
+        $writer->write($qrCode, null, $label);
+    }
 }

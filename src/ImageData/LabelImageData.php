@@ -22,6 +22,10 @@ class LabelImageData
 
     public static function createForLabel(LabelInterface $label): self
     {
+        if (false !== strpos($label->getText(), "\n")) {
+            throw new \Exception('Label does not support line breaks');
+        }
+
         if (!function_exists('imagettfbbox')) {
             throw new \Exception('Function "imagettfbbox" does not exist: check your FreeType installation');
         }
