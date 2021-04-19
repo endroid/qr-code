@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Tests;
 
+use Endroid\QrCode\Bacon\MatrixFactory;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
@@ -185,5 +186,19 @@ final class QrCodeTest extends TestCase
         $writer = new PngWriter();
         $this->expectExceptionMessage('Label does not support line breaks');
         $writer->write($qrCode, null, $label);
+    }
+
+    /**
+     * @testdox Block size should be at least 1
+     */
+    public function testBlockSizeTooSmall(): void
+    {
+        $aLotOfData = str_repeat('alot', 100);
+        $qrCode = QrCode::create($aLotOfData)
+            ->setSize(10);
+
+        $matrixFactory = new MatrixFactory();
+        $this->expectExceptionMessage('Too much data: increase image dimensions or lower error correction level');
+        $matrix = $matrixFactory->create($qrCode);
     }
 }

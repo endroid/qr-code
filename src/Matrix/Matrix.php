@@ -51,6 +51,10 @@ final class Matrix implements MatrixInterface
             $this->innerSize = $this->blockSize * $this->getBlockCount();
         }
 
+        if ($this->blockSize < 1) {
+            throw new \Exception('Too much data: increase image dimensions or lower error correction level');
+        }
+
         $this->marginLeft = intval(($this->outerSize - $this->innerSize) / 2);
         $this->marginRight = $this->outerSize - $this->innerSize - $this->marginLeft;
     }
