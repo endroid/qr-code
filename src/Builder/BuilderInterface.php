@@ -55,8 +55,6 @@ interface BuilderInterface
 
     public function labelTextColor(ColorInterface $labelTextColor): BuilderInterface;
 
-    public function labelBackgroundColor(ColorInterface $labelBackgroundColor): BuilderInterface;
-
     public function validateResult(bool $validateResult): BuilderInterface;
 
     public function build(): ResultInterface;

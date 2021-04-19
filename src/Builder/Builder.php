@@ -170,13 +170,6 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    public function labelBackgroundColor(ColorInterface $labelBackgroundColor): BuilderInterface
-    {
-        $this->options['labelBackgroundColor'] = $labelBackgroundColor;
-
-        return $this;
-    }
-
     public function validateResult(bool $validateResult): BuilderInterface
     {
         $this->options['validateResult'] = $validateResult;

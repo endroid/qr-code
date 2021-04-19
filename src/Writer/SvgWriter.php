@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Endroid\QrCode\Writer;
 
 use Endroid\QrCode\Bacon\MatrixFactory;
+use Endroid\QrCode\ImageData\LogoImageData;
 use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCodeInterface;
@@ -75,11 +76,13 @@ final class SvgWriter implements WriterInterface
     /** @param array<mixed> $options */
     private function addLogo(LogoInterface $logo, SvgResult $result, array $options): void
     {
+        $logoImageData = LogoImageData::createForLogo($logo);
+
         if (!isset($options[self::WRITER_OPTION_FORCE_XLINK_HREF])) {
             $options[self::WRITER_OPTION_FORCE_XLINK_HREF] = false;
         }
 
-        if ('image/svg+xml' === $logo->getMimeType() && (null === $logo->getResizeToHeight() || null === $logo->getResizeToWidth())) {
+        if ('image/svg+xml' === $logoImageData->getMimeType() && (null === $logo->getResizeToHeight() || null === $logo->getResizeToWidth())) {
             throw new \Exception('SVG Logos require an explicit height set via setLogoSize($width, $height)');
         }
 
@@ -88,22 +91,22 @@ final class SvgWriter implements WriterInterface
         /** @var \SimpleXMLElement $xmlAttributes */
         $xmlAttributes = $xml->attributes();
 
-        $x = intval($xmlAttributes->width) / 2 - $logo->getTargetWidth() / 2;
-        $y = intval($xmlAttributes->height) / 2 - $logo->getTargetHeight() / 2;
+        $x = intval($xmlAttributes->width) / 2 - $logoImageData->getWidth() / 2;
+        $y = intval($xmlAttributes->height) / 2 - $logoImageData->getHeight() / 2;
 
         $imageDefinition = $xml->addChild('image');
         $imageDefinition->addAttribute('x', strval($x));
         $imageDefinition->addAttribute('y', strval($y));
-        $imageDefinition->addAttribute('width', strval($logo->getTargetWidth()));
-        $imageDefinition->addAttribute('height', strval($logo->getTargetHeight()));
+        $imageDefinition->addAttribute('width', strval($logoImageData->getWidth()));
+        $imageDefinition->addAttribute('height', strval($logoImageData->getHeight()));
         $imageDefinition->addAttribute('preserveAspectRatio', 'none');
 
         // xlink:href is actually deprecated, but still required when placing the qr code in a pdf.
         // SimpleXML strips out the xlink part by using addAttribute(), so it must be set directly.
         if ($options[self::WRITER_OPTION_FORCE_XLINK_HREF]) {
-            $imageDefinition['xlink:href'] = $logo->getImageDataUri();
+            $imageDefinition['xlink:href'] = $logoImageData->createDataUri();
         } else {
-            $imageDefinition->addAttribute('href', $logo->getImageDataUri());
+            $imageDefinition->addAttribute('href', $logoImageData->createDataUri());
         }
     }
 }

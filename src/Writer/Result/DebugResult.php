@@ -58,8 +58,8 @@ final class DebugResult extends AbstractResult
 
         if (isset($this->logo)) {
             $debugLines[] = 'Logo path: '.$this->logo->getPath();
-            $debugLines[] = 'Logo target width: '.$this->logo->getTargetWidth();
-            $debugLines[] = 'Logo target height: '.$this->logo->getTargetHeight();
+            $debugLines[] = 'Logo resize to width: '.$this->logo->getResizeToWidth();
+            $debugLines[] = 'Logo resize to height: '.$this->logo->getResizeToHeight();
         }
 
         if (isset($this->label)) {
@@ -69,7 +69,6 @@ final class DebugResult extends AbstractResult
             $debugLines[] = 'Label alignment: '.get_class($this->label->getAlignment());
             $debugLines[] = 'Label margin: ['.implode(', ', $this->label->getMargin()->toArray()).']';
             $debugLines[] = 'Label text color: ['.implode(', ', $this->label->getTextColor()->toArray()).']';
-            $debugLines[] = 'Label background color: ['.implode(', ', $this->label->getBackgroundColor()->toArray()).']';
         }
 
         $debugLines[] = 'Validate result: '.($this->validateResult ? 'true' : 'false');

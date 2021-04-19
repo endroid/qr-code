@@ -20,6 +20,4 @@ interface LabelInterface
     public function getMargin(): MarginInterface;
 
     public function getTextColor(): ColorInterface;
-
-    public function getBackgroundColor(): ColorInterface;
 }

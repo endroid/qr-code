@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Endroid\QrCode\Writer;
 
 use Endroid\QrCode\Bacon\MatrixFactory;
+use Endroid\QrCode\ImageData\LabelImageData;
+use Endroid\QrCode\ImageData\LogoImageData;
 use Endroid\QrCode\Label\Alignment\LabelAlignmentLeft;
 use Endroid\QrCode\Label\Alignment\LabelAlignmentRight;
 use Endroid\QrCode\Label\LabelInterface;
@@ -67,25 +69,33 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
             }
         }
 
-        $interpolatedImage = imagecreatetruecolor($matrix->getOuterSize(), $matrix->getOuterSize());
+        $targetWidth = $matrix->getOuterSize();
+        $targetHeight = $matrix->getOuterSize();
 
-        if (!$interpolatedImage) {
+        if ($label instanceof LabelInterface) {
+            $labelImageData = LabelImageData::createForLabel($label);
+            $targetHeight += $labelImageData->getHeight() + $label->getMargin()->getTop() + $label->getMargin()->getBottom();
+        }
+
+        $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
+
+        if (!$targetImage) {
             throw new \Exception('Unable to generate image: check your GD installation');
         }
 
         /** @var int $backgroundColor */
         $backgroundColor = imagecolorallocatealpha(
-            $interpolatedImage,
+            $targetImage,
             $qrCode->getBackgroundColor()->getRed(),
             $qrCode->getBackgroundColor()->getGreen(),
             $qrCode->getBackgroundColor()->getBlue(),
             $qrCode->getBackgroundColor()->getAlpha()
         );
 
-        imagefill($interpolatedImage, 0, 0, $backgroundColor);
+        imagefill($targetImage, 0, 0, $backgroundColor);
 
         imagecopyresampled(
-            $interpolatedImage,
+            $targetImage,
             $baseImage,
             $matrix->getMarginLeft(),
             $matrix->getMarginLeft(),
@@ -102,10 +112,10 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
         }
 
         if ($qrCode->getBackgroundColor()->getAlpha() > 0) {
-            imagesavealpha($interpolatedImage, true);
+            imagesavealpha($targetImage, true);
         }
 
-        $result = new PngResult($interpolatedImage);
+        $result = new PngResult($targetImage);
 
         if ($logo instanceof LogoInterface) {
             $result = $this->addLogo($logo, $result);
@@ -118,26 +128,27 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
         return $result;
     }
 
-    public function addLogo(LogoInterface $logo, PngResult $result): PngResult
+    private function addLogo(LogoInterface $logo, PngResult $result): PngResult
     {
-        $logoImage = $logo->getImage();
+        $logoImageData = LogoImageData::createForLogo($logo);
+
         $targetImage = $result->getImage();
 
         imagecopyresampled(
             $targetImage,
-            $logoImage,
-            intval(imagesx($targetImage) / 2 - $logo->getTargetWidth() / 2),
-            intval(imagesy($targetImage) / 2 - $logo->getTargetHeight() / 2),
+            $logoImageData->getImage(),
+            intval(imagesx($targetImage) / 2 - $logoImageData->getWidth() / 2),
+            intval(imagesx($targetImage) / 2 - $logoImageData->getHeight() / 2),
             0,
             0,
-            $logo->getTargetWidth(),
-            $logo->getTargetHeight(),
-            imagesx($logoImage),
-            imagesy($logoImage)
+            $logoImageData->getWidth(),
+            $logoImageData->getHeight(),
+            imagesx($logoImageData->getImage()),
+            imagesy($logoImageData->getImage())
         );
 
         if (PHP_VERSION_ID < 80000) {
-            imagedestroy($logoImage);
+            imagedestroy($logoImageData->getImage());
         }
 
         return new PngResult($targetImage);
@@ -145,73 +156,26 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
 
     private function addLabel(LabelInterface $label, PngResult $result): PngResult
     {
-        $sourceImage = $result->getImage();
+        $targetImage = $result->getImage();
 
-        if (!function_exists('imagettfbbox')) {
-            throw new \Exception('Function "imagettfbbox" does not exist: check your FreeType installation');
-        }
-
-        $labelBox = imagettfbbox($label->getFont()->getSize(), 0, $label->getFont()->getPath(), $label->getText());
-
-        if (!is_array($labelBox)) {
-            throw new \Exception('Unable to generate label image box: check your FreeType installation');
-        }
-
-        $labelBoxWidth = intval($labelBox[2] - $labelBox[0]);
-        $labelBoxHeight = intval($labelBox[0] - $labelBox[7]);
-
-        $targetWidth = imagesx($sourceImage);
-        $targetHeight = imagesy($sourceImage) + $labelBoxHeight + $label->getMargin()->getTop() + $label->getMargin()->getBottom();
-
-        $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
-
-        if (!$targetImage) {
-            throw new \Exception('Unable to generate image: check your GD installation');
-        }
+        $labelImageData = LabelImageData::createForLabel($label);
 
         /** @var int $textColor */
-        $textColor = imagecolorallocate(
+        $textColor = imagecolorallocatealpha(
             $targetImage,
             $label->getTextColor()->getRed(),
             $label->getTextColor()->getGreen(),
-            $label->getTextColor()->getBlue()
+            $label->getTextColor()->getBlue(),
+            $label->getTextColor()->getAlpha()
         );
 
-        /** @var int $backgroundColor */
-        $backgroundColor = imagecolorallocate(
-            $targetImage,
-            $label->getBackgroundColor()->getRed(),
-            $label->getBackgroundColor()->getGreen(),
-            $label->getBackgroundColor()->getBlue()
-        );
-
-        imagefill($targetImage, 0, 0, $backgroundColor);
-
-        // Copy source image to target image
-        imagecopyresampled(
-            $targetImage,
-            $sourceImage,
-            0,
-            0,
-            0,
-            0,
-            imagesx($sourceImage),
-            imagesy($sourceImage),
-            imagesx($sourceImage),
-            imagesy($sourceImage)
-        );
-
-        if (PHP_VERSION_ID < 80000) {
-            imagedestroy($sourceImage);
-        }
-
-        $x = intval($targetWidth / 2 - $labelBoxWidth / 2);
-        $y = $targetHeight - $label->getMargin()->getBottom();
+        $x = intval(imagesx($targetImage) / 2 - $labelImageData->getWidth() / 2);
+        $y = imagesy($targetImage) - $label->getMargin()->getBottom();
 
         if ($label->getAlignment() instanceof LabelAlignmentLeft) {
             $x = $label->getMargin()->getLeft();
         } elseif ($label->getAlignment() instanceof LabelAlignmentRight) {
-            $x = $targetWidth - $labelBoxWidth - $label->getMargin()->getRight();
+            $x = imagesx($targetImage) - $labelImageData->getWidth() - $label->getMargin()->getRight();
         }
 
         imagettftext($targetImage, $label->getFont()->getSize(), 0, $x, $y, $textColor, $label->getFont()->getPath(), $label->getText());

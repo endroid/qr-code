@@ -54,8 +54,7 @@ final class QrCodeTest extends TestCase
 
         // Create generic label
         $label = Label::create('Label')
-            ->setTextColor(new Color(255, 0, 0))
-            ->setBackgroundColor(new Color(0, 0, 0));
+            ->setTextColor(new Color(255, 0, 0));
 
         $result = $writer->write($qrCode, $logo, $label);
 
@@ -136,7 +135,7 @@ final class QrCodeTest extends TestCase
         $qrCode = QrCode::create('QR Code');
 
         $logo = Logo::create('/my/invalid/path.png');
-        $this->expectExceptionMessage('Could not determine mime type');
+        $this->expectExceptionMessage('Invalid data at path "/my/invalid/path.png"');
         $writer->write($qrCode, $logo);
     }
 
