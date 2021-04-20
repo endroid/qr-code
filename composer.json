@@ -14,7 +14,7 @@
     "require": {
         "php": "^7.3||^8.0",
         "bacon/bacon-qr-code": "^2.0",
-        "khanamiryan/qrcode-detector-decoder": "^1.0.2",
+        "khanamiryan/qrcode-detector-decoder": "^1.0.5",
         "myclabs/php-enum": "^1.5",
         "symfony/options-resolver": "^3.4||^4.4||^5.0",
         "symfony/property-access": "^3.4||^4.4||^5.0"
