@@ -174,42 +174,42 @@ class QrCodeTest extends TestCase
                 'margin' => 0,
                 'round' => true,
                 'mode' => QrCode::ROUND_BLOCK_SIZE_MODE_ENLARGE,
-                'expectedSize' => 406
+                'expectedSize' => 406,
             ],
             [
                 'size' => 400,
                 'margin' => 5,
                 'round' => true,
                 'mode' => QrCode::ROUND_BLOCK_SIZE_MODE_ENLARGE,
-                'expectedSize' => 416
+                'expectedSize' => 416,
             ],
             [
                 'size' => 400,
                 'margin' => 0,
                 'round' => true,
                 'mode' => QrCode::ROUND_BLOCK_SIZE_MODE_MARGIN,
-                'expectedSize' => 400
+                'expectedSize' => 400,
             ],
             [
                 'size' => 400,
                 'margin' => 5,
                 'round' => true,
                 'mode' => QrCode::ROUND_BLOCK_SIZE_MODE_MARGIN,
-                'expectedSize' => 410
+                'expectedSize' => 410,
             ],
             [
                 'size' => 400,
                 'margin' => 0,
                 'round' => true,
                 'mode' => QrCode::ROUND_BLOCK_SIZE_MODE_SHRINK,
-                'expectedSize' => 377
+                'expectedSize' => 377,
             ],
             [
                 'size' => 400,
                 'margin' => 5,
                 'round' => true,
                 'mode' => QrCode::ROUND_BLOCK_SIZE_MODE_SHRINK,
-                'expectedSize' => 387
+                'expectedSize' => 387,
             ],
         ];
     }
@@ -256,7 +256,7 @@ class QrCodeTest extends TestCase
 
         $image = imagecreatefromstring(file_get_contents($filename));
 
-        $this->assertTrue($image !== false);
+        $this->assertTrue(false !== $image);
 
         imagedestroy($image);
     }

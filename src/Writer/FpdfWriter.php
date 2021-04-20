@@ -42,7 +42,7 @@ class FpdfWriter extends AbstractWriter
         }
 
         $label = $qrCode->getLabel();
-        $labelHeight = $label !== null ? 30 : 0;
+        $labelHeight = null !== $label ? 30 : 0;
 
         $data = $qrCode->getData();
         $options = $qrCode->getWriterOptions();
@@ -88,7 +88,7 @@ class FpdfWriter extends AbstractWriter
             $fpdf->setY($data['outer_height'] + 5);
             $fpdf->SetFont('Helvetica', null, $qrCode->getLabelFontSize());
             $fpdf->Cell(0, 0, $label, 0, 0, strtoupper($qrCode->getLabelAlignment()[0]));
-	}
+        }
 
         return $fpdf->Output('S');
     }
