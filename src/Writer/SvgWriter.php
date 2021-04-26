@@ -82,10 +82,6 @@ final class SvgWriter implements WriterInterface
             $options[self::WRITER_OPTION_FORCE_XLINK_HREF] = false;
         }
 
-        if ('image/svg+xml' === $logoImageData->getMimeType() && (null === $logo->getResizeToHeight() || null === $logo->getResizeToWidth())) {
-            throw new \Exception('SVG Logos require an explicit height set via setLogoSize($width, $height)');
-        }
-
         $xml = $result->getXml();
 
         /** @var \SimpleXMLElement $xmlAttributes */

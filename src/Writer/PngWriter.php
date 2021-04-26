@@ -132,6 +132,10 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
     {
         $logoImageData = LogoImageData::createForLogo($logo);
 
+        if ('image/svg+xml' === $logoImageData->getMimeType()) {
+            throw new \Exception('PNG Writer does not support SVG logo');
+        }
+
         $targetImage = $result->getImage();
 
         imagecopyresampled(

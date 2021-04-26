@@ -52,37 +52,39 @@ class LogoImageData
             $mimeType = self::detectMimeTypeFromPath($logo->getPath());
         }
 
+        $width = $logo->getResizeToWidth();
+        $height = $logo->getResizeToHeight();
+
+        if ('image/svg+xml' === $mimeType) {
+            if (null === $width || null === $height) {
+                throw new \Exception('SVG Logos require an explicitly set resize width and height');
+            }
+
+            return new self($data, null, $mimeType, $width, $height);
+        }
+
         $image = imagecreatefromstring($data);
 
         if (!$image) {
             throw new \Exception(sprintf('Unable to parse image data at path "%s"', $logo->getPath()));
         }
 
-        $width = imagesx($image);
-        $height = imagesy($image);
-
-        $resizeToWidth = $logo->getResizeToWidth();
-        $resizeToHeight = $logo->getResizeToHeight();
-
-        // Fixed resize width and height
-        if (is_int($resizeToWidth) && is_int($resizeToHeight)) {
-            $width = $resizeToWidth;
-            $height = $resizeToHeight;
+        // No target width and height specified: use from original image
+        if (null !== $width && null !== $height) {
+            return new self($data, $image, $mimeType, $width, $height);
         }
 
-        // Only fixed width: calculate height
-        if (is_int($resizeToWidth) && is_null($resizeToHeight)) {
-            $width = $resizeToWidth;
-            $height = intval(imagesy($image) * $resizeToWidth / imagesx($image));
+        // Only target width specified: calculate height
+        if (null !== $width && null === $height) {
+            return new self($data, $image, $mimeType, $width, intval(imagesy($image) * $width / imagesx($image)));
         }
 
-        // Only fixed height: calculate width
-        if (is_int($resizeToHeight) && is_null($resizeToWidth)) {
-            $height = $resizeToHeight;
-            $width = intval(imagesx($image) * $resizeToHeight / imagesy($image));
+        // Only target height specified: calculate width
+        if (null === $width && null !== $height) {
+            return new self($data, $image, $mimeType, intval(imagesx($image) * $height / imagesy($image)), $height);
         }
 
-        return new self($data, $image, $mimeType, $width, $height);
+        return new self($data, $image, $mimeType, imagesx($image), imagesy($image));
     }
 
     public function getData(): string

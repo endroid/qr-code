@@ -199,6 +199,26 @@ final class QrCodeTest extends TestCase
 
         $matrixFactory = new MatrixFactory();
         $this->expectExceptionMessage('Too much data: increase image dimensions or lower error correction level');
-        $matrix = $matrixFactory->create($qrCode);
+        $matrixFactory->create($qrCode);
+    }
+
+    /**
+     * @testdox PNG Writer does not accept SVG logo, while SVG writer does
+     */
+    public function testSvgLogo(): void
+    {
+        $qrCode = QrCode::create('QR Code');
+        $logo = Logo::create(__DIR__.'/assets/symfony.svg')
+            ->setResizeToWidth(100)
+            ->setResizeToHeight(50)
+        ;
+
+        $svgWriter = new SvgWriter();
+        $result = $svgWriter->write($qrCode, $logo);
+        $this->assertInstanceOf(SvgResult::class, $result);
+
+        $pngWriter = new PngWriter();
+        $this->expectExceptionMessage('PNG Writer does not support SVG logo');
+        $pngWriter->write($qrCode, $logo);
     }
 }
