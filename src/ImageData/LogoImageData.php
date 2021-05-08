@@ -129,7 +129,7 @@ class LogoImageData
             throw new \Exception(sprintf('Content type could not be determined for logo URL "%s"', $url));
         }
 
-        return $headers['Content-Type'];
+        return is_array($headers['Content-Type']) ? $headers['Content-Type'][1] : $headers['Content-Type'];
     }
 
     private static function detectMimeTypeFromPath(string $path): string
