@@ -133,7 +133,7 @@ readability. However some other rounding variants are available.
 * `shrink`: the size of the QR code and the final image are
   shrunk when rounding differences occur.
 * `none`: No rounding. This mode can be used when blocks don't need to be rounded
-  to pixes (for instance SVG).
+  to pixels (for instance SVG).
 
 ## Readability
 
