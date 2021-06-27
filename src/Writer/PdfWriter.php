@@ -70,6 +70,10 @@ final class PdfWriter implements WriterInterface
             }
         }
 
+        if ($logo instanceof LogoInterface) {
+            $this->addLogo($logo, $fpdf);
+        }
+
         if ($label instanceof LabelInterface) {
             $fpdf->setY($fpdf->GetPageHeight() - 25);
             $fpdf->SetFont('Helvetica', null, $label->getFont()->getSize());
@@ -79,36 +83,28 @@ final class PdfWriter implements WriterInterface
         return new PdfResult($fpdf);
     }
 
-//    public function writeLogo(LogoInterface $logo, ResultInterface $result, array $options = []): ResultInterface
-//    {
-//        $logoPath = $qrCode->getLogoPath();
-//        if (null !== $logoPath) {
-//            $this->addLogo(
-//                $fpdf,
-//                $logoPath,
-//                $qrCode->getLogoWidth(),
-//                $qrCode->getLogoHeight(),
-//                $data['outer_width'],
-//                $data['outer_height']
-//            );
-//        }
-//
-//        if (null === $logoHeight || null === $logoWidth) {
-//            [$logoSourceWidth, $logoSourceHeight] = \getimagesize($logoPath);
-//
-//            if (null === $logoWidth) {
-//                $logoWidth = (int) $logoSourceWidth;
-//            }
-//
-//            if (null === $logoHeight) {
-//                $aspectRatio = $logoWidth / $logoSourceWidth;
-//                $logoHeight = (int) ($logoSourceHeight * $aspectRatio);
-//            }
-//        }
-//
-//        $logoX = $imageWidth / 2 - (int) $logoWidth / 2;
-//        $logoY = $imageHeight / 2 - (int) $logoHeight / 2;
-//
-//        $fpdf->Image($logoPath, $logoX, $logoY, $logoWidth, $logoHeight);
-//    }
+    private function addLogo(LogoInterface $logo, \FPDF $fpdf): void
+    {
+        $logoPath = $logo->getPath();
+        $logoHeight = $logo->getResizeToHeight();
+        $logoWidth = $logo->getResizeToWidth();
+
+        if (null === $logoHeight || null === $logoWidth) {
+            [$logoSourceWidth, $logoSourceHeight] = \getimagesize($logoPath);
+
+            if (null === $logoWidth) {
+                $logoWidth = (int) $logoSourceWidth;
+            }
+
+            if (null === $logoHeight) {
+                $aspectRatio = $logoWidth / $logoSourceWidth;
+                $logoHeight = (int) ($logoSourceHeight * $aspectRatio);
+            }
+        }
+
+        $logoX = $fpdf->GetPageWidth() / 2 - (int) $logoWidth / 2;
+        $logoY = $fpdf->GetPageHeight() / 2 - (int) $logoHeight / 2;
+
+        $fpdf->Image($logoPath, $logoX, $logoY, $logoWidth, $logoHeight);
+    }
 }
