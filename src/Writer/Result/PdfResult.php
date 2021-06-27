@@ -14,6 +14,11 @@ final class PdfResult extends AbstractResult
         $this->fpdf = $fpdf;
     }
 
+    public function getPdf(): \FPDF
+    {
+        return $this->fpdf;
+    }
+
     public function getString(): string
     {
         return $this->fpdf->Output('S');

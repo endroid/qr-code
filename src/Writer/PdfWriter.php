@@ -70,8 +70,10 @@ final class PdfWriter implements WriterInterface
             }
         }
 
+        $result = new PdfResult($fpdf);
+
         if ($logo instanceof LogoInterface) {
-            $this->addLogo($logo, $fpdf);
+            $result = $this->addLogo($logo, $result);
         }
 
         if ($label instanceof LabelInterface) {
@@ -80,11 +82,13 @@ final class PdfWriter implements WriterInterface
             $fpdf->Cell(0, 0, $label->getText(), 0, 0, 'C');
         }
 
-        return new PdfResult($fpdf);
+        return $result;
     }
 
-    private function addLogo(LogoInterface $logo, \FPDF $fpdf): void
+    private function addLogo(LogoInterface $logo, PdfResult $result): PdfResult
     {
+        $fpdf = $result->getPdf();
+
         $logoPath = $logo->getPath();
         $logoHeight = $logo->getResizeToHeight();
         $logoWidth = $logo->getResizeToWidth();
@@ -106,5 +110,7 @@ final class PdfWriter implements WriterInterface
         $logoY = $fpdf->GetPageHeight() / 2 - (int) $logoHeight / 2;
 
         $fpdf->Image($logoPath, $logoX, $logoY, $logoWidth, $logoHeight);
+
+        return $result;
     }
 }
