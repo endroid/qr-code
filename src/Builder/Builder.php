@@ -135,6 +135,13 @@ class Builder implements BuilderInterface
         return $this;
     }
 
+    public function logoPunchoutBackground(bool $logoPunchoutBackground): BuilderInterface
+    {
+        $this->options['logoPunchoutBackground'] = $logoPunchoutBackground;
+
+        return $this;
+    }
+
     public function labelText(string $labelText): BuilderInterface
     {
         $this->options['labelText'] = $labelText;

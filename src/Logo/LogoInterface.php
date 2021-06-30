@@ -11,4 +11,6 @@ interface LogoInterface
     public function getResizeToWidth(): ?int;
 
     public function getResizeToHeight(): ?int;
+
+    public function getPunchoutBackground(): ?bool;
 }
