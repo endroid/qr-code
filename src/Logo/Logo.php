@@ -15,7 +15,10 @@ final class Logo implements LogoInterface
     /** @var int|null */
     private $resizeToHeight;
 
-    public function __construct(string $path, ?int $resizeToWidth = null, ?int $resizeToHeight = null, ?bool $punchoutBackground = false)
+    /** @var bool */
+    private $punchoutBackground;
+
+    public function __construct(string $path, ?int $resizeToWidth = null, ?int $resizeToHeight = null, bool $punchoutBackground = false)
     {
         $this->path = $path;
         $this->resizeToWidth = $resizeToWidth;
@@ -64,12 +67,12 @@ final class Logo implements LogoInterface
         return $this;
     }
 
-    public function getPunchoutBackground(): ?bool
+    public function getPunchoutBackground(): bool
     {
         return $this->punchoutBackground;
     }
 
-    public function setPunchoutBackground(?bool $punchoutBackground): self
+    public function setPunchoutBackground(bool $punchoutBackground): self
     {
         $this->punchoutBackground = $punchoutBackground;
 

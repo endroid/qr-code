@@ -65,7 +65,7 @@ class LogoImageData
                 throw new \Exception('SVG Logos require an explicitly set resize width and height');
             }
 
-            return new self($data, null, $mimeType, $width, $height);
+            return new self($data, null, $mimeType, $width, $height, $logo->getPunchoutBackground());
         }
 
         $image = imagecreatefromstring($data);
