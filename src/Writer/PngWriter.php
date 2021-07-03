@@ -138,6 +138,29 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
 
         $targetImage = $result->getImage();
 
+        if($logoImageData->getPunchoutBackground()) {
+            $transparent = imagecolorallocatealpha($targetImage, 255, 255, 255, 127);
+            imagealphablending($targetImage, false);
+            for(
+                $x_offset = intval(imagesx($targetImage) / 2 - $logoImageData->getWidth() / 2);
+                $x_offset < intval(imagesx($targetImage) / 2 - $logoImageData->getWidth() / 2) + $logoImageData->getWidth();
+                $x_offset++
+            ) {
+                for(
+                    $y_offset = intval(imagesy($targetImage) / 2 - $logoImageData->getHeight() / 2);
+                    $y_offset < intval(imagesy($targetImage) / 2 - $logoImageData->getHeight() / 2) + $logoImageData->getHeight();
+                    $y_offset++
+                ) {
+                    imagesetpixel(
+                        $targetImage,
+                        $x_offset,
+                        $y_offset,
+                        $transparent
+                    );
+                }
+            }
+        }
+
         imagecopyresampled(
             $targetImage,
             $logoImageData->getImage(),

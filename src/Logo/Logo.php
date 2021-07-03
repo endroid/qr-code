@@ -15,11 +15,12 @@ final class Logo implements LogoInterface
     /** @var int|null */
     private $resizeToHeight;
 
-    public function __construct(string $path, ?int $resizeToWidth = null, ?int $resizeToHeight = null)
+    public function __construct(string $path, ?int $resizeToWidth = null, ?int $resizeToHeight = null, ?bool $punchoutBackground = false)
     {
         $this->path = $path;
         $this->resizeToWidth = $resizeToWidth;
         $this->resizeToHeight = $resizeToHeight;
+        $this->punchoutBackground = $punchoutBackground;
     }
 
     public static function create(string $path): self
@@ -59,6 +60,18 @@ final class Logo implements LogoInterface
     public function setResizeToHeight(?int $resizeToHeight): self
     {
         $this->resizeToHeight = $resizeToHeight;
+
+        return $this;
+    }
+
+    public function getPunchoutBackground(): ?bool
+    {
+        return $this->punchoutBackground;
+    }
+
+    public function setPunchoutBackground(?bool $punchoutBackground): self
+    {
+        $this->punchoutBackground = $punchoutBackground;
 
         return $this;
     }

@@ -23,19 +23,24 @@ class LogoImageData
     /** @var int */
     private $height;
 
+    /** @var bool */
+    private $punchoutBackground;
+
     /** @param mixed $image */
     private function __construct(
         string $data,
         $image,
         string $mimeType,
         int $width,
-        int $height
+        int $height,
+        bool $punchoutBackground
     ) {
         $this->data = $data;
         $this->image = $image;
         $this->mimeType = $mimeType;
         $this->width = $width;
         $this->height = $height;
+        $this->punchoutBackground = $punchoutBackground;
     }
 
     public static function createForLogo(LogoInterface $logo): self
@@ -71,20 +76,20 @@ class LogoImageData
 
         // No target width and height specified: use from original image
         if (null !== $width && null !== $height) {
-            return new self($data, $image, $mimeType, $width, $height);
+            return new self($data, $image, $mimeType, $width, $height, $logo->getPunchoutBackground());
         }
 
         // Only target width specified: calculate height
         if (null !== $width && null === $height) {
-            return new self($data, $image, $mimeType, $width, intval(imagesy($image) * $width / imagesx($image)));
+            return new self($data, $image, $mimeType, $width, intval(imagesy($image) * $width / imagesx($image)), $logo->getPunchoutBackground());
         }
 
         // Only target height specified: calculate width
         if (null === $width && null !== $height) {
-            return new self($data, $image, $mimeType, intval(imagesx($image) * $height / imagesy($image)), $height);
+            return new self($data, $image, $mimeType, intval(imagesx($image) * $height / imagesy($image)), $height, $logo->getPunchoutBackground());
         }
 
-        return new self($data, $image, $mimeType, imagesx($image), imagesy($image));
+        return new self($data, $image, $mimeType, imagesx($image), imagesy($image), $logo->getPunchoutBackground());
     }
 
     public function getData(): string
@@ -111,6 +116,11 @@ class LogoImageData
     public function getHeight(): int
     {
         return $this->height;
+    }
+
+    public function getPunchoutBackground(): bool
+    {
+        return $this->punchoutBackground;
     }
 
     public function createDataUri(): string

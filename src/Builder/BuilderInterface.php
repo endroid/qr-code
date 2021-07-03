@@ -45,6 +45,8 @@ interface BuilderInterface
 
     public function logoResizeToHeight(int $logoResizeToHeight): BuilderInterface;
 
+    public function logoPunchoutBackground(bool $logoPunchoutBackground): BuilderInterface;
+
     public function labelText(string $labelText): BuilderInterface;
 
     public function labelFont(FontInterface $labelFont): BuilderInterface;
