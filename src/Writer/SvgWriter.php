@@ -14,6 +14,7 @@ use Endroid\QrCode\Writer\Result\SvgResult;
 
 final class SvgWriter implements WriterInterface
 {
+    public const DECIMAL_PRECISION = 10;
     public const WRITER_OPTION_BLOCK_ID = 'block_id';
     public const WRITER_OPTION_EXCLUDE_XML_DECLARATION = 'exclude_xml_declaration';
     public const WRITER_OPTION_FORCE_XLINK_HREF = 'force_xlink_href';
@@ -40,8 +41,8 @@ final class SvgWriter implements WriterInterface
 
         $blockDefinition = $xml->defs->addChild('rect');
         $blockDefinition->addAttribute('id', $options[self::WRITER_OPTION_BLOCK_ID]);
-        $blockDefinition->addAttribute('width', strval($matrix->getBlockSize()));
-        $blockDefinition->addAttribute('height', strval($matrix->getBlockSize()));
+        $blockDefinition->addAttribute('width', number_format($matrix->getBlockSize(), self::DECIMAL_PRECISION, '.', ''));
+        $blockDefinition->addAttribute('height', number_format($matrix->getBlockSize(), self::DECIMAL_PRECISION, '.', ''));
         $blockDefinition->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getForegroundColor()->getRed(), $qrCode->getForegroundColor()->getGreen(), $qrCode->getForegroundColor()->getBlue()));
         $blockDefinition->addAttribute('fill-opacity', strval($qrCode->getForegroundColor()->getOpacity()));
 
@@ -57,8 +58,8 @@ final class SvgWriter implements WriterInterface
             for ($columnIndex = 0; $columnIndex < $matrix->getBlockCount(); ++$columnIndex) {
                 if (1 === $matrix->getBlockValue($rowIndex, $columnIndex)) {
                     $block = $xml->addChild('use');
-                    $block->addAttribute('x', strval($matrix->getMarginLeft() + $matrix->getBlockSize() * $columnIndex));
-                    $block->addAttribute('y', strval($matrix->getMarginLeft() + $matrix->getBlockSize() * $rowIndex));
+                    $block->addAttribute('x', number_format($matrix->getMarginLeft() + $matrix->getBlockSize() * $columnIndex, self::DECIMAL_PRECISION, '.', ''));
+                    $block->addAttribute('y', number_format($matrix->getMarginLeft() + $matrix->getBlockSize() * $rowIndex, self::DECIMAL_PRECISION, '.', ''));
                     $block->addAttribute('xlink:href', '#'.$options[self::WRITER_OPTION_BLOCK_ID], 'http://www.w3.org/1999/xlink');
                 }
             }
