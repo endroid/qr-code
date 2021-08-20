@@ -14,6 +14,9 @@ use Endroid\QrCode\Writer\Result\ResultInterface;
 final class PdfWriter implements WriterInterface
 {
     public const WRITER_OPTION_UNIT = 'unit';
+    public const WRITER_OPTION_PDF = 'fpdf';
+    public const WRITER_OPTION_X = 'x';
+    public const WRITER_OPTION_Y = 'y';
 
     public function write(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = []): ResultInterface
     {
@@ -48,20 +51,36 @@ final class PdfWriter implements WriterInterface
             throw new \Exception('PDF Writer does not support alpha channels');
         }
 
-        // @todo Check how to add label height later
-        $fpdf = new \FPDF('P', $unit, [$matrix->getOuterSize(), $matrix->getOuterSize() + $labelSpace]);
-        $fpdf->AddPage();
+        if (isset($options[self::WRITER_OPTION_PDF])) {
+            $fpdf = $options[self::WRITER_OPTION_PDF];
+            if (!$fpdf instanceof \FPDF) {
+                throw new \Exception('pdf option must be an instance of FPDF');
+            }
+        } else {
+            // @todo Check how to add label height later
+            $fpdf = new \FPDF('P', $unit, [$matrix->getOuterSize(), $matrix->getOuterSize() + $labelSpace]);
+            $fpdf->AddPage();
+        }
+
+        $x = 0;
+        if (isset($options[self::WRITER_OPTION_X])) {
+            $x = $options[self::WRITER_OPTION_X];
+        }
+        $y = 0;
+        if (isset($options[self::WRITER_OPTION_Y])) {
+            $y = $options[self::WRITER_OPTION_Y];
+        }
 
         $fpdf->SetFillColor($backgroundColor->getRed(), $backgroundColor->getGreen(), $backgroundColor->getBlue());
-        $fpdf->Rect(0, 0, $matrix->getOuterSize(), $matrix->getOuterSize(), 'F');
+        $fpdf->Rect($x, $y, $matrix->getOuterSize(), $matrix->getOuterSize(), 'F');
         $fpdf->SetFillColor($foregroundColor->getRed(), $foregroundColor->getGreen(), $foregroundColor->getBlue());
 
         for ($rowIndex = 0; $rowIndex < $matrix->getBlockCount(); ++$rowIndex) {
             for ($columnIndex = 0; $columnIndex < $matrix->getBlockCount(); ++$columnIndex) {
                 if (1 === $matrix->getBlockValue($rowIndex, $columnIndex)) {
                     $fpdf->Rect(
-                        $matrix->getMarginLeft() + ($columnIndex * $matrix->getBlockSize()),
-                        $matrix->getMarginLeft() + ($rowIndex * $matrix->getBlockSize()),
+                        $x + $matrix->getMarginLeft() + ($columnIndex * $matrix->getBlockSize()),
+                        $y + $matrix->getMarginLeft() + ($rowIndex * $matrix->getBlockSize()),
                         $matrix->getBlockSize(),
                         $matrix->getBlockSize(),
                         'F'
@@ -70,25 +89,21 @@ final class PdfWriter implements WriterInterface
             }
         }
 
-        $result = new PdfResult($fpdf);
-
         if ($logo instanceof LogoInterface) {
-            $result = $this->addLogo($logo, $result);
+            $this->addLogo($logo, $fpdf, $x, $y, $matrix->getOuterSize());
         }
 
         if ($label instanceof LabelInterface) {
-            $fpdf->setY($fpdf->GetPageHeight() - 25);
+            $fpdf->SetXY($x, $y + $matrix->getOuterSize() + $labelSpace - 25);
             $fpdf->SetFont('Helvetica', null, $label->getFont()->getSize());
-            $fpdf->Cell(0, 0, $label->getText(), 0, 0, 'C');
+            $fpdf->Cell($matrix->getOuterSize(), 0, $label->getText(), 0, 0, 'C');
         }
 
-        return $result;
+        return new PdfResult($fpdf);
     }
 
-    private function addLogo(LogoInterface $logo, PdfResult $result): PdfResult
+    private function addLogo(LogoInterface $logo, \FPDF $fpdf, float $x, float $y, float $size): void
     {
-        $fpdf = $result->getPdf();
-
         $logoPath = $logo->getPath();
         $logoHeight = $logo->getResizeToHeight();
         $logoWidth = $logo->getResizeToWidth();
@@ -106,11 +121,9 @@ final class PdfWriter implements WriterInterface
             }
         }
 
-        $logoX = $fpdf->GetPageWidth() / 2 - (int) $logoWidth / 2;
-        $logoY = $fpdf->GetPageHeight() / 2 - (int) $logoHeight / 2;
+        $logoX = $x + $size / 2 - (int) $logoWidth / 2;
+        $logoY = $y + $size / 2 - (int) $logoHeight / 2;
 
         $fpdf->Image($logoPath, $logoX, $logoY, $logoWidth, $logoHeight);
-
-        return $result;
     }
 }
