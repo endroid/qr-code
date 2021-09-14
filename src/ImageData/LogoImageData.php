@@ -131,7 +131,7 @@ class LogoImageData
     private static function detectMimeTypeFromUrl(string $url): string
     {
         /** @var mixed $format */
-        $format = version_compare(PHP_VERSION, '80000') >= 0 ? true : 1;
+        $format = PHP_VERSION_ID >= 80000 ? true : 1;
 
         $headers = get_headers($url, $format);
 
