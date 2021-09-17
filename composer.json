@@ -38,7 +38,10 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "preferred-install": {
+            "endroid/*": "source"
+        }
     },
     "extra": {
         "branch-alias": {
