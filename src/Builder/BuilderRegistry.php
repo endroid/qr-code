@@ -7,7 +7,7 @@ namespace Endroid\QrCode\Builder;
 final class BuilderRegistry implements BuilderRegistryInterface
 {
     /** @var array<BuilderInterface> */
-    private $builders = [];
+    private array $builders = [];
 
     public function getBuilder(string $name): BuilderInterface
     {

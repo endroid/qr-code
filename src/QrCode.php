@@ -15,29 +15,14 @@ use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 
 final class QrCode implements QrCodeInterface
 {
-    /** @var string */
-    private $data;
-
-    /** @var EncodingInterface */
-    private $encoding;
-
-    /** @var ErrorCorrectionLevelInterface */
-    private $errorCorrectionLevel;
-
-    /** @var int */
-    private $size;
-
-    /** @var int */
-    private $margin;
-
-    /** @var RoundBlockSizeModeInterface */
-    private $roundBlockSizeMode;
-
-    /** @var ColorInterface */
-    private $foregroundColor;
-
-    /** @var ColorInterface */
-    private $backgroundColor;
+    private string $data;
+    private EncodingInterface $encoding;
+    private ErrorCorrectionLevelInterface $errorCorrectionLevel;
+    private int $size;
+    private int $margin;
+    private RoundBlockSizeModeInterface $roundBlockSizeMode;
+    private ColorInterface $foregroundColor;
+    private ColorInterface $backgroundColor;
 
     public function __construct(
         string $data,
@@ -50,13 +35,13 @@ final class QrCode implements QrCodeInterface
         ColorInterface $backgroundColor = null
     ) {
         $this->data = $data;
-        $this->encoding = isset($encoding) ? $encoding : new Encoding('UTF-8');
-        $this->errorCorrectionLevel = isset($errorCorrectionLevel) ? $errorCorrectionLevel : new ErrorCorrectionLevelLow();
+        $this->encoding = $encoding ?? new Encoding('UTF-8');
+        $this->errorCorrectionLevel = $errorCorrectionLevel ?? new ErrorCorrectionLevelLow();
         $this->size = $size;
         $this->margin = $margin;
-        $this->roundBlockSizeMode = isset($roundBlockSizeMode) ? $roundBlockSizeMode : new RoundBlockSizeModeMargin();
-        $this->foregroundColor = isset($foregroundColor) ? $foregroundColor : new Color(0, 0, 0);
-        $this->backgroundColor = isset($backgroundColor) ? $backgroundColor : new Color(255, 255, 255);
+        $this->roundBlockSizeMode = $roundBlockSizeMode ?? new RoundBlockSizeModeMargin();
+        $this->foregroundColor = $foregroundColor ?? new Color(0, 0, 0);
+        $this->backgroundColor = $backgroundColor ?? new Color(255, 255, 255);
     }
 
     public static function create(string $data): self

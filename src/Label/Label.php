@@ -15,20 +15,11 @@ use Endroid\QrCode\Label\Margin\MarginInterface;
 
 final class Label implements LabelInterface
 {
-    /** @var string */
-    private $text;
-
-    /** @var FontInterface */
-    private $font;
-
-    /** @var LabelAlignmentInterface */
-    private $alignment;
-
-    /** @var MarginInterface */
-    private $margin;
-
-    /** @var ColorInterface */
-    private $textColor;
+    private string $text;
+    private FontInterface $font;
+    private LabelAlignmentInterface $alignment;
+    private MarginInterface $margin;
+    private ColorInterface $textColor;
 
     public function __construct(
         string $text,

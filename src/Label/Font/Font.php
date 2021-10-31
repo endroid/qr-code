@@ -6,11 +6,8 @@ namespace Endroid\QrCode\Label\Font;
 
 final class Font implements FontInterface
 {
-    /** @var string */
-    private $path;
-
-    /** @var int */
-    private $size;
+    private string $path;
+    private int $size;
 
     public function __construct(string $path, int $size = 16)
     {

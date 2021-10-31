@@ -7,7 +7,7 @@ namespace Endroid\QrCode\Writer\Result;
 final class EpsResult extends AbstractResult
 {
     /** @var array<string> */
-    private $lines;
+    private array $lines;
 
     /** @param array<string> $lines */
     public function __construct(array $lines)

@@ -6,17 +6,10 @@ namespace Endroid\QrCode\Logo;
 
 final class Logo implements LogoInterface
 {
-    /** @var string */
-    private $path;
-
-    /** @var int|null */
-    private $resizeToWidth;
-
-    /** @var int|null */
-    private $resizeToHeight;
-
-    /** @var bool */
-    private $punchoutBackground;
+    private string $path;
+    private ?int $resizeToWidth;
+    private ?int $resizeToHeight;
+    private bool $punchoutBackground;
 
     public function __construct(string $path, ?int $resizeToWidth = null, ?int $resizeToHeight = null, bool $punchoutBackground = false)
     {

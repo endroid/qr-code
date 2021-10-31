@@ -24,7 +24,7 @@ use Endroid\QrCode\Writer\WriterInterface;
 class Builder implements BuilderInterface
 {
     /** @var array<mixed> */
-    private $options;
+    private array $options;
 
     public function __construct()
     {

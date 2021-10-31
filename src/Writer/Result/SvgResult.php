@@ -6,11 +6,8 @@ namespace Endroid\QrCode\Writer\Result;
 
 final class SvgResult extends AbstractResult
 {
-    /** @var \SimpleXMLElement */
-    private $xml;
-
-    /** @var bool */
-    private $excludeXmlDeclaration;
+    private \SimpleXMLElement $xml;
+    private bool $excludeXmlDeclaration;
 
     public function __construct(\SimpleXMLElement $xml, bool $excludeXmlDeclaration = false)
     {

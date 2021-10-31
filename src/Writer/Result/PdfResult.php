@@ -6,8 +6,7 @@ namespace Endroid\QrCode\Writer\Result;
 
 final class PdfResult extends AbstractResult
 {
-    /** @var \FPDF */
-    private $fpdf;
+    private \FPDF $fpdf;
 
     public function __construct(\FPDF $fpdf)
     {

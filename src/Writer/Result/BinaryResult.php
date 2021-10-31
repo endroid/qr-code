@@ -8,7 +8,7 @@ use Endroid\QrCode\Matrix\MatrixInterface;
 
 final class BinaryResult extends AbstractResult
 {
-    private $matrix;
+    private MatrixInterface $matrix;
 
     public function __construct(MatrixInterface $matrix)
     {
