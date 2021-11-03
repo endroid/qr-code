@@ -44,11 +44,15 @@ jobs:
         run: vendor/bin/code-quality
 
       - name: Test against highest versions
+        env:
+          PHP_CS_FIXER_IGNORE_ENV: 1
         run: |
           vendor/bin/unit-test
           vendor/bin/functional-test
 
       - name: Test against lowest versions
+        env:
+          PHP_CS_FIXER_IGNORE_ENV: 1
         run: |
           composer update --prefer-lowest
           vendor/bin/unit-test
