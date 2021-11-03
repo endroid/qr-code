@@ -92,6 +92,10 @@ class LogoImageData
     /** @return mixed */
     public function getImage()
     {
+        if (null === $this->image) {
+            throw new \Exception('SVG Images have no image resource');
+        }
+
         return $this->image;
     }
 

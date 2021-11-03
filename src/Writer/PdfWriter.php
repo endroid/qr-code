@@ -109,7 +109,11 @@ final class PdfWriter implements WriterInterface
         $logoWidth = $logo->getResizeToWidth();
 
         if (null === $logoHeight || null === $logoWidth) {
-            [$logoSourceWidth, $logoSourceHeight] = \getimagesize($logoPath);
+            $imageSize = \getimagesize($logoPath);
+            if (!$imageSize) {
+                throw new \Exception(sprintf('Unable to read image size for logo "%s"', $logoPath));
+            }
+            [$logoSourceWidth, $logoSourceHeight] = $imageSize;
 
             if (null === $logoWidth) {
                 $logoWidth = (int) $logoSourceWidth;

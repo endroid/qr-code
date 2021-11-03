@@ -40,7 +40,7 @@ final class SvgWriter implements WriterInterface
         $xml->addChild('defs');
 
         $blockDefinition = $xml->defs->addChild('rect');
-        $blockDefinition->addAttribute('id', $options[self::WRITER_OPTION_BLOCK_ID]);
+        $blockDefinition->addAttribute('id', strval($options[self::WRITER_OPTION_BLOCK_ID]));
         $blockDefinition->addAttribute('width', number_format($matrix->getBlockSize(), self::DECIMAL_PRECISION, '.', ''));
         $blockDefinition->addAttribute('height', number_format($matrix->getBlockSize(), self::DECIMAL_PRECISION, '.', ''));
         $blockDefinition->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getForegroundColor()->getRed(), $qrCode->getForegroundColor()->getGreen(), $qrCode->getForegroundColor()->getBlue()));
@@ -65,7 +65,7 @@ final class SvgWriter implements WriterInterface
             }
         }
 
-        $result = new SvgResult($xml, $options[self::WRITER_OPTION_EXCLUDE_XML_DECLARATION]);
+        $result = new SvgResult($xml, boolval($options[self::WRITER_OPTION_EXCLUDE_XML_DECLARATION]));
 
         if ($logo instanceof LogoInterface) {
             $this->addLogo($logo, $result, $options);
