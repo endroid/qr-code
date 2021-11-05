@@ -14,10 +14,6 @@ for validating generated QR codes. Further extended with Twig extensions, genera
 Symfony bundle for easy installation and configuration. Different writers are provided to generate the QR code
 as PNG, SVG, EPS or in binary format.
 
-If you like my work you can show some appreciation by making a small donation via this small button :)
-
-[![Donate with PayPal](https://raw.githubusercontent.com/aha999/DonateButtons/master/paypal-donate-icon-7.png)](https://www.paypal.com/donate/?cmd=_s-xclick&hosted_button_id=RGH86QN825TWN)
-
 ## Installation
 
 Use [Composer](https://getcomposer.org/) to install the library.
