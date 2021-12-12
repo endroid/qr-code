@@ -12,6 +12,7 @@ use Endroid\QrCode\Label\Alignment\LabelAlignmentRight;
 use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCodeInterface;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeNone;
 use Endroid\QrCode\Writer\Result\PngResult;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 use Zxing\QrReader;
@@ -27,7 +28,7 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
         $matrixFactory = new MatrixFactory();
         $matrix = $matrixFactory->create($qrCode);
 
-        $baseBlockSize = 50;
+        $baseBlockSize = $qrCode->getRoundBlockSizeMode() instanceof RoundBlockSizeModeNone ? 50 : intval($matrix->getBlockSize());
         $baseImage = imagecreatetruecolor($matrix->getBlockCount() * $baseBlockSize, $matrix->getBlockCount() * $baseBlockSize);
 
         if (!$baseImage) {
