@@ -101,7 +101,7 @@ final class SvgWriter implements WriterInterface
         // xlink:href is actually deprecated, but still required when placing the qr code in a pdf.
         // SimpleXML strips out the xlink part by using addAttribute(), so it must be set directly.
         if ($options[self::WRITER_OPTION_FORCE_XLINK_HREF]) {
-            $imageDefinition->addAttribute('xlink:href', $logoImageData->createDataUri());
+            $imageDefinition->addAttribute('xlink:href', $logoImageData->createDataUri(), 'http://www.w3.org/1999/xlink');
         } else {
             $imageDefinition->addAttribute('href', $logoImageData->createDataUri());
         }
