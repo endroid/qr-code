@@ -44,16 +44,10 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
             $qrCode->getForegroundColor()->getAlpha()
         );
 
-        /** @var int $backgroundColor */
-        $backgroundColor = imagecolorallocatealpha(
-            $baseImage,
-            $qrCode->getBackgroundColor()->getRed(),
-            $qrCode->getBackgroundColor()->getGreen(),
-            $qrCode->getBackgroundColor()->getBlue(),
-            $qrCode->getBackgroundColor()->getAlpha()
-        );
+        /** @var int $transparentColor */
+        $transparentColor = imagecolorallocatealpha($baseImage, 255, 255, 255, 127);
 
-        imagefill($baseImage, 0, 0, $backgroundColor);
+        imagefill($baseImage, 0, 0, $transparentColor);
 
         for ($rowIndex = 0; $rowIndex < $matrix->getBlockCount(); ++$rowIndex) {
             for ($columnIndex = 0; $columnIndex < $matrix->getBlockCount(); ++$columnIndex) {
