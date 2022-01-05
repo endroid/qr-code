@@ -28,7 +28,7 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
         $matrixFactory = new MatrixFactory();
         $matrix = $matrixFactory->create($qrCode);
 
-        $baseBlockSize = $qrCode->getRoundBlockSizeMode() instanceof RoundBlockSizeModeNone ? 50 : intval($matrix->getBlockSize());
+        $baseBlockSize = $qrCode->getRoundBlockSizeMode() instanceof RoundBlockSizeModeNone ? 10 : intval($matrix->getBlockSize());
         $baseImage = imagecreatetruecolor($matrix->getBlockCount() * $baseBlockSize, $matrix->getBlockCount() * $baseBlockSize);
 
         if (!$baseImage) {
@@ -62,8 +62,8 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
                         $baseImage,
                         $columnIndex * $baseBlockSize,
                         $rowIndex * $baseBlockSize,
-                        ($columnIndex + 1) * $baseBlockSize,
-                        ($rowIndex + 1) * $baseBlockSize,
+                        ($columnIndex + 1) * $baseBlockSize - 1,
+                        ($rowIndex + 1) * $baseBlockSize - 1,
                         $foregroundColor
                     );
                 }
