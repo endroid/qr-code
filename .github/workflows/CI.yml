@@ -41,8 +41,6 @@ jobs:
         run: composer install --prefer-dist
 
       - name: Check code quality
-        env:
-          PHP_CS_FIXER_IGNORE_ENV: 1
         run: vendor/bin/code-quality
 
       - name: Test against highest versions
