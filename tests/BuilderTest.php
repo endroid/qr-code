@@ -46,9 +46,9 @@ final class BuilderTest extends TestCase
      */
     public function testGithubIssue365(): void
     {
-        $data = 'test';
-        $size = 300;
-        $label = 'label';
+        $data = 'Ahmad';
+        $label = '';
+        $size = 120;
 
         $result = Builder::create()
             ->data($data)
