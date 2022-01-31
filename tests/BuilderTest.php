@@ -40,4 +40,29 @@ final class BuilderTest extends TestCase
         $this->assertInstanceOf(PngResult::class, $result);
         $this->assertEquals('image/png', $result->getMimeType());
     }
+
+    /**
+     * @testdox Github issue #365
+     */
+    public function testGithubIssue365(): void
+    {
+        $data = 'test';
+        $size = 300;
+        $label = 'label';
+
+        $result = Builder::create()
+            ->data($data)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size($size)
+            ->margin(10)
+            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
+            ->labelText($label)
+            ->labelFont(new NotoSans(20))
+            ->labelAlignment(new LabelAlignmentCenter())
+            ->build();
+
+        $this->assertInstanceOf(PngResult::class, $result);
+        $this->assertEquals('image/png', $result->getMimeType());
+    }
 }
