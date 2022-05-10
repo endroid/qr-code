@@ -60,7 +60,7 @@ class LogoImageData
             return new self($data, null, $mimeType, $width, $height, $logo->getPunchoutBackground());
         }
 
-        $image = imagecreatefromstring($data);
+        $image = @imagecreatefromstring($data);
 
         if (!$image) {
             throw new \Exception(sprintf('Unable to parse image data at path "%s"', $logo->getPath()));
