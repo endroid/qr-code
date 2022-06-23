@@ -14,6 +14,10 @@ for validating generated QR codes. Further extended with Twig extensions, genera
 Symfony bundle for easy installation and configuration. Different writers are provided to generate the QR code
 as PNG, SVG, EPS or in binary format.
 
+## Sponsored by
+
+[![Blackfire.io](assets/blackfire.png)](https://www.blackfire.io)
+
 ## Installation
 
 Use [Composer](https://getcomposer.org/) to install the library. Also make sure you have enabled and configured the
