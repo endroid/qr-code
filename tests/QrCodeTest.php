@@ -17,11 +17,13 @@ use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeInterface;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeShrink;
 use Endroid\QrCode\Writer\BinaryWriter;
+use Endroid\QrCode\Writer\ConsoleWriter;
 use Endroid\QrCode\Writer\DebugWriter;
 use Endroid\QrCode\Writer\EpsWriter;
 use Endroid\QrCode\Writer\PdfWriter;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\Result\BinaryResult;
+use Endroid\QrCode\Writer\Result\ConsoleResult;
 use Endroid\QrCode\Writer\Result\DebugResult;
 use Endroid\QrCode\Writer\Result\EpsResult;
 use Endroid\QrCode\Writer\Result\PdfResult;
@@ -79,6 +81,7 @@ final class QrCodeTest extends TestCase
         yield [new PdfWriter(), PdfResult::class, 'application/pdf'];
         yield [new PngWriter(), PngResult::class, 'image/png'];
         yield [new SvgWriter(), SvgResult::class, 'image/svg+xml'];
+        yield [new ConsoleWriter(), ConsoleResult::class, 'text/plain'];
     }
 
     /**
