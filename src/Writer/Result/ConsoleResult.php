@@ -18,8 +18,8 @@ class ConsoleResult extends AbstractResult
         3 => ' '
     ];
 
-    protected $matrix;
-    protected $twoblocks;
+    protected MatrixInterface $matrix;
+    protected array $twoblocks;
 
     /**
      * @param MatrixInterface $matrix
@@ -58,7 +58,7 @@ class ConsoleResult extends AbstractResult
 
         echo str_repeat($this->twoblocks[0], $side + 4) . PHP_EOL; // margin-bottom
 
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 
 }

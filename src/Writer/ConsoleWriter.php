@@ -16,7 +16,7 @@ use Endroid\QrCode\Writer\WriterInterface;
 class ConsoleWriter implements WriterInterface
 {
 
-    protected $darkmode;
+    protected bool $darkmode;
 
     /**
      * Ctor
