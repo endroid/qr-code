@@ -66,3 +66,5 @@ jobs:
 
       - name: Check code quality
         run: vendor/bin/code-quality
+        env:
+          PHP_CS_FIXER_IGNORE_ENV: 1
