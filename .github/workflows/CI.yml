@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['7.4', '8.0', '8.1']
+        php-versions: ['7.4', '8.0', '8.1', '8.2']
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
@@ -40,9 +40,6 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --prefer-dist
 
-      - name: Check code quality
-        run: vendor/bin/code-quality
-
       - name: Test against highest versions
         run: |
           vendor/bin/unit-test
@@ -66,3 +63,6 @@ jobs:
         with:
           name: coverage
           path: tests/coverage
+
+      - name: Check code quality
+        run: vendor/bin/code-quality

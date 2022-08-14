@@ -29,7 +29,7 @@ final class Label implements LabelInterface
         ColorInterface $textColor = null
     ) {
         $this->text = $text;
-        $this->font = $font ?? new Font(__DIR__ . '/../../assets/noto_sans.otf', 16);
+        $this->font = $font ?? new Font(__DIR__.'/../../assets/noto_sans.otf', 16);
         $this->alignment = $alignment ?? new LabelAlignmentCenter();
         $this->margin = $margin ?? new Margin(0, 10, 10, 10);
         $this->textColor = $textColor ?? new Color(0, 0, 0);
