@@ -16,18 +16,6 @@ use Endroid\QrCode\Writer\Result\ResultInterface;
  */
 class ConsoleWriter implements WriterInterface
 {
-    protected bool $darkmode;
-
-    /**
-     * Ctor.
-     *
-     * @param bool $darkmode Darkmode means white characters on a dark background (default: true)
-     */
-    public function __construct(bool $darkmode = true)
-    {
-        $this->darkmode = $darkmode;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -36,6 +24,6 @@ class ConsoleWriter implements WriterInterface
         $matrixFactory = new MatrixFactory();
         $matrix = $matrixFactory->create($qrCode);
 
-        return new ConsoleResult($matrix, $this->darkmode);
+        return new ConsoleResult($matrix, $qrCode->getForegroundColor(), $qrCode->getBackgroundColor());
     }
 }
