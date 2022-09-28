@@ -16,6 +16,8 @@ interface ColorInterface
 
     public function getOpacity(): float;
 
+    public function getHex(): string;
+
     /** @return array<string, int> */
     public function toArray(): array;
 }

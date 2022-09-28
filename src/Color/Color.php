@@ -44,6 +44,11 @@ final class Color implements ColorInterface
         return 1 - $this->alpha / 127;
     }
 
+    public function getHex(): string
+    {
+        return sprintf('#%02x%02x%02x', $this->red, $this->green, $this->blue);
+    }
+
     public function toArray(): array
     {
         return [
