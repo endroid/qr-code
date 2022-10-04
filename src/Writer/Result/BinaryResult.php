@@ -8,19 +8,19 @@ use Endroid\QrCode\Matrix\MatrixInterface;
 
 final class BinaryResult extends AbstractResult
 {
-    private MatrixInterface $matrix;
-
     public function __construct(MatrixInterface $matrix)
     {
-        $this->matrix = $matrix;
+        parent::__construct($matrix);
     }
 
     public function getString(): string
     {
+        $matrix = $this->getMatrix();
+
         $binaryString = '';
-        for ($rowIndex = 0; $rowIndex < $this->matrix->getBlockCount(); ++$rowIndex) {
-            for ($columnIndex = 0; $columnIndex < $this->matrix->getBlockCount(); ++$columnIndex) {
-                $binaryString .= $this->matrix->getBlockValue($rowIndex, $columnIndex);
+        for ($rowIndex = 0; $rowIndex < $matrix->getBlockCount(); ++$rowIndex) {
+            for ($columnIndex = 0; $columnIndex < $matrix->getBlockCount(); ++$columnIndex) {
+                $binaryString .= $matrix->getBlockValue($rowIndex, $columnIndex);
             }
             $binaryString .= "\n";
         }

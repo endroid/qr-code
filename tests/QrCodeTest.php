@@ -9,8 +9,10 @@ use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\Exception\ValidationException;
 use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\Matrix\MatrixInterface;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeEnlarge;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeInterface;
@@ -60,10 +62,11 @@ final class QrCodeTest extends TestCase
             ->setTextColor(new Color(255, 0, 0));
 
         $result = $writer->write($qrCode, $logo, $label);
+        $this->assertInstanceOf(MatrixInterface::class, $result->getMatrix());
 
         if ($writer instanceof ValidatingWriterInterface) {
             if ($writer instanceof PngWriter && PHP_VERSION_ID >= 80000) {
-                $this->expectException(\Exception::class);
+                $this->expectException(ValidationException::class);
             }
             $writer->validateResult($result, $qrCode->getData());
         }

@@ -99,7 +99,7 @@ final class PdfWriter implements WriterInterface
             $fpdf->Cell($matrix->getOuterSize(), 0, $label->getText(), 0, 0, 'C');
         }
 
-        return new PdfResult($fpdf);
+        return new PdfResult($matrix, $fpdf);
     }
 
     private function addLogo(LogoInterface $logo, \FPDF $fpdf, float $x, float $y, float $size): void

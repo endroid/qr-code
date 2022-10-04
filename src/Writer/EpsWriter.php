@@ -39,6 +39,6 @@ final class EpsWriter implements WriterInterface
             }
         }
 
-        return new EpsResult($lines);
+        return new EpsResult($matrix, $lines);
     }
 }

@@ -7,6 +7,7 @@ namespace Endroid\QrCode\Builder;
 use Endroid\QrCode\Color\ColorInterface;
 use Endroid\QrCode\Encoding\EncodingInterface;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelInterface;
+use Endroid\QrCode\Exception\ValidationException;
 use Endroid\QrCode\Label\Alignment\LabelAlignmentInterface;
 use Endroid\QrCode\Label\Font\FontInterface;
 use Endroid\QrCode\Label\Label;
@@ -216,7 +217,7 @@ class Builder implements BuilderInterface
         $writer = $this->options['writer'];
 
         if ($this->options['validateResult'] && !$writer instanceof ValidatingWriterInterface) {
-            throw new \Exception('Unable to validate the result: '.get_class($writer).' does not support validation');
+            throw ValidationException::createForUnsupportedWriter(strval(get_class($writer)));
         }
 
         /** @var QrCode $qrCode */

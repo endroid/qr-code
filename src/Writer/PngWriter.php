@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Endroid\QrCode\Writer;
 
 use Endroid\QrCode\Bacon\MatrixFactory;
+use Endroid\QrCode\Exception\ValidationException;
 use Endroid\QrCode\ImageData\LabelImageData;
 use Endroid\QrCode\ImageData\LogoImageData;
 use Endroid\QrCode\Label\Alignment\LabelAlignmentLeft;
@@ -110,7 +111,7 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
             imagesavealpha($targetImage, true);
         }
 
-        $result = new PngResult($targetImage);
+        $result = new PngResult($matrix, $targetImage);
 
         if ($logo instanceof LogoInterface) {
             $result = $this->addLogo($logo, $result);
@@ -174,7 +175,7 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
             imagedestroy($logoImageData->getImage());
         }
 
-        return new PngResult($targetImage);
+        return new PngResult($result->getMatrix(), $targetImage);
     }
 
     private function addLabel(LabelInterface $label, PngResult $result): PngResult
@@ -203,7 +204,7 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
 
         imagettftext($targetImage, $label->getFont()->getSize(), 0, $x, $y, $textColor, $label->getFont()->getPath(), $label->getText());
 
-        return new PngResult($targetImage);
+        return new PngResult($result->getMatrix(), $targetImage);
     }
 
     public function validateResult(ResultInterface $result, string $expectedData): void
@@ -211,17 +212,16 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
         $string = $result->getString();
 
         if (!class_exists(QrReader::class)) {
-            throw new \Exception('Please install khanamiryan/qrcode-detector-decoder or disable image validation');
+            throw ValidationException::createForMissingPackage('khanamiryan/qrcode-detector-decoder');
         }
 
         if (PHP_VERSION_ID >= 80000) {
-            throw new \Exception('The validator is not compatible with PHP 8 yet, see https://github.com/khanamiryan/php-qrcode-detector-decoder/pull/103');
+            throw ValidationException::createForIncompatiblePhpVersion();
         }
 
         $reader = new QrReader($string, QrReader::SOURCE_TYPE_BLOB);
         if ($reader->text() !== $expectedData) {
-            throw new \Exception('Built-in validation reader read "'.$reader->text().'" instead of "'.$expectedData.'".
-                 Adjust your parameters to increase readability or disable built-in validation.');
+            throw ValidationException::createForInvalidData($expectedData, strval($reader->text()));
         }
     }
 }

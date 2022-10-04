@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer\Result;
 
+use Endroid\QrCode\Matrix\MatrixInterface;
+
 final class PngResult extends AbstractResult
 {
     /** @var mixed */
     private $image;
 
     /** @param mixed $image */
-    public function __construct($image)
+    public function __construct(MatrixInterface $matrix, $image)
     {
+        parent::__construct($matrix);
+
         $this->image = $image;
     }
 

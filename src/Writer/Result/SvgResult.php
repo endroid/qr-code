@@ -4,13 +4,20 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer\Result;
 
+use Endroid\QrCode\Matrix\MatrixInterface;
+
 final class SvgResult extends AbstractResult
 {
     private \SimpleXMLElement $xml;
     private bool $excludeXmlDeclaration;
 
-    public function __construct(\SimpleXMLElement $xml, bool $excludeXmlDeclaration = false)
-    {
+    public function __construct(
+        MatrixInterface $matrix,
+        \SimpleXMLElement $xml,
+        bool $excludeXmlDeclaration = false
+    ) {
+        parent::__construct($matrix);
+
         $this->xml = $xml;
         $this->excludeXmlDeclaration = $excludeXmlDeclaration;
     }

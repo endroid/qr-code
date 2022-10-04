@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Writer;
 
+use Endroid\QrCode\Bacon\MatrixFactory;
 use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCodeInterface;
@@ -14,7 +15,10 @@ final class DebugWriter implements WriterInterface, ValidatingWriterInterface
 {
     public function write(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = []): ResultInterface
     {
-        return new DebugResult($qrCode, $logo, $label, $options);
+        $matrixFactory = new MatrixFactory();
+        $matrix = $matrixFactory->create($qrCode);
+
+        return new DebugResult($matrix, $qrCode, $logo, $label, $options);
     }
 
     public function validateResult(ResultInterface $result, string $expectedData): void

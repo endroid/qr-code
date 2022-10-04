@@ -6,6 +6,7 @@ namespace Endroid\QrCode\Writer\Result;
 
 use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
+use Endroid\QrCode\Matrix\MatrixInterface;
 use Endroid\QrCode\QrCodeInterface;
 
 final class DebugResult extends AbstractResult
@@ -20,8 +21,15 @@ final class DebugResult extends AbstractResult
     private bool $validateResult = false;
 
     /** @param array<mixed> $options */
-    public function __construct(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = [])
-    {
+    public function __construct(
+        MatrixInterface $matrix,
+        QrCodeInterface $qrCode,
+        LogoInterface $logo = null,
+        LabelInterface $label = null,
+        array $options = []
+    ) {
+        parent::__construct($matrix);
+
         $this->qrCode = $qrCode;
         $this->logo = $logo;
         $this->label = $label;
