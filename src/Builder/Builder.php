@@ -216,7 +216,7 @@ class Builder implements BuilderInterface
         $writer = $this->options['writer'];
 
         if ($this->options['validateResult'] && !$writer instanceof ValidatingWriterInterface) {
-            throw new \Exception('Unable to validate result with '.get_class($writer));
+            throw new \Exception('Unable to validate the result: '.get_class($writer).' does not support validation');
         }
 
         /** @var QrCode $qrCode */
