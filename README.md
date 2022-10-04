@@ -149,13 +149,17 @@ size can result in additional padding to compensate for the rounding difference.
 And finally the encoding (default UTF-8 to support large character sets) can be
 set to `ISO-8859-1` if possible to improve readability.
 
-## Built-in validation reader
+## Validating the generated QR code
 
-You can enable the built-in validation reader (disabled by default) by calling
-setValidateResult(true). This validation reader does not guarantee that the QR
+When outputting a PNG (i.e. `->writer(new PngWriter())`), you can enable validation:
+* Add `->setValidateResult(true)` to the configuration
+* Install [khanamiryan/php-qrcode-detector-decoder](https://github.com/khanamiryan/php-qrcode-detector-decoder)
+
+This validation reader does not guarantee that the QR
 code will be readable by all readers but it helps you provide a minimum level
-of quality. Take note that the validator can consume quite amount of additional
-resources and it should be installed separately only if you use it.
+of quality. Besides, the validator can consume quite amount of additional resources.
+
+If validation fails, an exception is thrown.
 
 ## Symfony integration
 
