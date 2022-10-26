@@ -133,27 +133,17 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
         }
 
         $targetImage = $result->getImage();
+        $matrix = $result->getMatrix();
 
         if ($logoImageData->getPunchoutBackground()) {
             /** @var int $transparent */
             $transparent = imagecolorallocatealpha($targetImage, 255, 255, 255, 127);
             imagealphablending($targetImage, false);
-            for (
-                $x_offset = intval(imagesx($targetImage) / 2 - $logoImageData->getWidth() / 2);
-                $x_offset < intval(imagesx($targetImage) / 2 - $logoImageData->getWidth() / 2) + $logoImageData->getWidth();
-                ++$x_offset
-            ) {
-                for (
-                    $y_offset = intval(imagesy($targetImage) / 2 - $logoImageData->getHeight() / 2);
-                    $y_offset < intval(imagesy($targetImage) / 2 - $logoImageData->getHeight() / 2) + $logoImageData->getHeight();
-                    ++$y_offset
-                ) {
-                    imagesetpixel(
-                        $targetImage,
-                        $x_offset,
-                        $y_offset,
-                        $transparent
-                    );
+            $xOffsetStart = intval($matrix->getOuterSize() / 2 - $logoImageData->getWidth() / 2);
+            $yOffsetStart = intval($matrix->getOuterSize() / 2 - $logoImageData->getHeight() / 2);
+            for ($xOffset = $xOffsetStart; $xOffset < $xOffsetStart + $logoImageData->getWidth(); ++$xOffset) {
+                for ($yOffset = $yOffsetStart; $yOffset < $yOffsetStart + $logoImageData->getHeight(); ++$yOffset) {
+                    imagesetpixel($targetImage, $xOffset, $yOffset, $transparent);
                 }
             }
         }
@@ -161,8 +151,8 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
         imagecopyresampled(
             $targetImage,
             $logoImageData->getImage(),
-            intval(imagesx($targetImage) / 2 - $logoImageData->getWidth() / 2),
-            intval(imagesx($targetImage) / 2 - $logoImageData->getHeight() / 2),
+            intval($matrix->getOuterSize() / 2 - $logoImageData->getWidth() / 2),
+            intval($matrix->getOuterSize() / 2 - $logoImageData->getHeight() / 2),
             0,
             0,
             $logoImageData->getWidth(),
@@ -175,7 +165,7 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
             imagedestroy($logoImageData->getImage());
         }
 
-        return new PngResult($result->getMatrix(), $targetImage);
+        return new PngResult($matrix, $targetImage);
     }
 
     private function addLabel(LabelInterface $label, PngResult $result): PngResult
