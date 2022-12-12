@@ -9,7 +9,6 @@ use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
-use Endroid\QrCode\Exception\ValidationException;
 use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\Matrix\MatrixInterface;
@@ -66,9 +65,6 @@ final class QrCodeTest extends TestCase
         $this->assertInstanceOf(MatrixInterface::class, $result->getMatrix());
 
         if ($writer instanceof ValidatingWriterInterface) {
-            if ($writer instanceof PngWriter && PHP_VERSION_ID >= 80000) {
-                $this->expectException(ValidationException::class);
-            }
             $writer->validateResult($result, $qrCode->getData());
         }
 
@@ -175,10 +171,6 @@ final class QrCodeTest extends TestCase
         $image = imagecreatefromstring(file_get_contents($path));
 
         $this->assertTrue(false !== $image);
-
-        if (PHP_VERSION_ID < 80000) {
-            imagedestroy($image);
-        }
 
         unlink($path);
     }

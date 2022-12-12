@@ -18,7 +18,7 @@
     "require-dev": {
         "ext-gd": "*",
         "endroid/quality": "dev-master",
-        "khanamiryan/qrcode-detector-decoder": "^1.0.4",
+        "khanamiryan/qrcode-detector-decoder": "^2.0",
         "setasign/fpdf": "^1.8.2"
     },
     "suggest": {

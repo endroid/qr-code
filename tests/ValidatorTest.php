@@ -17,10 +17,6 @@ final class ValidatorTest extends TestCase
      */
     public function testReadability(string $name, string $data): void
     {
-        if (PHP_VERSION_ID >= 80000) {
-            $this->expectException(\Exception::class);
-        }
-
         $result = Builder::create()
             ->data($data)
             ->validateResult(true)

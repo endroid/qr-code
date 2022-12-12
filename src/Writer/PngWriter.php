@@ -103,10 +103,6 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
             imagesy($baseImage)
         );
 
-        if (PHP_VERSION_ID < 80000) {
-            imagedestroy($baseImage);
-        }
-
         if ($qrCode->getBackgroundColor()->getAlpha() > 0) {
             imagesavealpha($targetImage, true);
         }
@@ -161,10 +157,6 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
             imagesy($logoImageData->getImage())
         );
 
-        if (PHP_VERSION_ID < 80000) {
-            imagedestroy($logoImageData->getImage());
-        }
-
         return new PngResult($matrix, $targetImage);
     }
 
@@ -203,10 +195,6 @@ final class PngWriter implements WriterInterface, ValidatingWriterInterface
 
         if (!class_exists(QrReader::class)) {
             throw ValidationException::createForMissingPackage('khanamiryan/qrcode-detector-decoder');
-        }
-
-        if (PHP_VERSION_ID >= 80000) {
-            throw ValidationException::createForIncompatiblePhpVersion();
         }
 
         $reader = new QrReader($string, QrReader::SOURCE_TYPE_BLOB);
