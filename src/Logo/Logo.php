@@ -6,17 +6,12 @@ namespace Endroid\QrCode\Logo;
 
 final class Logo implements LogoInterface
 {
-    private string $path;
-    private ?int $resizeToWidth;
-    private ?int $resizeToHeight;
-    private bool $punchoutBackground;
-
-    public function __construct(string $path, ?int $resizeToWidth = null, ?int $resizeToHeight = null, bool $punchoutBackground = false)
-    {
-        $this->path = $path;
-        $this->resizeToWidth = $resizeToWidth;
-        $this->resizeToHeight = $resizeToHeight;
-        $this->punchoutBackground = $punchoutBackground;
+    public function __construct(
+        private string $path,
+        private int|null $resizeToWidth = null,
+        private int|null $resizeToHeight = null,
+        private bool $punchoutBackground = false
+    ) {
     }
 
     public static function create(string $path): self
@@ -36,24 +31,24 @@ final class Logo implements LogoInterface
         return $this;
     }
 
-    public function getResizeToWidth(): ?int
+    public function getResizeToWidth(): int|null
     {
         return $this->resizeToWidth;
     }
 
-    public function setResizeToWidth(?int $resizeToWidth): self
+    public function setResizeToWidth(int|null $resizeToWidth): self
     {
         $this->resizeToWidth = $resizeToWidth;
 
         return $this;
     }
 
-    public function getResizeToHeight(): ?int
+    public function getResizeToHeight(): int|null
     {
         return $this->resizeToHeight;
     }
 
-    public function setResizeToHeight(?int $resizeToHeight): self
+    public function setResizeToHeight(int|null $resizeToHeight): self
     {
         $this->resizeToHeight = $resizeToHeight;
 

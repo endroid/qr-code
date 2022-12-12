@@ -6,11 +6,9 @@ namespace Endroid\QrCode\Label\Font;
 
 final class NotoSans implements FontInterface
 {
-    private int $size;
-
-    public function __construct(int $size = 16)
-    {
-        $this->size = $size;
+    public function __construct(
+        private int $size = 16
+    ) {
     }
 
     public function getPath(): string

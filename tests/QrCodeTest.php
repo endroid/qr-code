@@ -40,6 +40,7 @@ final class QrCodeTest extends TestCase
 {
     /**
      * @testdox Write as $resultClass with content type $contentType
+     *
      * @dataProvider writerProvider
      */
     public function testQrCode(WriterInterface $writer, string $resultClass, string $contentType): void
@@ -106,6 +107,7 @@ final class QrCodeTest extends TestCase
 
     /**
      * @testdox Size and margin are handled correctly with rounded blocks
+     *
      * @dataProvider roundedSizeProvider
      */
     public function testSetSizeRounded(int $size, int $margin, RoundBlockSizeModeInterface $roundBlockSizeMode, int $expectedSize): void

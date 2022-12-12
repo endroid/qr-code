@@ -25,7 +25,7 @@ use Endroid\QrCode\Writer\WriterInterface;
 class Builder implements BuilderInterface
 {
     /**
-     * @var array<mixed>{
+     * @var array<string, mixed>{
      *     data: string,
      *     writer: WriterInterface,
      *     writerOptions: array,
@@ -78,7 +78,7 @@ class Builder implements BuilderInterface
         return $this;
     }
 
-    /** @param array<mixed> $writerOptions */
+    /** @param array<string, mixed> $writerOptions */
     public function writerOptions(array $writerOptions): BuilderInterface
     {
         $this->options['writerOptions'] = $writerOptions;
@@ -243,7 +243,7 @@ class Builder implements BuilderInterface
      *
      * @return mixed
      */
-    private function buildObject(string $class, string $optionsPrefix = null)
+    private function buildObject(string $class, string|null $optionsPrefix = null)
     {
         /** @var \ReflectionClass<object> $reflectionClass */
         $reflectionClass = new \ReflectionClass($class);

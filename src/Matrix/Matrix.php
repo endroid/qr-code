@@ -11,9 +11,6 @@ use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeShrink;
 
 final class Matrix implements MatrixInterface
 {
-    /** @var array<int, array<int, int>> */
-    private array $blockValues = [];
-
     private float $blockSize;
     private int $innerSize;
     private int $outerSize;
@@ -21,10 +18,12 @@ final class Matrix implements MatrixInterface
     private int $marginRight;
 
     /** @param array<array<int>> $blockValues */
-    public function __construct(array $blockValues, int $size, int $margin, RoundBlockSizeModeInterface $roundBlockSizeMode)
-    {
-        $this->blockValues = $blockValues;
-
+    public function __construct(
+        private array $blockValues,
+        int $size,
+        int $margin,
+        RoundBlockSizeModeInterface $roundBlockSizeMode
+    ) {
         $this->blockSize = $size / $this->getBlockCount();
         $this->innerSize = $size;
         $this->outerSize = $size + 2 * $margin;

@@ -15,20 +15,18 @@ use Endroid\QrCode\Label\Margin\MarginInterface;
 
 final class Label implements LabelInterface
 {
-    private string $text;
     private FontInterface $font;
     private LabelAlignmentInterface $alignment;
     private MarginInterface $margin;
     private ColorInterface $textColor;
 
     public function __construct(
-        string $text,
-        FontInterface $font = null,
-        LabelAlignmentInterface $alignment = null,
-        MarginInterface $margin = null,
-        ColorInterface $textColor = null
+        private string $text,
+        FontInterface|null $font = null,
+        LabelAlignmentInterface|null $alignment = null,
+        MarginInterface|null $margin = null,
+        ColorInterface|null $textColor = null
     ) {
-        $this->text = $text;
         $this->font = $font ?? new Font(__DIR__.'/../../assets/noto_sans.otf', 16);
         $this->alignment = $alignment ?? new LabelAlignmentCenter();
         $this->margin = $margin ?? new Margin(0, 10, 10, 10);

@@ -8,13 +8,11 @@ use Endroid\QrCode\Matrix\MatrixInterface;
 
 final class PdfResult extends AbstractResult
 {
-    private \FPDF $fpdf;
-
-    public function __construct(MatrixInterface $matrix, \FPDF $fpdf)
-    {
+    public function __construct(
+        MatrixInterface $matrix,
+        private \FPDF $fpdf
+    ) {
         parent::__construct($matrix);
-
-        $this->fpdf = $fpdf;
     }
 
     public function getPdf(): \FPDF

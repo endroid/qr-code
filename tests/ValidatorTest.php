@@ -12,6 +12,7 @@ final class ValidatorTest extends TestCase
 {
     /**
      * @testdox Can write $name and successfully validate result
+     *
      * @dataProvider dataProvider
      */
     public function testReadability(string $name, string $data): void
