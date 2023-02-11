@@ -24,7 +24,7 @@ Use [Composer](https://getcomposer.org/) to install the library. Also make sure 
 [GD extension](https://www.php.net/manual/en/book.image.php) if you want to generate images.
 
 ``` bash
-$ composer require endroid/qr-code
+ composer require endroid/qr-code
 ```
 
 ## Usage: using the builder
