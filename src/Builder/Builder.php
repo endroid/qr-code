@@ -17,7 +17,7 @@ use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeInterface;
-use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\GdWriter;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 use Endroid\QrCode\Writer\ValidatingWriterInterface;
 use Endroid\QrCode\Writer\WriterInterface;
@@ -57,7 +57,7 @@ class Builder implements BuilderInterface
     {
         $this->options = [
             'data' => '',
-            'writer' => new PngWriter(),
+            'writer' => new GdWriter(),
             'writerOptions' => [],
             'qrCodeClass' => QrCode::class,
             'logoClass' => Logo::class,

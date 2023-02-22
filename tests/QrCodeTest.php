@@ -22,14 +22,16 @@ use Endroid\QrCode\Writer\ConsoleWriter;
 use Endroid\QrCode\Writer\DebugWriter;
 use Endroid\QrCode\Writer\EpsWriter;
 use Endroid\QrCode\Writer\PdfWriter;
-use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\GdWriter;
 use Endroid\QrCode\Writer\Result\BinaryResult;
 use Endroid\QrCode\Writer\Result\ConsoleResult;
 use Endroid\QrCode\Writer\Result\DebugResult;
 use Endroid\QrCode\Writer\Result\EpsResult;
+use Endroid\QrCode\Writer\Result\GifResult;
 use Endroid\QrCode\Writer\Result\PdfResult;
 use Endroid\QrCode\Writer\Result\PngResult;
 use Endroid\QrCode\Writer\Result\SvgResult;
+use Endroid\QrCode\Writer\Result\WebpResult;
 use Endroid\QrCode\Writer\SvgWriter;
 use Endroid\QrCode\Writer\ValidatingWriterInterface;
 use Endroid\QrCode\Writer\WriterInterface;
@@ -42,7 +44,7 @@ final class QrCodeTest extends TestCase
      *
      * @dataProvider writerProvider
      */
-    public function testQrCode(WriterInterface $writer, string $resultClass, string $contentType): void
+    public function testQrCode(WriterInterface $writer, string $resultClass, string $contentType, array $options = []): void
     {
         $qrCode = QrCode::create('Data')
             ->setEncoding(new Encoding('UTF-8'))
@@ -61,7 +63,7 @@ final class QrCodeTest extends TestCase
         $label = Label::create('Label')
             ->setTextColor(new Color(255, 0, 0));
 
-        $result = $writer->write($qrCode, $logo, $label);
+        $result = $writer->write($qrCode, $logo, $label, $options);
         $this->assertInstanceOf(MatrixInterface::class, $result->getMatrix());
 
         if ($writer instanceof ValidatingWriterInterface) {
@@ -75,13 +77,15 @@ final class QrCodeTest extends TestCase
 
     public function writerProvider(): iterable
     {
-        yield [new BinaryWriter(), BinaryResult::class, 'text/plain'];
-        yield [new DebugWriter(), DebugResult::class, 'text/plain'];
-        yield [new EpsWriter(), EpsResult::class, 'image/eps'];
-        yield [new PdfWriter(), PdfResult::class, 'application/pdf'];
-        yield [new PngWriter(), PngResult::class, 'image/png'];
-        yield [new SvgWriter(), SvgResult::class, 'image/svg+xml'];
-        yield [new ConsoleWriter(), ConsoleResult::class, 'text/plain'];
+        yield [new BinaryWriter(), BinaryResult::class, 'text/plain', []];
+        yield [new DebugWriter(), DebugResult::class, 'text/plain', []];
+        yield [new EpsWriter(), EpsResult::class, 'image/eps', []];
+        yield [new PdfWriter(), PdfResult::class, 'application/pdf', []];
+        yield [new GdWriter(), PngResult::class, 'image/png', []];
+        yield [new GdWriter(), GifResult::class, 'image/gif', [GdWriter::WRITER_OPTION_RESULT_CLASS => GifResult::class]];
+        yield [new GdWriter(), WebpResult::class, 'image/webp', [GdWriter::WRITER_OPTION_RESULT_CLASS => WebpResult::class]];
+        yield [new SvgWriter(), SvgResult::class, 'image/svg+xml', []];
+        yield [new ConsoleWriter(), ConsoleResult::class, 'text/plain', []];
     }
 
     /**
@@ -164,7 +168,7 @@ final class QrCodeTest extends TestCase
     {
         $path = __DIR__.'/test-save-to-file.png';
 
-        $writer = new PngWriter();
+        $writer = new GdWriter();
         $qrCode = new QrCode('QR Code');
         $writer->write($qrCode)->saveToFile($path);
 
@@ -183,7 +187,7 @@ final class QrCodeTest extends TestCase
         $qrCode = QrCode::create('QR Code');
         $label = Label::create("this\none has\nline breaks in it");
 
-        $writer = new PngWriter();
+        $writer = new GdWriter();
         $this->expectExceptionMessage('Label does not support line breaks');
         $writer->write($qrCode, null, $label);
     }
@@ -217,7 +221,7 @@ final class QrCodeTest extends TestCase
         $result = $svgWriter->write($qrCode, $logo);
         $this->assertInstanceOf(SvgResult::class, $result);
 
-        $pngWriter = new PngWriter();
+        $pngWriter = new GdWriter();
         $this->expectExceptionMessage('PNG Writer does not support SVG logo');
         $pngWriter->write($qrCode, $logo);
     }

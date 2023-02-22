@@ -36,10 +36,11 @@ use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Label\Font\NotoSans;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
-use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\GdWriter;
+use Endroid\QrCode\Writer\Result\PngResult;
 
 $result = Builder::create()
-    ->writer(new PngWriter())
+    ->writer(new GdWriter())
     ->writerOptions([])
     ->data('Custom QR code contents')
     ->encoding(new Encoding('UTF-8'))
@@ -65,10 +66,10 @@ use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
-use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\GdWriter;
 use Endroid\QrCode\Writer\ValidationException;
 
-$writer = new PngWriter();
+$writer = new GdWriter();
 
 // Create QR code
 $qrCode = QrCode::create('Life is too short to be generating QR codes')
@@ -117,6 +118,27 @@ $dataUri = $result->getDataUri();
 use Endroid\QrCode\Writer\SvgWriter;
 
 $builder->setWriterOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true]);
+```
+
+```php
+use Endroid\QrCode\Writer\GdWriter;
+use Endroid\QrCode\Writer\Result\PngResult;
+
+$builder->setWriterOptions([GdWriter::WRITER_OPTION_RESULT_CLASS => PngResult::class, PngResult::RESULT_OPTION_QUALITY => -1]);
+```
+
+```php
+use Endroid\QrCode\Writer\GdWriter;
+use Endroid\QrCode\Writer\Result\WebpResult;
+
+$builder->setWriterOptions([GdWriter::WRITER_OPTION_RESULT_CLASS => WebpResult::class, WebpResult::RESULT_OPTION_QUALITY => 80]);
+```
+
+```php
+use Endroid\QrCode\Writer\GdWriter;
+use Endroid\QrCode\Writer\Result\GifResult;
+
+$builder->setWriterOptions([GdWriter::WRITER_OPTION_RESULT_CLASS => GifResult::class]);
 ```
 
 ### Encoding
