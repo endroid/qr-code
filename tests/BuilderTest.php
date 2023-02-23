@@ -12,7 +12,7 @@ use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Label\Font\NotoSans;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
-use Endroid\QrCode\Writer\GdWriter;
+use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\Result\PngResult;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +24,7 @@ final class BuilderTest extends TestCase
     public function testBuilder(): void
     {
         $result = Builder::create()
-            ->writer(new GdWriter())
+            ->writer(new PngWriter())
             ->writerOptions([])
             ->data('Custom QR code contents')
             ->encoding(new Encoding('UTF-8'))
@@ -67,7 +67,7 @@ final class BuilderTest extends TestCase
         $this->assertInstanceOf(PngResult::class, $result);
         $this->assertEquals('image/png', $result->getMimeType());
 
-        $writer = new GdWriter();
+        $writer = new PngWriter();
         $qrCode = QrCode::create('https://xxxxxxx.xxxx/xxxxxxx')
             ->setEncoding(new Encoding('UTF-8'))
             ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())

@@ -8,10 +8,10 @@ use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCodeInterface;
 use Endroid\QrCode\Writer\Result\GdResult;
-use Endroid\QrCode\Writer\Result\PngResult;
 use Endroid\QrCode\Writer\Result\ResultInterface;
+use Endroid\QrCode\Writer\Result\WebPResult;
 
-final class PngWriter extends AbstractGdWriter
+final class WebPWriter extends AbstractGdWriter
 {
     public const WRITER_OPTION_QUALITY = 'quality';
 
@@ -24,6 +24,6 @@ final class PngWriter extends AbstractGdWriter
         /** @var GdResult $gdResult */
         $gdResult = parent::write($qrCode, $logo, $label, $options);
 
-        return new PngResult($gdResult->getMatrix(), $gdResult->getImage(), $options[self::WRITER_OPTION_QUALITY]);
+        return new WebPResult($gdResult->getMatrix(), $gdResult->getImage(), $options[self::WRITER_OPTION_QUALITY]);
     }
 }

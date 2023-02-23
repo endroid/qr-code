@@ -8,22 +8,16 @@ use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCodeInterface;
 use Endroid\QrCode\Writer\Result\GdResult;
-use Endroid\QrCode\Writer\Result\PngResult;
+use Endroid\QrCode\Writer\Result\GifResult;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 
-final class PngWriter extends AbstractGdWriter
+final class GifWriter extends AbstractGdWriter
 {
-    public const WRITER_OPTION_QUALITY = 'quality';
-
     public function write(QrCodeInterface $qrCode, LogoInterface|null $logo = null, LabelInterface|null $label = null, array $options = []): ResultInterface
     {
-        if (!isset($options[self::WRITER_OPTION_QUALITY])) {
-            $options[self::WRITER_OPTION_QUALITY] = -1;
-        }
-
         /** @var GdResult $gdResult */
         $gdResult = parent::write($qrCode, $logo, $label, $options);
 
-        return new PngResult($gdResult->getMatrix(), $gdResult->getImage(), $options[self::WRITER_OPTION_QUALITY]);
+        return new GifResult($gdResult->getMatrix(), $gdResult->getImage());
     }
 }

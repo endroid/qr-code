@@ -16,11 +16,6 @@ final class ValidationException extends \Exception
         return new self(sprintf('Please install "%s" or disable image validation', $packageName));
     }
 
-    public static function createForIncompatiblePhpVersion(): self
-    {
-        return new self('The validator is not compatible with PHP 8 yet, see https://github.com/khanamiryan/php-qrcode-detector-decoder/pull/103');
-    }
-
     public static function createForInvalidData(string $expectedData, string $actualData): self
     {
         return new self('The validation reader read "'.$actualData.'" instead of "'.$expectedData.'". Adjust your parameters to increase readability or disable validation.');

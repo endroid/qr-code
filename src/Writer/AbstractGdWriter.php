@@ -14,26 +14,14 @@ use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCodeInterface;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeNone;
-use Endroid\QrCode\Writer\Result\AbstractGdResult;
-use Endroid\QrCode\Writer\Result\PngResult;
+use Endroid\QrCode\Writer\Result\GdResult;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 use Zxing\QrReader;
 
-class GdWriter implements WriterInterface, ValidatingWriterInterface
+abstract class AbstractGdWriter implements WriterInterface, ValidatingWriterInterface
 {
-    public const WRITER_OPTION_RESULT_CLASS = 'result_class';
-    private string $resultClass = PngResult::class;
-
     public function write(QrCodeInterface $qrCode, LogoInterface|null $logo = null, LabelInterface|null $label = null, array $options = []): ResultInterface
     {
-        if (isset($options[self::WRITER_OPTION_RESULT_CLASS])) {
-            $this->resultClass = $options[self::WRITER_OPTION_RESULT_CLASS];
-
-            if (!is_subclass_of($this->resultClass, AbstractGdResult::class)) {
-                throw new \Exception($this->resultClass . ' must extend ' . AbstractGdResult::class);
-            }
-        }
-
         if (!extension_loaded('gd')) {
             throw new \Exception('Unable to generate image: please check if the GD extension is enabled and configured correctly');
         }
@@ -119,7 +107,7 @@ class GdWriter implements WriterInterface, ValidatingWriterInterface
             imagesavealpha($targetImage, true);
         }
 
-        $result = new $this->resultClass($matrix, $targetImage, $options);
+        $result = new GdResult($matrix, $targetImage);
 
         if ($logo instanceof LogoInterface) {
             $result = $this->addLogo($logo, $result);
@@ -132,7 +120,7 @@ class GdWriter implements WriterInterface, ValidatingWriterInterface
         return $result;
     }
 
-    private function addLogo(LogoInterface $logo, AbstractGdResult $result): AbstractGdResult
+    private static function addLogo(LogoInterface $logo, GdResult $result): GdResult
     {
         $logoImageData = LogoImageData::createForLogo($logo);
 
@@ -169,10 +157,10 @@ class GdWriter implements WriterInterface, ValidatingWriterInterface
             imagesy($logoImageData->getImage())
         );
 
-        return new $this->resultClass($matrix, $targetImage);
+        return new GdResult($matrix, $targetImage);
     }
 
-    private function addLabel(LabelInterface $label, AbstractGdResult $result): AbstractGdResult
+    private static function addLabel(LabelInterface $label, GdResult $result): GdResult
     {
         $targetImage = $result->getImage();
 
@@ -198,7 +186,7 @@ class GdWriter implements WriterInterface, ValidatingWriterInterface
 
         imagettftext($targetImage, $label->getFont()->getSize(), 0, $x, $y, $textColor, $label->getFont()->getPath(), $label->getText());
 
-        return new $this->resultClass($result->getMatrix(), $targetImage);
+        return new GdResult($result->getMatrix(), $targetImage);
     }
 
     public function validateResult(ResultInterface $result, string $expectedData): void

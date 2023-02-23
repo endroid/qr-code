@@ -6,7 +6,7 @@ namespace Endroid\QrCode\Writer\Result;
 
 use Endroid\QrCode\Matrix\MatrixInterface;
 
-final class PngResult extends GdResult
+final class WebPResult extends GdResult
 {
     private int $quality;
 
@@ -18,14 +18,18 @@ final class PngResult extends GdResult
 
     public function getString(): string
     {
+        if (!function_exists('imagewebp')) {
+            throw new \Exception('WebP support is not available in your GD installation');
+        }
+
         ob_start();
-        imagepng($this->image, quality: $this->quality);
+        imagewebp($this->image, quality: $this->quality);
 
         return strval(ob_get_clean());
     }
 
     public function getMimeType(): string
     {
-        return 'image/png';
+        return 'image/webp';
     }
 }
