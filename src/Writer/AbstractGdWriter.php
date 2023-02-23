@@ -120,7 +120,7 @@ abstract class AbstractGdWriter implements WriterInterface, ValidatingWriterInte
         return $result;
     }
 
-    private static function addLogo(LogoInterface $logo, GdResult $result): GdResult
+    private function addLogo(LogoInterface $logo, GdResult $result): GdResult
     {
         $logoImageData = LogoImageData::createForLogo($logo);
 
@@ -160,7 +160,7 @@ abstract class AbstractGdWriter implements WriterInterface, ValidatingWriterInte
         return new GdResult($matrix, $targetImage);
     }
 
-    private static function addLabel(LabelInterface $label, GdResult $result): GdResult
+    private function addLabel(LabelInterface $label, GdResult $result): GdResult
     {
         $targetImage = $result->getImage();
 
