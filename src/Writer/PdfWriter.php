@@ -105,7 +105,7 @@ final class PdfWriter implements WriterInterface
             $fpdf->Link($x, $y, $x + $matrix->getOuterSize(), $y + $matrix->getOuterSize(), $link);
         }
 
-        return new PdfResult($fpdf);
+        return new PdfResult($matrix, $fpdf);
     }
 
     private function addLogo(LogoInterface $logo, \FPDF $fpdf, float $x, float $y, float $size): void
