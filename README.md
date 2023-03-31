@@ -136,7 +136,7 @@ You can provide any writer options like this.
 ```php
 use Endroid\QrCode\Writer\SvgWriter;
 
-$builder->setWriterOptions([
+$builder->writerOptions([
     SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true
 ]);
 ```
