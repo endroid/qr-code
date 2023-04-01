@@ -121,6 +121,7 @@ found as a constant prefixed with WRITER_OPTION_ in the writer class.
   * `fpdf`: PDF to place the image in (default: new PDF)
   * `x`: image offset (default: 0)
   * `y`: image offset (default: 0)
+  * `link`: a URL or an identifier returned by `AddLink()`.
 * `PngWriter`
   * `compression_level`: compression level (0-9, default: -1 = zlib default)
 * `SvgWriter`
@@ -194,7 +195,7 @@ integrates the QR code library in Symfony for an even better experience.
 * Support for multiple configurations and injection via aliases
 * Generate QR codes for defined configurations via URL like /qr-code/<config>/Hello
 * Generate QR codes or URLs directly from Twig using dedicated functions
- 
+
 Read the [bundle documentation](https://github.com/endroid/qr-code-bundle)
 for more information.
 
