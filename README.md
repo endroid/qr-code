@@ -208,4 +208,4 @@ Lock your dependencies for production and test your code when upgrading.
 ## License
 
 This bundle is under the MIT license. For the full copyright and license
-information please view the LICENSE file that was distributed with this source code.7
+information please view the LICENSE file that was distributed with this source code.
