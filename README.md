@@ -48,6 +48,8 @@ $result = Builder::create()
     ->margin(10)
     ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
     ->logoPath(__DIR__.'/assets/symfony.png')
+    ->logoResizeToWidth(50)
+    ->logoPunchoutBackground(true)
     ->labelText('This is the label')
     ->labelFont(new NotoSans(20))
     ->labelAlignment(new LabelAlignmentCenter())
@@ -82,7 +84,9 @@ $qrCode = QrCode::create('Life is too short to be generating QR codes')
 
 // Create generic logo
 $logo = Logo::create(__DIR__.'/assets/symfony.png')
-    ->setResizeToWidth(50);
+    ->setResizeToWidth(50)
+    ->setPunchoutBackground(true)
+;
 
 // Create generic label
 $label = Label::create('Label')
