@@ -22,10 +22,10 @@ final class Label implements LabelInterface
 
     public function __construct(
         private string $text,
-        FontInterface|null $font = null,
-        LabelAlignmentInterface|null $alignment = null,
-        MarginInterface|null $margin = null,
-        ColorInterface|null $textColor = null
+        FontInterface $font = null,
+        LabelAlignmentInterface $alignment = null,
+        MarginInterface $margin = null,
+        ColorInterface $textColor = null
     ) {
         $this->font = $font ?? new Font(__DIR__.'/../../assets/noto_sans.otf', 16);
         $this->alignment = $alignment ?? new LabelAlignmentCenter();

@@ -20,7 +20,7 @@ final class SvgWriter implements WriterInterface
     public const WRITER_OPTION_EXCLUDE_SVG_WIDTH_AND_HEIGHT = 'exclude_svg_width_and_height';
     public const WRITER_OPTION_FORCE_XLINK_HREF = 'force_xlink_href';
 
-    public function write(QrCodeInterface $qrCode, LogoInterface|null $logo = null, LabelInterface|null $label = null, array $options = []): ResultInterface
+    public function write(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = []): ResultInterface
     {
         if (!isset($options[self::WRITER_OPTION_BLOCK_ID])) {
             $options[self::WRITER_OPTION_BLOCK_ID] = 'block';

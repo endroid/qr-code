@@ -15,7 +15,7 @@ final class WebPWriter extends AbstractGdWriter
 {
     public const WRITER_OPTION_QUALITY = 'quality';
 
-    public function write(QrCodeInterface $qrCode, LogoInterface|null $logo = null, LabelInterface|null $label = null, array $options = []): ResultInterface
+    public function write(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = []): ResultInterface
     {
         if (!isset($options[self::WRITER_OPTION_QUALITY])) {
             $options[self::WRITER_OPTION_QUALITY] = -1;

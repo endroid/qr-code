@@ -19,7 +19,7 @@ final class PdfWriter implements WriterInterface
     public const WRITER_OPTION_Y = 'y';
     public const WRITER_OPTION_LINK = 'link';
 
-    public function write(QrCodeInterface $qrCode, LogoInterface|null $logo = null, LabelInterface|null $label = null, array $options = []): ResultInterface
+    public function write(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = []): ResultInterface
     {
         $matrixFactory = new MatrixFactory();
         $matrix = $matrixFactory->create($qrCode);

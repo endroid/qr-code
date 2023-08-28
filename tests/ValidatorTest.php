@@ -27,7 +27,7 @@ final class ValidatorTest extends TestCase
         $this->assertEquals('image/png', $result->getMimeType());
     }
 
-    public function dataProvider(): iterable
+    public static function dataProvider(): iterable
     {
         yield ['small data', 'Tiny'];
         yield ['data containing spaces', 'This one has spaces'];

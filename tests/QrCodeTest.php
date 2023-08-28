@@ -77,7 +77,7 @@ final class QrCodeTest extends TestCase
         $this->assertStringContainsString('data:'.$result->getMimeType().';base64,', $result->getDataUri());
     }
 
-    public function writerProvider(): iterable
+    public static function writerProvider(): iterable
     {
         yield [new BinaryWriter(), BinaryResult::class, 'text/plain'];
         yield [new ConsoleWriter(), ConsoleResult::class, 'text/plain'];
@@ -127,7 +127,7 @@ final class QrCodeTest extends TestCase
         $this->assertTrue(imagesy($image) === $expectedSize);
     }
 
-    public function roundedSizeProvider()
+    public static function roundedSizeProvider(): iterable
     {
         yield [400, 0, new RoundBlockSizeModeEnlarge(), 406];
         yield [400, 5, new RoundBlockSizeModeEnlarge(), 416];
