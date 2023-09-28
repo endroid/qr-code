@@ -18,9 +18,17 @@ class LogoImageData
     ) {
     }
 
-    public static function createForLogo(LogoInterface $logo): self
+    public static function createForLogo(LogoInterface $logo, bool $verboseErrors = false): self
     {
-        $data = @file_get_contents($logo->getPath());
+        if ($verboseErrors) {
+            try {
+                $data = file_get_contents($logo->getPath());
+            } catch (\Exception $e) {
+                throw new \Exception(sprintf('Failed to get file contents with error: %s', $e->getMessage()));
+            }
+        } else {
+            $data = @file_get_contents($logo->getPath());
+        }
 
         if (!is_string($data)) {
             throw new \Exception(sprintf('Invalid data at path "%s"', $logo->getPath()));
@@ -43,7 +51,15 @@ class LogoImageData
             return new self($data, null, $mimeType, $width, $height, $logo->getPunchoutBackground());
         }
 
-        $image = @imagecreatefromstring($data);
+        if ($verboseErrors) {
+            try {
+                $image = imagecreatefromstring($data);
+            } catch (\Exception $e) {
+                throw new \Exception(sprintf('Failed to create image from sting with error: %s', $e->getMessage()));
+            }
+        } else {
+            $image = @imagecreatefromstring($data);
+        }
 
         if (!$image) {
             throw new \Exception(sprintf('Unable to parse image data at path "%s"', $logo->getPath()));
