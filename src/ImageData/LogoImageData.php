@@ -20,10 +20,12 @@ class LogoImageData
 
     public static function createForLogo(LogoInterface $logo): self
     {
+        error_clear_last();
         $data = @file_get_contents($logo->getPath());
 
         if (!is_string($data)) {
-            throw new \Exception(sprintf('Invalid data at path "%s"', $logo->getPath()));
+            $errorDetails = error_get_last()['message'] ?? 'invalid data';
+            throw new \Exception(sprintf('Could not read logo image data from path "%s": %s', $logo->getPath(), $errorDetails));
         }
 
         if (false !== filter_var($logo->getPath(), FILTER_VALIDATE_URL)) {
@@ -43,10 +45,12 @@ class LogoImageData
             return new self($data, null, $mimeType, $width, $height, $logo->getPunchoutBackground());
         }
 
+        error_clear_last();
         $image = @imagecreatefromstring($data);
 
         if (!$image) {
-            throw new \Exception(sprintf('Unable to parse image data at path "%s"', $logo->getPath()));
+            $errorDetails = error_get_last()['message'] ?? 'invalid data';
+            throw new \Exception(sprintf('Unable to parse image data at path "%s": %s', $logo->getPath(), $errorDetails));
         }
 
         // No target width and height specified: use from original image
@@ -123,10 +127,12 @@ class LogoImageData
             throw new \Exception('You need the ext-fileinfo extension to determine logo mime type');
         }
 
+        error_clear_last();
         $mimeType = @mime_content_type($path);
 
         if (!is_string($mimeType)) {
-            throw new \Exception('Could not determine mime type');
+            $errorDetails = error_get_last()['message'] ?? 'invalid data';
+            throw new \Exception(sprintf('Could not determine mime type: %s', $errorDetails));
         }
 
         if (!preg_match('#^image/#', $mimeType)) {

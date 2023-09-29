@@ -146,7 +146,7 @@ final class QrCodeTest extends TestCase
         $qrCode = QrCode::create('QR Code');
 
         $logo = Logo::create('/my/invalid/path.png');
-        $this->expectExceptionMessage('Invalid data at path "/my/invalid/path.png"');
+        $this->expectExceptionMessageMatches('#Could not read logo image data from path "/my/invalid/path.png"#');
         $writer->write($qrCode, $logo);
     }
 

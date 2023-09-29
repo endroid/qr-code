@@ -16,7 +16,7 @@ class LabelImageData
 
     public static function createForLabel(LabelInterface $label): self
     {
-        if (false !== strpos($label->getText(), "\n")) {
+        if (str_contains($label->getText(), "\n")) {
             throw new \Exception('Label does not support line breaks');
         }
 
