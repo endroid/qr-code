@@ -32,10 +32,10 @@ Use [Composer](https://getcomposer.org/) to install the library. Also make sure 
 ```php
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
-use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Label\LabelAlignment;
 use Endroid\QrCode\Label\Font\NotoSans;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 
 $result = Builder::create()
@@ -43,16 +43,16 @@ $result = Builder::create()
     ->writerOptions([])
     ->data('Custom QR code contents')
     ->encoding(new Encoding('UTF-8'))
-    ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+    ->errorCorrectionLevel(ErrorCorrectionLevel::High)
     ->size(300)
     ->margin(10)
-    ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
+    ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
     ->logoPath(__DIR__.'/assets/symfony.png')
     ->logoResizeToWidth(50)
     ->logoPunchoutBackground(true)
     ->labelText('This is the label')
     ->labelFont(new NotoSans(20))
-    ->labelAlignment(new LabelAlignmentCenter())
+    ->labelAlignment(LabelAlignment::Center)
     ->validateResult(false)
     ->build();
 ```
@@ -62,11 +62,11 @@ $result = Builder::create()
 ```php
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Logo\Logo;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ValidationException;
 
@@ -75,10 +75,10 @@ $writer = new PngWriter();
 // Create QR code
 $qrCode = QrCode::create('Life is too short to be generating QR codes')
     ->setEncoding(new Encoding('UTF-8'))
-    ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
+    ->setErrorCorrectionLevel(ErrorCorrectionLevel::Low)
     ->setSize(300)
     ->setMargin(10)
-    ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+    ->setRoundBlockSizeMode(RoundBlockSizeMode::Margin)
     ->setForegroundColor(new Color(0, 0, 0))
     ->setBackgroundColor(new Color(255, 255, 255));
 
