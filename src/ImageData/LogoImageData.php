@@ -6,15 +6,15 @@ namespace Endroid\QrCode\ImageData;
 
 use Endroid\QrCode\Logo\LogoInterface;
 
-class LogoImageData
+final class LogoImageData
 {
     private function __construct(
-        private string $data,
+        private readonly string $data,
         private \GdImage|null $image,
-        private string $mimeType,
-        private int $width,
-        private int $height,
-        private bool $punchoutBackground
+        private readonly string $mimeType,
+        private readonly int $width,
+        private readonly int $height,
+        private readonly bool $punchoutBackground
     ) {
     }
 

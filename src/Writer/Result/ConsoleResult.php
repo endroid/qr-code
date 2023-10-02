@@ -7,7 +7,7 @@ namespace Endroid\QrCode\Writer\Result;
 use Endroid\QrCode\Color\ColorInterface;
 use Endroid\QrCode\Matrix\MatrixInterface;
 
-class ConsoleResult extends AbstractResult
+final class ConsoleResult extends AbstractResult
 {
     private const TWO_BLOCKS = [
         0 => ' ',

@@ -8,15 +8,12 @@ use Endroid\QrCode\Bacon\MatrixFactory;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\Matrix\MatrixInterface;
 use Endroid\QrCode\QrCode;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeEnlarge;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeInterface;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeShrink;
+use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\BinaryWriter;
 use Endroid\QrCode\Writer\ConsoleWriter;
 use Endroid\QrCode\Writer\DebugWriter;
@@ -50,10 +47,10 @@ final class QrCodeTest extends TestCase
     {
         $qrCode = QrCode::create('Data')
             ->setEncoding(new Encoding('UTF-8'))
-            ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
+            ->setErrorCorrectionLevel(ErrorCorrectionLevel::Low)
             ->setSize(300)
             ->setMargin(10)
-            ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+            ->setRoundBlockSizeMode(RoundBlockSizeMode::Margin)
             ->setForegroundColor(new Color(0, 0, 0))
             ->setBackgroundColor(new Color(255, 255, 255));
 
@@ -112,7 +109,7 @@ final class QrCodeTest extends TestCase
      *
      * @dataProvider roundedSizeProvider
      */
-    public function testSetSizeRounded(int $size, int $margin, RoundBlockSizeModeInterface $roundBlockSizeMode, int $expectedSize): void
+    public function testSetSizeRounded(int $size, int $margin, RoundBlockSizeMode $roundBlockSizeMode, int $expectedSize): void
     {
         $imageData = Builder::create()
             ->data('QR Code contents with some length to have some data')
@@ -129,12 +126,12 @@ final class QrCodeTest extends TestCase
 
     public static function roundedSizeProvider(): iterable
     {
-        yield [400, 0, new RoundBlockSizeModeEnlarge(), 406];
-        yield [400, 5, new RoundBlockSizeModeEnlarge(), 416];
-        yield [400, 0, new RoundBlockSizeModeMargin(), 400];
-        yield [400, 5, new RoundBlockSizeModeMargin(), 410];
-        yield [400, 0, new RoundBlockSizeModeShrink(), 377];
-        yield [400, 5, new RoundBlockSizeModeShrink(), 387];
+        yield [400, 0, RoundBlockSizeMode::Enlarge, 406];
+        yield [400, 5, RoundBlockSizeMode::Enlarge, 416];
+        yield [400, 0, RoundBlockSizeMode::Margin, 400];
+        yield [400, 5, RoundBlockSizeMode::Margin, 410];
+        yield [400, 0, RoundBlockSizeMode::Shrink, 377];
+        yield [400, 5, RoundBlockSizeMode::Shrink, 387];
     }
 
     /**

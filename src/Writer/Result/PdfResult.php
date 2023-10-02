@@ -10,7 +10,7 @@ final class PdfResult extends AbstractResult
 {
     public function __construct(
         MatrixInterface $matrix,
-        private \FPDF $fpdf
+        private readonly \FPDF $fpdf
     ) {
         parent::__construct($matrix);
     }

@@ -8,12 +8,12 @@ use Endroid\QrCode\Matrix\MatrixInterface;
 
 final class PngResult extends GdResult
 {
-    private int $quality;
-
-    public function __construct(MatrixInterface $matrix, \GdImage $image, int $quality = -1)
-    {
+    public function __construct(
+        MatrixInterface $matrix,
+        \GdImage $image,
+        private readonly int $quality = -1
+    ) {
         parent::__construct($matrix, $image);
-        $this->quality = $quality;
     }
 
     public function getString(): string

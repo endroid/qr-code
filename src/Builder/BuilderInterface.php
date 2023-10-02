@@ -6,11 +6,11 @@ namespace Endroid\QrCode\Builder;
 
 use Endroid\QrCode\Color\ColorInterface;
 use Endroid\QrCode\Encoding\EncodingInterface;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelInterface;
-use Endroid\QrCode\Label\Alignment\LabelAlignmentInterface;
+use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\Label\Font\FontInterface;
+use Endroid\QrCode\Label\LabelAlignment;
 use Endroid\QrCode\Label\Margin\MarginInterface;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeInterface;
+use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 use Endroid\QrCode\Writer\WriterInterface;
 
@@ -27,13 +27,13 @@ interface BuilderInterface
 
     public function encoding(EncodingInterface $encoding): BuilderInterface;
 
-    public function errorCorrectionLevel(ErrorCorrectionLevelInterface $errorCorrectionLevel): BuilderInterface;
+    public function errorCorrectionLevel(ErrorCorrectionLevel $errorCorrectionLevel): BuilderInterface;
 
     public function size(int $size): BuilderInterface;
 
     public function margin(int $margin): BuilderInterface;
 
-    public function roundBlockSizeMode(RoundBlockSizeModeInterface $roundBlockSizeMode): BuilderInterface;
+    public function roundBlockSizeMode(RoundBlockSizeMode $roundBlockSizeMode): BuilderInterface;
 
     public function foregroundColor(ColorInterface $foregroundColor): BuilderInterface;
 
@@ -51,7 +51,7 @@ interface BuilderInterface
 
     public function labelFont(FontInterface $labelFont): BuilderInterface;
 
-    public function labelAlignment(LabelAlignmentInterface $labelAlignment): BuilderInterface;
+    public function labelAlignment(LabelAlignment $labelAlignment): BuilderInterface;
 
     public function labelMargin(MarginInterface $labelMargin): BuilderInterface;
 

@@ -10,7 +10,7 @@ class GdResult extends AbstractResult
 {
     public function __construct(
         MatrixInterface $matrix,
-        protected \GdImage $image
+        protected readonly \GdImage $image
     ) {
         parent::__construct($matrix);
     }
