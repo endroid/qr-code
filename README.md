@@ -113,7 +113,7 @@ $result->saveToFile(__DIR__.'/qrcode.png');
 $dataUri = $result->getDataUri();
 ```
 
-![QR Code](https://endroid.nl/qr-code/default/Life%20is%20too%20short%20to%20be%20generating%20QR%20codes)
+![QR Code](assets/example.png)
 
 ### Writer options
 
