@@ -2,3 +2,6 @@
 /composer.lock
 /tests/coverage/
 /vendor/
+
+/src/BaconQrCode/
+/src/dasprid/
