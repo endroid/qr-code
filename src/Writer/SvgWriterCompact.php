@@ -67,7 +67,7 @@ final class SvgWriterCompact implements WriterInterface
 			//blocks in this line
 			for($columnIndex = 0; $columnIndex < $bcount; $columnIndex++){
 
-				//get block value
+				//get block value 0|1
 				$v = $matrix->getBlockValue($rowIndex, $columnIndex);
 
 				if($v === 1){
@@ -84,12 +84,12 @@ final class SvgWriterCompact implements WriterInterface
 					$g->bcount++;
 				}
 				else{
-					// [0] : this block has not to be drawn (gap)
+					// [0] : this block has not to be drawn (empty, gap)
 					//It does not belong to the running group
 
 					//close the running group and calc its rectangular shape
 					if($g){
-						//calculate drawing reactangle immediately to use it in the follwing steps directly
+						//calculate drawing reactangle immediately to use it in the following steps directly
 						$g->calc($xoff, $yoff, $bsize);
 
 						//collect the group for the actual line
@@ -98,7 +98,7 @@ final class SvgWriterCompact implements WriterInterface
 
 					//reset running variable!
 					//With this a new group will be opened as soon
-					//as the next no empty block [1] appears in the following for columnIndex loops
+					//as the next nonempty block [1] appears in the following for columnIndex loops
 					$g = null;
 				}
 			}
@@ -124,11 +124,11 @@ final class SvgWriterCompact implements WriterInterface
 		/*===== II) =====
 		We could create <rect> Elements for each block group. But this will also produce
 		a lot of SVG markup and does not solve the problem of flashing lines between adjacent blocks.
-		The proper solution ist to combine als drawing statements into one <path> Element.
-		This removes flashing edges in al browsers as well in all tested graphics software.
-		The reason might be hat the resulting combined path ist handled as only one path
-		and not a group of pathes.
-		further reading at: https://www.mediaevent.de/tutorial/svg-path.html
+		The proper solution is to combine all drawing statements into one <path> Element.
+		This removes flashing edges in all browsers and as well in all tested graphics software (inkscape, illustrator, affinity, libre office, ...).
+		The reason might be that the resulting combined path is handled as only one path and not a group of pathes.
+
+		Further reading for SVG at: https://www.mediaevent.de/tutorial/svg-path.html
 		*/
 		//array for collecting single rectangular drawing statements M...Z
 		$da = [];
@@ -141,7 +141,7 @@ final class SvgWriterCompact implements WriterInterface
 				$da[] = "M{$p->x1},{$p->y1}L{$p->x2},{$p->y1}L{$p->x2},{$p->y2}L{$p->x1},{$p->y2}Z";
 			}
 		}
-		//Now the draw statements of all block groups for all rows are combined in one single
+		//Get the combined String. Now the draw statements of all block groups for all rows are combined in one single
 		//statement that can be set as the @d Attribute of the <path> Element.
 		$path_d = implode(" ", $da);
 
@@ -158,15 +158,15 @@ final class SvgWriterCompact implements WriterInterface
 		$xml->addAttribute('viewBox', '0 0 '.$matrix->getOuterSize().' '.$matrix->getOuterSize());
 
 		//background rectangle
-        $background = $xml->addChild('rect');
-        $background->addAttribute('x', '0');
-        $background->addAttribute('y', '0');
-        $background->addAttribute('width', strval($matrix->getOuterSize()));
-        $background->addAttribute('height', strval($matrix->getOuterSize()));
-        $background->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getBackgroundColor()->getRed(), $qrCode->getBackgroundColor()->getGreen(), $qrCode->getBackgroundColor()->getBlue()));
-        $background->addAttribute('fill-opacity', strval($qrCode->getBackgroundColor()->getOpacity()));
+		$background = $xml->addChild('rect');
+		$background->addAttribute('x', '0');
+		$background->addAttribute('y', '0');
+		$background->addAttribute('width', strval($matrix->getOuterSize()));
+		$background->addAttribute('height', strval($matrix->getOuterSize()));
+		$background->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getBackgroundColor()->getRed(), $qrCode->getBackgroundColor()->getGreen(), $qrCode->getBackgroundColor()->getBlue()));
+		$background->addAttribute('fill-opacity', strval($qrCode->getBackgroundColor()->getOpacity()));
 
-		//Symbol as one combined path with all blocks
+		//Symbol as one combined <path> for all visible blocks [1]
 		$pelm = $xml->addChild("path");
 		//fill color
 		$fc = '#'.sprintf('%02x%02x%02x', $qrCode->getForegroundColor()->getRed(), $qrCode->getForegroundColor()->getGreen(), $qrCode->getForegroundColor()->getBlue());
@@ -174,7 +174,7 @@ final class SvgWriterCompact implements WriterInterface
 		$fo = strval($qrCode->getForegroundColor()->getOpacity());
 		$pelm->addAttribute("fill", $fc);
 		$pelm->addAttribute("fill-opacity", $fo);
-		//The drawing statement for all blocks at once
+		//The drawing statement
 		$pelm->addAttribute("d", $path_d);
 
 
@@ -268,18 +268,16 @@ $pelm->addAttribute("d", $path_d);
 
 
 
-//Hilfsklasse QR Blockgruppe z.B. zur Weiterverarbeitung SVG
-//Führt 1-n QR-Code Pixel zu einer Grupppe zusamen,
-//aus der ein Rechteck zum Zeichnen berechnet werden kann.
+//Helper class for grouping horizontaly adjacent blocks with values of [1]
 class SvgWriterCompact_Blockgroup{
-	//start index in matrix, 0-n
+	//start index in the matrix, 0-n
 	public $ix = 0;
 	public $iy = 0;
 
 	//number of blocks in this group, 1-n
 	public $bcount = 0;
 
-	//absolute positions and size
+	//absolute coordinates and size after calc()
 	public $x1 = 0;
 	public $y1 = 0;
 	public $w = 0;
@@ -287,10 +285,11 @@ class SvgWriterCompact_Blockgroup{
 	public $x2 = 0;
 	public $y2 = 0;
 
-	/*
-	calculate drawing rectangle in absolute pixel coordinates
-	The rectangle may be a square if the group contains only one block,
-	or a more or less wide rectangle depending of blocks in the group.
+
+	/*calculate drawing rectangle in absolute pixel coordinates
+
+	The rectangle may be a square if the group contains only one block.
+	Or a more or less wide rectangle depending on the number of blocks in the group.
 	This drawing rectangle can be used to render a SVG <rect> element
 	or a drawing statement for a SVG <path> element @d Attribute.
 
@@ -299,8 +298,8 @@ class SvgWriterCompact_Blockgroup{
 
 	For resolution independend vector graphics this might be irrelevant.
 	But float numbers produce a large amount of redundant overhead in the coordinate values.
-	SVG output of "M 10.0000000000,20.0000000000" is completely useless.
-	Better ist "M 10,20".
+	Especially SVG output like "M 10.0000000000,20.0000000000" is completely useless.
+	It should better be "M 10,20".
 
 	The resulting SVG vectorgraphic file only consists of rectangular shapes with rounded
 	values and can be positioned/edited in any vector graphics software and scaled to any size
@@ -322,10 +321,8 @@ class SvgWriterCompact_Blockgroup{
 		$this->y2 = $this->y1 + $this->h;
 	}
 
-	function __construct($ix=0, $iy=0, $posx=0, $posy=0){
+	function __construct($ix=0, $iy=0){
 		$this->ix = $ix;
 		$this->iy = $iy;
-		$this->x1 = $posx;
-		$this->y1 = $posy;
 	}
 }
