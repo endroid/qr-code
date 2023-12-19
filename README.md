@@ -16,7 +16,7 @@ as PNG, SVG, EPS or in binary format.
 
 ## Sponsored by
 
-[![Blackfire.io](assets/blackfire.png)](https://www.blackfire.io)
+[![Blackfire.io](.github/blackfire.png)](https://www.blackfire.io)
 
 ## Installation
 
@@ -113,7 +113,7 @@ $result->saveToFile(__DIR__.'/qrcode.png');
 $dataUri = $result->getDataUri();
 ```
 
-![QR Code](assets/example.png)
+![QR Code](.github/example.png)
 
 ### Writer options
 
