@@ -19,14 +19,23 @@ use Zxing\QrReader;
 
 abstract class AbstractGdWriter implements WriterInterface, ValidatingWriterInterface
 {
+    /**
+     * Get the matrix. Can be overridden to perform custom punch outs.
+     */
+    protected function getMatrix(QrCodeInterface $qrCode)
+    {
+        $matrixFactory = new MatrixFactory();
+
+        return $matrixFactory->create($qrCode);
+    }
+
     public function write(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = []): ResultInterface
     {
         if (!extension_loaded('gd')) {
             throw new \Exception('Unable to generate image: please check if the GD extension is enabled and configured correctly');
         }
 
-        $matrixFactory = new MatrixFactory();
-        $matrix = $matrixFactory->create($qrCode);
+        $matrix = $this->getMatrix($qrCode);
 
         $baseBlockSize = RoundBlockSizeMode::None === $qrCode->getRoundBlockSizeMode() ? 10 : intval($matrix->getBlockSize());
         $baseImage = imagecreatetruecolor($matrix->getBlockCount() * $baseBlockSize, $matrix->getBlockCount() * $baseBlockSize);
