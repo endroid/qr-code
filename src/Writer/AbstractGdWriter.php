@@ -11,6 +11,7 @@ use Endroid\QrCode\ImageData\LogoImageData;
 use Endroid\QrCode\Label\LabelAlignment;
 use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
+use Endroid\QrCode\Matrix\MatrixInterface;
 use Endroid\QrCode\QrCodeInterface;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\Result\GdResult;
@@ -19,10 +20,7 @@ use Zxing\QrReader;
 
 abstract class AbstractGdWriter implements WriterInterface, ValidatingWriterInterface
 {
-    /**
-     * Get the matrix. Can be overridden to perform custom punch outs.
-     */
-    protected function getMatrix(QrCodeInterface $qrCode)
+    protected function getMatrix(QrCodeInterface $qrCode): MatrixInterface
     {
         $matrixFactory = new MatrixFactory();
 
