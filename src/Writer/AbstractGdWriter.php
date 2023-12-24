@@ -25,7 +25,8 @@ abstract class AbstractGdWriter implements WriterInterface, ValidatingWriterInte
     protected function getMatrix(QrCodeInterface $qrCode)
     {
         $matrixFactory = new MatrixFactory();
-        $matrix = $matrixFactory->create($qrCode);
+
+        return $matrixFactory->create($qrCode);
     }
 
     public function write(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = []): ResultInterface
