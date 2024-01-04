@@ -54,11 +54,12 @@ final class SvgWriter implements WriterInterface
         $blockDefinition->addAttribute('fill-opacity', strval($qrCode->getForegroundColor()->getOpacity()));
 
         $background = $xml->addChild('rect');
+        $background_color = '#'.sprintf('%02x%02x%02x', $qrCode->getBackgroundColor()->getRed(), $qrCode->getBackgroundColor()->getGreen(), $qrCode->getBackgroundColor()->getBlue());
         $background->addAttribute('x', '0');
         $background->addAttribute('y', '0');
         $background->addAttribute('width', strval($matrix->getOuterSize()));
         $background->addAttribute('height', strval($matrix->getOuterSize()));
-        $background->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getBackgroundColor()->getRed(), $qrCode->getBackgroundColor()->getGreen(), $qrCode->getBackgroundColor()->getBlue()));
+        $background->addAttribute('fill', $background_color);
         $background->addAttribute('fill-opacity', strval($qrCode->getBackgroundColor()->getOpacity()));
 
         for ($rowIndex = 0; $rowIndex < $matrix->getBlockCount(); ++$rowIndex) {
@@ -75,14 +76,14 @@ final class SvgWriter implements WriterInterface
         $result = new SvgResult($matrix, $xml, boolval($options[self::WRITER_OPTION_EXCLUDE_XML_DECLARATION]));
 
         if ($logo instanceof LogoInterface) {
-            $this->addLogo($logo, $result, $options);
+            $this->addLogo($logo, $result, $options, $background_color);
         }
 
         return $result;
     }
 
     /** @param array<string, mixed> $options */
-    private function addLogo(LogoInterface $logo, SvgResult $result, array $options): void
+    private function addLogo(LogoInterface $logo, SvgResult $result, array $options, string $background_color): void
     {
         $logoImageData = LogoImageData::createForLogo($logo);
 
@@ -97,6 +98,15 @@ final class SvgWriter implements WriterInterface
 
         $x = intval($xmlAttributes->width) / 2 - $logoImageData->getWidth() / 2;
         $y = intval($xmlAttributes->height) / 2 - $logoImageData->getHeight() / 2;
+
+        if ($logoImageData->getPunchoutBackground()) {
+            $punchout = $xml->addChild('rect');
+            $punchout->addAttribute('fill', $background_color);
+            $punchout->addAttribute('x', strval($x));
+            $punchout->addAttribute('y', strval($y));
+            $punchout->addAttribute('width', strval($logoImageData->getWidth()));
+            $punchout->addAttribute('height', strval($logoImageData->getHeight()));
+        }
 
         $imageDefinition = $xml->addChild('image');
         $imageDefinition->addAttribute('x', strval($x));
