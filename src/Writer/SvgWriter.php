@@ -112,7 +112,7 @@ final class SvgWriter implements WriterInterface
         }
     }
 
-    private functiom formatNumber(float $number): string
+    private function formatNumber(float $number): string
     {
         $string = number_format($number, self::DECIMAL_PRECISION, '.', '');
         $string = rtrim($string, '0');
