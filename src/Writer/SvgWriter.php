@@ -48,8 +48,8 @@ final class SvgWriter implements WriterInterface
 
         $blockDefinition = $xml->defs->addChild('rect');
         $blockDefinition->addAttribute('id', strval($options[self::WRITER_OPTION_BLOCK_ID]));
-        $blockDefinition->addAttribute('width', number_format($matrix->getBlockSize(), self::DECIMAL_PRECISION, '.', ''));
-        $blockDefinition->addAttribute('height', number_format($matrix->getBlockSize(), self::DECIMAL_PRECISION, '.', ''));
+        $blockDefinition->addAttribute('width', $this->formatNumber($matrix->getBlockSize()));
+        $blockDefinition->addAttribute('height', $this->formatNumber($matrix->getBlockSize()));
         $blockDefinition->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getForegroundColor()->getRed(), $qrCode->getForegroundColor()->getGreen(), $qrCode->getForegroundColor()->getBlue()));
         $blockDefinition->addAttribute('fill-opacity', strval($qrCode->getForegroundColor()->getOpacity()));
 
@@ -65,8 +65,8 @@ final class SvgWriter implements WriterInterface
             for ($columnIndex = 0; $columnIndex < $matrix->getBlockCount(); ++$columnIndex) {
                 if (1 === $matrix->getBlockValue($rowIndex, $columnIndex)) {
                     $block = $xml->addChild('use');
-                    $block->addAttribute('x', number_format($matrix->getMarginLeft() + $matrix->getBlockSize() * $columnIndex, self::DECIMAL_PRECISION, '.', ''));
-                    $block->addAttribute('y', number_format($matrix->getMarginLeft() + $matrix->getBlockSize() * $rowIndex, self::DECIMAL_PRECISION, '.', ''));
+                    $block->addAttribute('x', $this->formatNumber($matrix->getMarginLeft() + $matrix->getBlockSize() * $columnIndex));
+                    $block->addAttribute('y', $this->formatNumber($matrix->getMarginLeft() + $matrix->getBlockSize() * $rowIndex));
                     $block->addAttribute('xlink:href', '#'.$options[self::WRITER_OPTION_BLOCK_ID], 'http://www.w3.org/1999/xlink');
                 }
             }
@@ -110,5 +110,13 @@ final class SvgWriter implements WriterInterface
         } else {
             $imageDefinition->addAttribute('href', $logoImageData->createDataUri());
         }
+    }
+
+    private function formatNumber(float $number): string
+    {
+        $string = number_format($number, self::DECIMAL_PRECISION, '.', '');
+        $string = rtrim($string, '0');
+        $string = rtrim($string, '.');
+        return $string;
     }
 }
