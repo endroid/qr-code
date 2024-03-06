@@ -117,6 +117,7 @@ final class SvgWriter implements WriterInterface
         $string = number_format($number, self::DECIMAL_PRECISION, '.', '');
         $string = rtrim($string, '0');
         $string = rtrim($string, '.');
+
         return $string;
     }
 }
