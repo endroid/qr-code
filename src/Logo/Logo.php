@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Logo;
 
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Color\ColorInterface;
+
 final class Logo implements LogoInterface
 {
     public function __construct(
         private string $path,
         private int|null $resizeToWidth = null,
         private int|null $resizeToHeight = null,
-        private bool $punchoutBackground = false
+        private bool $punchoutBackground = false,
+        private int $margin = 0,
+        private ColorInterface $backgroundColor = new Color(255, 255, 255, 127)
     ) {
     }
 
@@ -63,6 +68,30 @@ final class Logo implements LogoInterface
     public function setPunchoutBackground(bool $punchoutBackground): self
     {
         $this->punchoutBackground = $punchoutBackground;
+
+        return $this;
+    }
+
+    public function getMargin(): int
+    {
+        return $this->margin;
+    }
+
+    public function setMargin(int $margin): self
+    {
+        $this->margin = $margin;
+
+        return $this;
+    }
+
+    public function getBackgroundColor(): ColorInterface
+    {
+        return $this->backgroundColor;
+    }
+
+    public function setBackgroundColor(ColorInterface $backgroundColor): self
+    {
+        $this->backgroundColor = $backgroundColor;
 
         return $this;
     }
