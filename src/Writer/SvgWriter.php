@@ -14,18 +14,13 @@ use Endroid\QrCode\Writer\Result\SvgResult;
 
 final class SvgWriter implements WriterInterface
 {
-    public const DECIMAL_PRECISION = 10;
-    public const WRITER_OPTION_BLOCK_ID = 'block_id';
+    public const DECIMAL_PRECISION = 2;
     public const WRITER_OPTION_EXCLUDE_XML_DECLARATION = 'exclude_xml_declaration';
     public const WRITER_OPTION_EXCLUDE_SVG_WIDTH_AND_HEIGHT = 'exclude_svg_width_and_height';
     public const WRITER_OPTION_FORCE_XLINK_HREF = 'force_xlink_href';
 
     public function write(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = []): ResultInterface
     {
-        if (!isset($options[self::WRITER_OPTION_BLOCK_ID])) {
-            $options[self::WRITER_OPTION_BLOCK_ID] = 'block';
-        }
-
         if (!isset($options[self::WRITER_OPTION_EXCLUDE_XML_DECLARATION])) {
             $options[self::WRITER_OPTION_EXCLUDE_XML_DECLARATION] = false;
         }
@@ -44,14 +39,6 @@ final class SvgWriter implements WriterInterface
             $xml->addAttribute('height', $matrix->getOuterSize().'px');
         }
         $xml->addAttribute('viewBox', '0 0 '.$matrix->getOuterSize().' '.$matrix->getOuterSize());
-        $xml->addChild('defs');
-
-        $blockDefinition = $xml->defs->addChild('rect');
-        $blockDefinition->addAttribute('id', strval($options[self::WRITER_OPTION_BLOCK_ID]));
-        $blockDefinition->addAttribute('width', $this->formatNumber($matrix->getBlockSize()));
-        $blockDefinition->addAttribute('height', $this->formatNumber($matrix->getBlockSize()));
-        $blockDefinition->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getForegroundColor()->getRed(), $qrCode->getForegroundColor()->getGreen(), $qrCode->getForegroundColor()->getBlue()));
-        $blockDefinition->addAttribute('fill-opacity', strval($qrCode->getForegroundColor()->getOpacity()));
 
         $background = $xml->addChild('rect');
         $background->addAttribute('x', '0');
@@ -61,16 +48,33 @@ final class SvgWriter implements WriterInterface
         $background->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getBackgroundColor()->getRed(), $qrCode->getBackgroundColor()->getGreen(), $qrCode->getBackgroundColor()->getBlue()));
         $background->addAttribute('fill-opacity', strval($qrCode->getBackgroundColor()->getOpacity()));
 
+        $path = '';
         for ($rowIndex = 0; $rowIndex < $matrix->getBlockCount(); ++$rowIndex) {
+            $left = $matrix->getMarginLeft();
             for ($columnIndex = 0; $columnIndex < $matrix->getBlockCount(); ++$columnIndex) {
                 if (1 === $matrix->getBlockValue($rowIndex, $columnIndex)) {
-                    $block = $xml->addChild('use');
-                    $block->addAttribute('x', $this->formatNumber($matrix->getMarginLeft() + $matrix->getBlockSize() * $columnIndex));
-                    $block->addAttribute('y', $this->formatNumber($matrix->getMarginLeft() + $matrix->getBlockSize() * $rowIndex));
-                    $block->addAttribute('xlink:href', '#'.$options[self::WRITER_OPTION_BLOCK_ID], 'http://www.w3.org/1999/xlink');
+                    // When we are at the first column or when the previous column was 0 set new left
+                    if (0 === $columnIndex || 0 === $matrix->getBlockValue($rowIndex, $columnIndex - 1)) {
+                        $left = $matrix->getMarginLeft() + $matrix->getBlockSize() * $columnIndex;
+                    }
+                    // When we are at the
+                    if ($columnIndex === $matrix->getBlockCount() - 1 || 0 === $matrix->getBlockValue($rowIndex, $columnIndex + 1)) {
+                        $top = $matrix->getMarginLeft() + $matrix->getBlockSize() * $rowIndex;
+                        $bottom = $matrix->getMarginLeft() + $matrix->getBlockSize() * ($rowIndex + 1);
+                        $right = $matrix->getMarginLeft() + $matrix->getBlockSize() * ($columnIndex + 1);
+                        $path .= 'M'.$this->formatNumber($left).','.$this->formatNumber($top);
+                        $path .= 'L'.$this->formatNumber($right).','.$this->formatNumber($top);
+                        $path .= 'L'.$this->formatNumber($right).','.$this->formatNumber($bottom);
+                        $path .= 'L'.$this->formatNumber($left).','.$this->formatNumber($bottom).'Z';
+                    }
                 }
             }
         }
+
+        $pathDefinition = $xml->addChild('path');
+        $pathDefinition->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getForegroundColor()->getRed(), $qrCode->getForegroundColor()->getGreen(), $qrCode->getForegroundColor()->getBlue()));
+        $pathDefinition->addAttribute('fill-opacity', strval($qrCode->getForegroundColor()->getOpacity()));
+        $pathDefinition->addAttribute('d', $path);
 
         $result = new SvgResult($matrix, $xml, boolval($options[self::WRITER_OPTION_EXCLUDE_XML_DECLARATION]));
 
