@@ -13,16 +13,13 @@
     ],
     "require": {
         "php": "^8.1",
-        "bacon/bacon-qr-code": "^2.0.5||^3.0"
+        "bacon/bacon-qr-code": "^3.0"
     },
     "require-dev": {
         "ext-gd": "*",
         "endroid/quality": "dev-main",
-        "khanamiryan/qrcode-detector-decoder": "^1.0.4||^2.0.2",
+        "khanamiryan/qrcode-detector-decoder": "^2.0.2",
         "setasign/fpdf": "^1.8.2"
-    },
-    "conflict": {
-        "khanamiryan/qrcode-detector-decoder": "^1.0.6"
     },
     "suggest": {
         "ext-gd": "Enables you to write PNG images",
