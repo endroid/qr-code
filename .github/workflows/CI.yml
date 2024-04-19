@@ -60,11 +60,11 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: logs
+          name: logs-php-${{ matrix.php-versions }}
           path: vendor/endroid/quality/application/var/log
 
       - name: Archive code coverage results
         uses: actions/upload-artifact@v4
         with:
-          name: coverage
+          name: coverage-php-${{ matrix.php-versions }}
           path: tests/coverage
