@@ -224,4 +224,20 @@ final class QrCodeTest extends TestCase
         $this->expectExceptionMessage('PNG Writer does not support SVG logo');
         $pngWriter->write($qrCode, $logo);
     }
+
+    /**
+     * @testdox SVG Write can write compact SVG and non-compact SVG
+     */
+    public function testSvgCompactOption(): void
+    {
+        $qrCode = QrCode::create('QR Code');
+
+        $svgWriter = new SvgWriter();
+        $result = $svgWriter->write(qrCode: $qrCode, options: [SvgWriter::WRITER_OPTION_COMPACT => true]);
+        $this->assertInstanceOf(SvgResult::class, $result);
+
+        $svgWriter = new SvgWriter();
+        $result = $svgWriter->write(qrCode: $qrCode, options: [SvgWriter::WRITER_OPTION_COMPACT => false]);
+        $this->assertInstanceOf(SvgResult::class, $result);
+    }
 }

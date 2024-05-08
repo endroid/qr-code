@@ -8,6 +8,7 @@ use Endroid\QrCode\Bacon\MatrixFactory;
 use Endroid\QrCode\ImageData\LogoImageData;
 use Endroid\QrCode\Label\LabelInterface;
 use Endroid\QrCode\Logo\LogoInterface;
+use Endroid\QrCode\Matrix\MatrixInterface;
 use Endroid\QrCode\QrCodeInterface;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 use Endroid\QrCode\Writer\Result\SvgResult;
@@ -15,12 +16,22 @@ use Endroid\QrCode\Writer\Result\SvgResult;
 final class SvgWriter implements WriterInterface
 {
     public const DECIMAL_PRECISION = 2;
+    public const WRITER_OPTION_COMPACT = 'compact';
+    public const WRITER_OPTION_BLOCK_ID = 'block_id';
     public const WRITER_OPTION_EXCLUDE_XML_DECLARATION = 'exclude_xml_declaration';
     public const WRITER_OPTION_EXCLUDE_SVG_WIDTH_AND_HEIGHT = 'exclude_svg_width_and_height';
     public const WRITER_OPTION_FORCE_XLINK_HREF = 'force_xlink_href';
 
     public function write(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = []): ResultInterface
     {
+        if (!isset($options[self::WRITER_OPTION_COMPACT])) {
+            $options[self::WRITER_OPTION_COMPACT] = true;
+        }
+
+        if (!isset($options[self::WRITER_OPTION_BLOCK_ID])) {
+            $options[self::WRITER_OPTION_BLOCK_ID] = 'block';
+        }
+
         if (!isset($options[self::WRITER_OPTION_EXCLUDE_XML_DECLARATION])) {
             $options[self::WRITER_OPTION_EXCLUDE_XML_DECLARATION] = false;
         }
@@ -48,6 +59,23 @@ final class SvgWriter implements WriterInterface
         $background->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getBackgroundColor()->getRed(), $qrCode->getBackgroundColor()->getGreen(), $qrCode->getBackgroundColor()->getBlue()));
         $background->addAttribute('fill-opacity', strval($qrCode->getBackgroundColor()->getOpacity()));
 
+        if ($options[self::WRITER_OPTION_COMPACT]) {
+            $this->writePath($xml, $qrCode, $matrix);
+        } else {
+            $this->writeBlockDefinitions($xml, $qrCode, $matrix, $options);
+        }
+
+        $result = new SvgResult($matrix, $xml, boolval($options[self::WRITER_OPTION_EXCLUDE_XML_DECLARATION]));
+
+        if ($logo instanceof LogoInterface) {
+            $this->addLogo($logo, $result, $options);
+        }
+
+        return $result;
+    }
+
+    private function writePath(\SimpleXMLElement $xml, QrCodeInterface $qrCode, MatrixInterface $matrix): void
+    {
         $path = '';
         for ($rowIndex = 0; $rowIndex < $matrix->getBlockCount(); ++$rowIndex) {
             $left = $matrix->getMarginLeft();
@@ -75,14 +103,30 @@ final class SvgWriter implements WriterInterface
         $pathDefinition->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getForegroundColor()->getRed(), $qrCode->getForegroundColor()->getGreen(), $qrCode->getForegroundColor()->getBlue()));
         $pathDefinition->addAttribute('fill-opacity', strval($qrCode->getForegroundColor()->getOpacity()));
         $pathDefinition->addAttribute('d', $path);
+    }
 
-        $result = new SvgResult($matrix, $xml, boolval($options[self::WRITER_OPTION_EXCLUDE_XML_DECLARATION]));
+    /** @param array<string, mixed> $options */
+    private function writeBlockDefinitions(\SimpleXMLElement $xml, QrCodeInterface $qrCode, MatrixInterface $matrix, array $options): void
+    {
+        $xml->addChild('defs');
 
-        if ($logo instanceof LogoInterface) {
-            $this->addLogo($logo, $result, $options);
+        $blockDefinition = $xml->defs->addChild('rect');
+        $blockDefinition->addAttribute('id', strval($options[self::WRITER_OPTION_BLOCK_ID]));
+        $blockDefinition->addAttribute('width', $this->formatNumber($matrix->getBlockSize()));
+        $blockDefinition->addAttribute('height', $this->formatNumber($matrix->getBlockSize()));
+        $blockDefinition->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $qrCode->getForegroundColor()->getRed(), $qrCode->getForegroundColor()->getGreen(), $qrCode->getForegroundColor()->getBlue()));
+        $blockDefinition->addAttribute('fill-opacity', strval($qrCode->getForegroundColor()->getOpacity()));
+
+        for ($rowIndex = 0; $rowIndex < $matrix->getBlockCount(); ++$rowIndex) {
+            for ($columnIndex = 0; $columnIndex < $matrix->getBlockCount(); ++$columnIndex) {
+                if (1 === $matrix->getBlockValue($rowIndex, $columnIndex)) {
+                    $block = $xml->addChild('use');
+                    $block->addAttribute('x', $this->formatNumber($matrix->getMarginLeft() + $matrix->getBlockSize() * $columnIndex));
+                    $block->addAttribute('y', $this->formatNumber($matrix->getMarginLeft() + $matrix->getBlockSize() * $rowIndex));
+                    $block->addAttribute('xlink:href', '#'.$options[self::WRITER_OPTION_BLOCK_ID], 'http://www.w3.org/1999/xlink');
+                }
+            }
         }
-
-        return $result;
     }
 
     /** @param array<string, mixed> $options */
@@ -120,8 +164,7 @@ final class SvgWriter implements WriterInterface
     {
         $string = number_format($number, self::DECIMAL_PRECISION, '.', '');
         $string = rtrim($string, '0');
-        $string = rtrim($string, '.');
 
-        return $string;
+        return rtrim($string, '.');
     }
 }
