@@ -133,6 +133,7 @@ found as a constant prefixed with WRITER_OPTION_ in the writer class.
   * `exclude_xml_declaration`: exclude XML declaration (default: false)
   * `exclude_svg_width_and_height`: exclude width and height (default: false)
   * `force_xlink_href`: forces xlink namespace in case of compatibility issues (default: false)
+  * `compact`: create using `path` element, otherwise use `defs` and `use` (default: true)
 * `WebPWriter`
   * `quality`: image quality (0-100, default: 80)
 
