@@ -113,9 +113,14 @@ final class LogoImageData
     private static function detectMimeTypeFromUrl(string $url): string
     {
         $headers = get_headers($url, true);
+
+        if (!is_array($headers)) {
+            throw new \Exception(sprintf('Could not retrieve headers to determine content type for logo URL "%s"', $url));
+        }
+
         $headers = array_combine(array_map('strtolower', array_keys($headers)), $headers);
 
-        if (!is_array($headers) || !isset($headers['content-type'])) {
+        if (!isset($headers['content-type'])) {
             throw new \Exception(sprintf('Content type could not be determined for logo URL "%s"', $url));
         }
 
