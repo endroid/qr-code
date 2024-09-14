@@ -134,33 +134,53 @@ abstract class AbstractGdWriter implements WriterInterface, ValidatingWriterInte
             throw new \Exception('PNG Writer does not support SVG logo');
         }
 
+        $logoImage = $logoImageData->getImage();
         $targetImage = $result->getImage();
         $matrix = $result->getMatrix();
 
         if ($logoImageData->getPunchoutBackground()) {
-            /** @var int $transparent */
-            $transparent = imagecolorallocatealpha($targetImage, 255, 255, 255, 127);
-            imagealphablending($targetImage, false);
-            $xOffsetStart = intval($matrix->getOuterSize() / 2 - $logoImageData->getWidth() / 2);
-            $yOffsetStart = intval($matrix->getOuterSize() / 2 - $logoImageData->getHeight() / 2);
-            for ($xOffset = $xOffsetStart; $xOffset < $xOffsetStart + $logoImageData->getWidth(); ++$xOffset) {
-                for ($yOffset = $yOffsetStart; $yOffset < $yOffsetStart + $logoImageData->getHeight(); ++$yOffset) {
-                    imagesetpixel($targetImage, $xOffset, $yOffset, $transparent);
-                }
+            $logoImage = imagecreatetruecolor($logoImageData->getWidth() + $logo->getMargin() * 2, $logoImageData->getHeight() + $logo->getMargin() * 2);
+
+            if (!$logoImage) {
+                throw new \Exception('Unable to generate image: please check if the GD extension is enabled and configured correctly');
             }
+
+            /** @var int $backgroundColor */
+            $backgroundColor = imagecolorallocatealpha(
+                $logoImage,
+                $logo->getBackgroundColor()->getRed(),
+                $logo->getBackgroundColor()->getGreen(),
+                $logo->getBackgroundColor()->getBlue(),
+                $logo->getBackgroundColor()->getAlpha()
+            );
+
+            imagefill($logoImage, 0, 0, $backgroundColor);
+
+            imagecopyresampled(
+                $logoImage,
+                $logoImageData->getImage(),
+                $logo->getMargin(),
+                $logo->getMargin(),
+                0,
+                0,
+                $logoImageData->getWidth(),
+                $logoImageData->getHeight(),
+                imagesx($logoImageData->getImage()),
+                imagesy($logoImageData->getImage())
+            );
         }
 
         imagecopyresampled(
             $targetImage,
-            $logoImageData->getImage(),
-            intval($matrix->getOuterSize() / 2 - $logoImageData->getWidth() / 2),
-            intval($matrix->getOuterSize() / 2 - $logoImageData->getHeight() / 2),
+            $logoImage,
+            intval($matrix->getOuterSize() / 2 - $logoImageData->getWidth() / 2 - $logo->getMargin()),
+            intval($matrix->getOuterSize() / 2 - $logoImageData->getHeight() / 2 - $logo->getMargin()),
             0,
             0,
-            $logoImageData->getWidth(),
-            $logoImageData->getHeight(),
-            imagesx($logoImageData->getImage()),
-            imagesy($logoImageData->getImage())
+            $logoImageData->getWidth() + $logo->getMargin() * 2,
+            $logoImageData->getHeight() + $logo->getMargin() * 2,
+            imagesx($logoImage),
+            imagesy($logoImage)
         );
 
         return new GdResult($matrix, $targetImage);
