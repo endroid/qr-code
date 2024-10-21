@@ -149,9 +149,12 @@ You can provide any writer options like this.
 ```php
 use Endroid\QrCode\Writer\SvgWriter;
 
-$builder->writerOptions([
-    SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true
-]);
+$builder = new Builder(
+    writer: new SvgWriter(),
+    writerOptions: [
+        SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => true
+    ]
+);
 ```
 
 ### Encoding
