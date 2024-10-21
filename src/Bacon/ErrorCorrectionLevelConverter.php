@@ -7,7 +7,7 @@ namespace Endroid\QrCode\Bacon;
 use BaconQrCode\Common\ErrorCorrectionLevel as BaconErrorCorrectionLevel;
 use Endroid\QrCode\ErrorCorrectionLevel;
 
-final class ErrorCorrectionLevelConverter
+final readonly class ErrorCorrectionLevelConverter
 {
     public static function convertToBaconErrorCorrectionLevel(ErrorCorrectionLevel $errorCorrectionLevel): BaconErrorCorrectionLevel
     {
@@ -15,7 +15,7 @@ final class ErrorCorrectionLevelConverter
             ErrorCorrectionLevel::Low => BaconErrorCorrectionLevel::valueOf('L'),
             ErrorCorrectionLevel::Medium => BaconErrorCorrectionLevel::valueOf('M'),
             ErrorCorrectionLevel::Quartile => BaconErrorCorrectionLevel::valueOf('Q'),
-            ErrorCorrectionLevel::High => BaconErrorCorrectionLevel::valueOf('H')
+            ErrorCorrectionLevel::High => BaconErrorCorrectionLevel::valueOf('H'),
         };
     }
 }

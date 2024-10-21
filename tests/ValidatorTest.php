@@ -6,22 +6,22 @@ namespace Endroid\QrCode\Tests;
 
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\Result\PngResult;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 final class ValidatorTest extends TestCase
 {
-    /**
-     * @testdox Can write $name and successfully validate result
-     *
-     * @dataProvider dataProvider
-     */
+    #[TestDox('Can write $name and successfully validate the result')]
+    #[DataProvider('dataProvider')]
     public function testReadability(string $name, string $data): void
     {
-        $result = Builder::create()
-            ->data($data)
-            ->validateResult(true)
-            ->build()
-        ;
+        $builder = new Builder(
+            validateResult: true,
+            data: $data
+        );
+
+        $result = $builder->build();
 
         $this->assertInstanceOf(PngResult::class, $result);
         $this->assertEquals('image/png', $result->getMimeType());

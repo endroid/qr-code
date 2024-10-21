@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode\Label\Font;
 
-final class Font implements FontInterface
+final readonly class Font implements FontInterface
 {
     public function __construct(
-        private readonly string $path,
-        private readonly int $size = 16
+        private string $path,
+        private int $size = 16,
     ) {
         $this->assertValidPath($path);
     }

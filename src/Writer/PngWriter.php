@@ -11,11 +11,11 @@ use Endroid\QrCode\Writer\Result\GdResult;
 use Endroid\QrCode\Writer\Result\PngResult;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 
-final class PngWriter extends AbstractGdWriter
+final readonly class PngWriter extends AbstractGdWriter
 {
     public const WRITER_OPTION_COMPRESSION_LEVEL = 'compression_level';
 
-    public function write(QrCodeInterface $qrCode, LogoInterface $logo = null, LabelInterface $label = null, array $options = []): ResultInterface
+    public function write(QrCodeInterface $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null, array $options = []): ResultInterface
     {
         if (!isset($options[self::WRITER_OPTION_COMPRESSION_LEVEL])) {
             $options[self::WRITER_OPTION_COMPRESSION_LEVEL] = -1;

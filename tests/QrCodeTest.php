@@ -34,33 +34,38 @@ use Endroid\QrCode\Writer\SvgWriter;
 use Endroid\QrCode\Writer\ValidatingWriterInterface;
 use Endroid\QrCode\Writer\WebPWriter;
 use Endroid\QrCode\Writer\WriterInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 final class QrCodeTest extends TestCase
 {
-    /**
-     * @testdox Write as $resultClass with content type $contentType
-     *
-     * @dataProvider writerProvider
-     */
+    #[TestDox('Write as $resultClass with content type $contentType')]
+    #[DataProvider('writerProvider')]
     public function testQrCode(WriterInterface $writer, string $resultClass, string $contentType): void
     {
-        $qrCode = QrCode::create('Data')
-            ->setEncoding(new Encoding('UTF-8'))
-            ->setErrorCorrectionLevel(ErrorCorrectionLevel::Low)
-            ->setSize(300)
-            ->setMargin(10)
-            ->setRoundBlockSizeMode(RoundBlockSizeMode::Margin)
-            ->setForegroundColor(new Color(0, 0, 0))
-            ->setBackgroundColor(new Color(255, 255, 255));
+        $qrCode = new QrCode(
+            data: 'Data',
+            encoding: new Encoding('UTF-8'),
+            errorCorrectionLevel: ErrorCorrectionLevel::Low,
+            size: 300,
+            margin: 10,
+            roundBlockSizeMode: RoundBlockSizeMode::Margin,
+            foregroundColor: new Color(0, 0, 0),
+            backgroundColor: new Color(255, 255, 255)
+        );
 
         // Create generic logo
-        $logo = Logo::create(__DIR__.'/assets/symfony.png')
-            ->setResizeToWidth(50);
+        $logo = new Logo(
+            path: __DIR__.'/assets/symfony.png',
+            resizeToWidth: 50
+        );
 
         // Create generic label
-        $label = Label::create('Label')
-            ->setTextColor(new Color(255, 0, 0));
+        $label = new Label(
+            text: 'Label',
+            textColor: new Color(255, 0, 0)
+        );
 
         $result = $writer->write($qrCode, $logo, $label);
         $this->assertInstanceOf(MatrixInterface::class, $result->getMatrix());
@@ -87,38 +92,37 @@ final class QrCodeTest extends TestCase
         yield [new WebPWriter(), WebpResult::class, 'image/webp'];
     }
 
-    /**
-     * @testdox Size and margin are handled correctly
-     */
+    #[TestDox('Size and margin are handled correctly')]
     public function testSetSize(): void
     {
-        $imageData = Builder::create()
-            ->data('QR Code')
-            ->size(400)
-            ->margin(15)
-            ->build()->getString();
+        $builder = new Builder(
+            data: 'QR Code',
+            size: 400,
+            margin: 15
+        );
 
-        $image = imagecreatefromstring($imageData);
+        $result = $builder->build();
+
+        $image = imagecreatefromstring($result->getString());
 
         $this->assertTrue(430 === imagesx($image));
         $this->assertTrue(430 === imagesy($image));
     }
 
-    /**
-     * @testdox Size and margin are handled correctly with rounded blocks
-     *
-     * @dataProvider roundedSizeProvider
-     */
+    #[TestDox('Size and margin are handled correctly with rounded blocks')]
+    #[DataProvider('roundedSizeProvider')]
     public function testSetSizeRounded(int $size, int $margin, RoundBlockSizeMode $roundBlockSizeMode, int $expectedSize): void
     {
-        $imageData = Builder::create()
-            ->data('QR Code contents with some length to have some data')
-            ->size($size)
-            ->margin($margin)
-            ->roundBlockSizeMode($roundBlockSizeMode)
-            ->build()->getString();
+        $builder = new Builder(
+            data: 'QR Code contents with some length to have some data',
+            size: $size,
+            margin: $margin,
+            roundBlockSizeMode: $roundBlockSizeMode
+        );
 
-        $image = imagecreatefromstring($imageData);
+        $result = $builder->build();
+
+        $image = imagecreatefromstring($result->getString());
 
         $this->assertTrue(imagesx($image) === $expectedSize);
         $this->assertTrue(imagesy($image) === $expectedSize);
@@ -134,35 +138,29 @@ final class QrCodeTest extends TestCase
         yield [400, 5, RoundBlockSizeMode::Shrink, 387];
     }
 
-    /**
-     * @testdox Invalid logo path results in exception
-     */
+    #[TestDox('Invalid logo path results in exception')]
     public function testInvalidLogoPath(): void
     {
         $writer = new SvgWriter();
-        $qrCode = QrCode::create('QR Code');
+        $qrCode = new QrCode('QR Code');
 
-        $logo = Logo::create('/my/invalid/path.png');
+        $logo = new Logo('/my/invalid/path.png');
         $this->expectExceptionMessageMatches('#Could not read logo image data from path "/my/invalid/path.png"#');
         $writer->write($qrCode, $logo);
     }
 
-    /**
-     * @testdox Invalid logo data results in exception
-     */
+    #[TestDox('Invalid logo data results in exception')]
     public function testInvalidLogoData(): void
     {
         $writer = new SvgWriter();
-        $qrCode = QrCode::create('QR Code');
+        $qrCode = new QrCode('QR Code');
 
-        $logo = Logo::create(__DIR__.'/QrCodeTest.php');
+        $logo = new Logo(__DIR__.'/QrCodeTest.php');
         $this->expectExceptionMessage('Logo path is not an image');
         $writer->write($qrCode, $logo);
     }
 
-    /**
-     * @testdox Result can be saved to file
-     */
+    #[TestDox('Result can be saved to file')]
     public function testSaveToFile(): void
     {
         $path = __DIR__.'/test-save-to-file.png';
@@ -178,43 +176,40 @@ final class QrCodeTest extends TestCase
         unlink($path);
     }
 
-    /**
-     * @testdox Line breaks are not supported
-     */
+    #[TestDox('Label line breaks are not supported')]
     public function testLabelLineBreaks(): void
     {
-        $qrCode = QrCode::create('QR Code');
-        $label = Label::create("this\none has\nline breaks in it");
+        $qrCode = new QrCode('QR Code');
+        $label = new Label("this\none has\nline breaks in it");
 
         $writer = new PngWriter();
         $this->expectExceptionMessage('Label does not support line breaks');
         $writer->write($qrCode, null, $label);
     }
 
-    /**
-     * @testdox Block size should be at least 1
-     */
+    #[TestDox('Block size should be at least 1')]
     public function testBlockSizeTooSmall(): void
     {
         $aLotOfData = str_repeat('alot', 100);
-        $qrCode = QrCode::create($aLotOfData)
-            ->setSize(10);
+        $qrCode = new QrCode(
+            data: $aLotOfData,
+            size: 10
+        );
 
         $matrixFactory = new MatrixFactory();
         $this->expectExceptionMessage('Too much data: increase image dimensions or lower error correction level');
         $matrixFactory->create($qrCode);
     }
 
-    /**
-     * @testdox PNG Writer does not accept SVG logo, while SVG writer does
-     */
+    #[TestDox('PNG Writer does not accept SVG logo, while SVG writer does')]
     public function testSvgLogo(): void
     {
-        $qrCode = QrCode::create('QR Code');
-        $logo = Logo::create(__DIR__.'/assets/symfony.svg')
-            ->setResizeToWidth(100)
-            ->setResizeToHeight(50)
-        ;
+        $qrCode = new QrCode('QR Code');
+        $logo = new Logo(
+            path: __DIR__.'/assets/symfony.svg',
+            resizeToWidth: 100,
+            resizeToHeight: 50
+        );
 
         $svgWriter = new SvgWriter();
         $result = $svgWriter->write($qrCode, $logo);
@@ -225,12 +220,10 @@ final class QrCodeTest extends TestCase
         $pngWriter->write($qrCode, $logo);
     }
 
-    /**
-     * @testdox SVG Write can write compact SVG and non-compact SVG
-     */
+    #[TestDox('SVG Writer can write compact SVG and non-compact SVG')]
     public function testSvgCompactOption(): void
     {
-        $qrCode = QrCode::create('QR Code');
+        $qrCode = new QrCode('QR Code');
 
         $svgWriter = new SvgWriter();
         $result = $svgWriter->write(qrCode: $qrCode, options: [SvgWriter::WRITER_OPTION_COMPACT => true]);

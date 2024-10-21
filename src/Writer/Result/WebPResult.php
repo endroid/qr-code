@@ -11,7 +11,7 @@ final class WebPResult extends GdResult
     public function __construct(
         MatrixInterface $matrix,
         \GdImage $image,
-        private readonly int $quality = -1
+        private readonly int $quality = -1,
     ) {
         parent::__construct($matrix, $image);
     }

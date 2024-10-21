@@ -10,11 +10,11 @@ final class LogoImageData
 {
     private function __construct(
         private readonly string $data,
-        private \GdImage|null $image,
+        private ?\GdImage $image,
         private readonly string $mimeType,
         private readonly int $width,
         private readonly int $height,
-        private readonly bool $punchoutBackground
+        private readonly bool $punchoutBackground,
     ) {
     }
 

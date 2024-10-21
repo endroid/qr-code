@@ -11,7 +11,7 @@ final class SvgResult extends AbstractResult
     public function __construct(
         MatrixInterface $matrix,
         private readonly \SimpleXMLElement $xml,
-        private readonly bool $excludeXmlDeclaration = false
+        private readonly bool $excludeXmlDeclaration = false,
     ) {
         parent::__construct($matrix);
     }

@@ -21,7 +21,7 @@ final class ConsoleResult extends AbstractResult
     public function __construct(
         MatrixInterface $matrix,
         ColorInterface $foreground,
-        ColorInterface $background
+        ColorInterface $background,
     ) {
         parent::__construct($matrix);
 

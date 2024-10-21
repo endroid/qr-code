@@ -34,27 +34,29 @@ use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\Label\LabelAlignment;
-use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\Label\Font\OpenSans;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 
-$result = Builder::create()
-    ->writer(new PngWriter())
-    ->writerOptions([])
-    ->data('Custom QR code contents')
-    ->encoding(new Encoding('UTF-8'))
-    ->errorCorrectionLevel(ErrorCorrectionLevel::High)
-    ->size(300)
-    ->margin(10)
-    ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
-    ->logoPath(__DIR__.'/assets/symfony.png')
-    ->logoResizeToWidth(50)
-    ->logoPunchoutBackground(true)
-    ->labelText('This is the label')
-    ->labelFont(new NotoSans(20))
-    ->labelAlignment(LabelAlignment::Center)
-    ->validateResult(false)
-    ->build();
+$builder = new Builder(
+    writer: new PngWriter(),
+    writerOptions: [],
+    validateResult: false,
+    data: 'Custom QR code contents',
+    encoding: new Encoding('UTF-8'),
+    errorCorrectionLevel: ErrorCorrectionLevel::High,
+    size: 300,
+    margin: 10,
+    roundBlockSizeMode: RoundBlockSizeMode::Margin,
+    logoPath: __DIR__.'/assets/symfony.png',
+    logoResizeToWidth: 50,
+    logoPunchoutBackground: true,
+    labelText: 'This is the label',
+    labelFont: new OpenSans(20),
+    labelAlignment: LabelAlignment::Center
+);
+
+$result = $builder->build();
 ```
 
 ## Usage: without using the builder
@@ -73,24 +75,29 @@ use Endroid\QrCode\Writer\ValidationException;
 $writer = new PngWriter();
 
 // Create QR code
-$qrCode = QrCode::create('Life is too short to be generating QR codes')
-    ->setEncoding(new Encoding('UTF-8'))
-    ->setErrorCorrectionLevel(ErrorCorrectionLevel::Low)
-    ->setSize(300)
-    ->setMargin(10)
-    ->setRoundBlockSizeMode(RoundBlockSizeMode::Margin)
-    ->setForegroundColor(new Color(0, 0, 0))
-    ->setBackgroundColor(new Color(255, 255, 255));
+$qrCode = new QrCode(
+    data: 'Life is too short to be generating QR codes',
+    encoding: new Encoding('UTF-8'),
+    errorCorrectionLevel: ErrorCorrectionLevel::Low,
+    size: 300,
+    margin: 10,
+    roundBlockSizeMode: RoundBlockSizeMode::Margin,
+    foregroundColor: new Color(0, 0, 0),
+    backgroundColor: new Color(255, 255, 255)
+);
 
 // Create generic logo
-$logo = Logo::create(__DIR__.'/assets/symfony.png')
-    ->setResizeToWidth(50)
-    ->setPunchoutBackground(true)
-;
+$logo = new Logo(
+    path: __DIR__.'/assets/symfony.png',
+    resizeToWidth: 50,
+    punchoutBackground: true
+);
 
 // Create generic label
-$label = Label::create('Label')
-    ->setTextColor(new Color(255, 0, 0));
+$label = new Label(
+    text: 'Label',
+    textColor: new Color(255, 0, 0)
+);
 
 $result = $writer->write($qrCode, $logo, $label);
 
