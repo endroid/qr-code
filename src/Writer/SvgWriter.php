@@ -132,6 +132,10 @@ final readonly class SvgWriter implements WriterInterface
     /** @param array<string, mixed> $options */
     private function addLogo(LogoInterface $logo, SvgResult $result, array $options): void
     {
+        if ($logo->getPunchoutBackground()) {
+            throw new \Exception('The SVG writer does not support logo punchout background');
+        }
+
         $logoImageData = LogoImageData::createForLogo($logo);
 
         if (!isset($options[self::WRITER_OPTION_FORCE_XLINK_HREF])) {

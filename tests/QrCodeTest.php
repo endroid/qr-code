@@ -233,4 +233,20 @@ final class QrCodeTest extends TestCase
         $result = $svgWriter->write(qrCode: $qrCode, options: [SvgWriter::WRITER_OPTION_COMPACT => false]);
         $this->assertInstanceOf(SvgResult::class, $result);
     }
+
+    #[TestDox('Logo punchout background is only available for GD writers')]
+    public function testLogoPunchoutBackgroundAvailability(): void
+    {
+        $qrCode = new QrCode('QR Code');
+        $logo = new Logo(
+            path: __DIR__.'/assets/symfony.svg',
+            resizeToWidth: 100,
+            resizeToHeight: 50,
+            punchoutBackground: true
+        );
+
+        $svgWriter = new SvgWriter();
+        $this->expectExceptionMessageMatches('#The SVG writer does not support logo punchout background#');
+        $svgWriter->write($qrCode, $logo);
+    }
 }
