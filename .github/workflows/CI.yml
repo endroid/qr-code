@@ -17,7 +17,7 @@ jobs:
           extensions: gd, mbstring, zip
           ini-values: max_execution_time=600, memory_limit=-1
           tools: composer:v2
-          coverage: none
+          coverage: xdebug
         env:
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -62,3 +62,9 @@ jobs:
         with:
           name: logs-php-${{ matrix.php-versions }}
           path: vendor/endroid/quality/application/var/log
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-php-${{ matrix.php-versions }}
+          path: tests/coverage
