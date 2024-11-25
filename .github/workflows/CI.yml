@@ -14,10 +14,10 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: gd, mbstring, xdebug, zip
+          extensions: gd, mbstring, zip
           ini-values: max_execution_time=600, memory_limit=-1
           tools: composer:v2
-          coverage: xdebug
+          coverage: none
         env:
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
