@@ -137,6 +137,7 @@ found as a constant prefixed with WRITER_OPTION_ in the writer class.
   * `link`: a URL or an identifier returned by `AddLink()`.
 * `PngWriter`
   * `compression_level`: compression level (0-9, default: -1 = zlib default)
+  * `number_of_colors`: number of colors (1-256, null for true color)
 * `SvgWriter`
   * `block_id`: id of the block element for external reference (default: block)
   * `exclude_xml_declaration`: exclude XML declaration (default: false)
