@@ -22,7 +22,7 @@ final readonly class PngWriter extends AbstractGdWriter
             $options[self::WRITER_OPTION_COMPRESSION_LEVEL] = -1;
         }
 
-        if (!isset($options[self::WRITER_OPTION_NUMBER_OF_COLORS])) {
+        if (!array_key_exists(self::WRITER_OPTION_NUMBER_OF_COLORS, $options)) {
             // When a logo is present use true color, otherwise use a palette of 16 colors
             $options[self::WRITER_OPTION_NUMBER_OF_COLORS] = $logo instanceof LogoInterface ? null : 16;
         }
