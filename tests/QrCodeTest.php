@@ -57,7 +57,7 @@ final class QrCodeTest extends TestCase
 
         // Create generic logo
         $logo = new Logo(
-            path: __DIR__.'/assets/symfony.png',
+            path: __DIR__.'/assets/bender.png',
             resizeToWidth: 50
         );
 
@@ -206,7 +206,7 @@ final class QrCodeTest extends TestCase
     {
         $qrCode = new QrCode('QR Code');
         $logo = new Logo(
-            path: __DIR__.'/assets/symfony.svg',
+            path: __DIR__.'/assets/bender.svg',
             resizeToWidth: 100,
             resizeToHeight: 50
         );
@@ -239,9 +239,8 @@ final class QrCodeTest extends TestCase
     {
         $qrCode = new QrCode('QR Code');
         $logo = new Logo(
-            path: __DIR__.'/assets/symfony.svg',
+            path: __DIR__.'/assets/bender.svg',
             resizeToWidth: 100,
-            resizeToHeight: 50,
             punchoutBackground: true
         );
 

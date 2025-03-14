@@ -50,7 +50,7 @@ $builder = new Builder(
     size: 300,
     margin: 10,
     roundBlockSizeMode: RoundBlockSizeMode::Margin,
-    logoPath: __DIR__.'/assets/symfony.png',
+    logoPath: __DIR__.'/assets/bender.png',
     logoResizeToWidth: 50,
     logoPunchoutBackground: true,
     labelText: 'This is the label',
@@ -90,7 +90,7 @@ $qrCode = new QrCode(
 
 // Create generic logo
 $logo = new Logo(
-    path: __DIR__.'/assets/symfony.png',
+    path: __DIR__.'/assets/bender.png',
     resizeToWidth: 50,
     punchoutBackground: true
 );
@@ -137,7 +137,7 @@ found as a constant prefixed with WRITER_OPTION_ in the writer class.
   * `link`: a URL or an identifier returned by `AddLink()`.
 * `PngWriter`
   * `compression_level`: compression level (0-9, default: -1 = zlib default)
-  * `number_of_colors`: number of colors (1-256, null for true color)
+  * `number_of_colors`: number of colors (1-256, null for true color and transparency)
 * `SvgWriter`
   * `block_id`: id of the block element for external reference (default: block)
   * `exclude_xml_declaration`: exclude XML declaration (default: false)
