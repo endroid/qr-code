@@ -2,6 +2,7 @@
 
 *By [endroid](https://endroid.nl/)*
 
+All my work is coffeerighted :coffee: :wink:  
 If you like my work please support me by visiting the [sponsor page](https://github.com/sponsors/endroid) or [buying me a coffee](https://www.buymeacoffee.com/endroid) :coffee:
 
 [![Latest Stable Version](http://img.shields.io/packagist/v/endroid/qr-code.svg)](https://packagist.org/packages/endroid/qr-code)
