@@ -3,7 +3,7 @@
 *By [endroid](https://endroid.nl/)*
 
 All my work is coffeerighted :coffee: :wink:  
-If you like my work please support me by visiting the [sponsor page](https://github.com/sponsors/endroid) or [buying me a coffee](https://www.buymeacoffee.com/endroid) :coffee:
+If you like my work please support me by visiting the [sponsor page](https://github.com/sponsors/endroid) or you can [buy me a coffee](https://www.buymeacoffee.com/endroid) :coffee:
 
 [![Latest Stable Version](http://img.shields.io/packagist/v/endroid/qr-code.svg)](https://packagist.org/packages/endroid/qr-code)
 [![Build Status](https://github.com/endroid/qr-code/workflows/CI/badge.svg)](https://github.com/endroid/qr-code/actions)
