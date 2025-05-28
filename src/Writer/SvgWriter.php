@@ -67,6 +67,10 @@ final readonly class SvgWriter implements WriterInterface
 
         $result = new SvgResult($matrix, $xml, boolval($options[self::WRITER_OPTION_EXCLUDE_XML_DECLARATION]));
 
+        if ($label instanceof LabelInterface) {
+            $this->addLabel($label, $result);
+        }
+
         if ($logo instanceof LogoInterface) {
             $this->addLogo($logo, $result, $options);
         }
@@ -162,6 +166,46 @@ final readonly class SvgWriter implements WriterInterface
         } else {
             $imageDefinition->addAttribute('href', $logoImageData->createDataUri());
         }
+    }
+
+    function setAttribute(\SimpleXMLElement $node, $attributeName, $attributeValue)
+    {
+        $attributes = $node->attributes();
+        if (isset($attributes->$attributeName)) {
+            $attributes->$attributeName = $attributeValue;
+        } else {
+            $attributes->addAttribute($attributeName, $attributeValue);
+        }
+    }
+
+    private function addLabel(LabelInterface $label, SvgResult $result): void
+    {
+        $xml = $result->getXml();
+
+        /** @var \SimpleXMLElement $xmlAttributes */
+        $xmlAttributes = $xml->attributes();
+        $viewBox = (string) $xmlAttributes->viewBox;
+        $viewBoxArray = explode(' ', $viewBox);
+
+        $this->setAttribute($xml, "viewBox", '0 0 '.$viewBoxArray[2].' '.$viewBoxArray[3] + 50);
+
+        $x = intval($xmlAttributes->width) / 2;
+        $y = intval($xmlAttributes->height) + 20;
+
+        // Get text and position of label
+        $labelText = $label->getText();
+        $fontSize = $label->getFont()->getSize();
+        $fontFamily = $label->getFont()->getSize();
+        $fontColor = $label->getTextColor();
+
+        // Create text element in SVG
+        $text = $xml->addChild('text', $labelText);
+        $text->addAttribute('x', (string)$x);
+        $text->addAttribute('y', (string)$y);
+        $text->addAttribute('font-size', (string)$fontSize);
+        $text->addAttribute('font-family', "Helvetica");
+        $text->addAttribute('text-anchor', 'middle'); // Center text horizontally
+        $text->addAttribute('fill', '#'.sprintf('%02x%02x%02x', $fontColor->getRed(), $fontColor->getGreen(), $fontColor->getBlue()));
     }
 
     private function formatNumber(float $number): string
