@@ -23,8 +23,11 @@ final readonly class PngWriter extends AbstractGdWriter
         }
 
         if (!array_key_exists(self::WRITER_OPTION_NUMBER_OF_COLORS, $options)) {
-            // When a logo is present use true color, otherwise use a palette of 16 colors
-            $options[self::WRITER_OPTION_NUMBER_OF_COLORS] = $logo instanceof LogoInterface ? null : 16;
+            $options[self::WRITER_OPTION_NUMBER_OF_COLORS] = match (true) {
+                $qrCode->getBackgroundColor()->getAlpha() > 0 || $qrCode->getForegroundColor()->getAlpha() > 0 => null,
+                $logo instanceof LogoInterface => null,
+                default => 16,
+            };
         }
 
         /** @var GdResult $gdResult */
