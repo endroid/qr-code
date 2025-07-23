@@ -39,6 +39,43 @@ final readonly class EpsWriter implements WriterInterface
             }
         }
 
+        if ($logo instanceof LogoInterface) {
+            $this->addLogo($logo, $lines, $matrix->getOuterSize());
+        }
+
         return new EpsResult($matrix, $lines);
+    }
+
+    private function addLogo(LogoInterface $logo, array &$lines, int $outerSize): void
+    {
+        $logoPath = $logo->getPath();
+        $logoHeight = $logo->getResizeToHeight();
+        $logoWidth = $logo->getResizeToWidth();
+
+        if (null === $logoHeight || null === $logoWidth) {
+            $imageSize = \getimagesize($logoPath);
+            if (!$imageSize) {
+                throw new \Exception(sprintf('Unable to read image size for logo "%s"', $logoPath));
+            }
+            [$logoSourceWidth, $logoSourceHeight] = $imageSize;
+
+            if (null === $logoWidth) {
+                $logoWidth = (int) $logoSourceWidth;
+            }
+
+            if (null === $logoHeight) {
+                $aspectRatio = $logoWidth / $logoSourceWidth;
+                $logoHeight = (int) ($logoSourceHeight * $aspectRatio);
+            }
+        }
+
+        $logoX = $outerSize / 2 - $logoWidth / 2;
+        $logoY = $outerSize / 2 - $logoHeight / 2;
+
+        $lines[] = 'gsave';
+        $lines[] = number_format($logoX, self::DECIMAL_PRECISION, '.', '').' '.number_format($logoY, self::DECIMAL_PRECISION, '.', '').' translate';
+        $lines[] = number_format($logoWidth, self::DECIMAL_PRECISION, '.', '').' '.number_format($logoHeight, self::DECIMAL_PRECISION, '.', '').' scale';
+        $lines[] = '('.$logoPath.') run';
+        $lines[] = 'grestore';
     }
 }
