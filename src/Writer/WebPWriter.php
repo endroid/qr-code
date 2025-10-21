@@ -13,8 +13,9 @@ use Endroid\QrCode\Writer\Result\WebPResult;
 
 final readonly class WebPWriter extends AbstractGdWriter
 {
-    public const WRITER_OPTION_QUALITY = 'quality';
+    public const string WRITER_OPTION_QUALITY = 'quality';
 
+    #[\Override]
     public function write(QrCodeInterface $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null, array $options = []): ResultInterface
     {
         if (!isset($options[self::WRITER_OPTION_QUALITY])) {

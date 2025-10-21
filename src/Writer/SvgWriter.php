@@ -15,13 +15,14 @@ use Endroid\QrCode\Writer\Result\SvgResult;
 
 final readonly class SvgWriter implements WriterInterface
 {
-    public const DECIMAL_PRECISION = 2;
-    public const WRITER_OPTION_COMPACT = 'compact';
-    public const WRITER_OPTION_BLOCK_ID = 'block_id';
-    public const WRITER_OPTION_EXCLUDE_XML_DECLARATION = 'exclude_xml_declaration';
-    public const WRITER_OPTION_EXCLUDE_SVG_WIDTH_AND_HEIGHT = 'exclude_svg_width_and_height';
-    public const WRITER_OPTION_FORCE_XLINK_HREF = 'force_xlink_href';
+    public const int DECIMAL_PRECISION = 2;
+    public const string WRITER_OPTION_COMPACT = 'compact';
+    public const string WRITER_OPTION_BLOCK_ID = 'block_id';
+    public const string WRITER_OPTION_EXCLUDE_XML_DECLARATION = 'exclude_xml_declaration';
+    public const string WRITER_OPTION_EXCLUDE_SVG_WIDTH_AND_HEIGHT = 'exclude_svg_width_and_height';
+    public const string WRITER_OPTION_FORCE_XLINK_HREF = 'force_xlink_href';
 
+    #[\Override]
     public function write(QrCodeInterface $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null, array $options = []): ResultInterface
     {
         if (!isset($options[self::WRITER_OPTION_COMPACT])) {

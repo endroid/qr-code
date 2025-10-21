@@ -13,12 +13,13 @@ use Endroid\QrCode\Writer\Result\ResultInterface;
 
 final readonly class PdfWriter implements WriterInterface
 {
-    public const WRITER_OPTION_UNIT = 'unit';
-    public const WRITER_OPTION_PDF = 'fpdf';
-    public const WRITER_OPTION_X = 'x';
-    public const WRITER_OPTION_Y = 'y';
-    public const WRITER_OPTION_LINK = 'link';
+    public const string WRITER_OPTION_UNIT = 'unit';
+    public const string WRITER_OPTION_PDF = 'fpdf';
+    public const string WRITER_OPTION_X = 'x';
+    public const string WRITER_OPTION_Y = 'y';
+    public const string WRITER_OPTION_LINK = 'link';
 
+    #[\Override]
     public function write(QrCodeInterface $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null, array $options = []): ResultInterface
     {
         $matrixFactory = new MatrixFactory();

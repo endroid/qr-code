@@ -13,6 +13,7 @@ final class BinaryResult extends AbstractResult
         parent::__construct($matrix);
     }
 
+    #[\Override]
     public function getString(): string
     {
         $matrix = $this->getMatrix();
@@ -28,6 +29,7 @@ final class BinaryResult extends AbstractResult
         return $binaryString;
     }
 
+    #[\Override]
     public function getMimeType(): string
     {
         return 'text/plain';

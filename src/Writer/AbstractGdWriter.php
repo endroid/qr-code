@@ -27,6 +27,7 @@ abstract readonly class AbstractGdWriter implements WriterInterface, ValidatingW
         return $matrixFactory->create($qrCode);
     }
 
+    #[\Override]
     public function write(QrCodeInterface $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null, array $options = []): ResultInterface
     {
         if (!extension_loaded('gd')) {
@@ -195,6 +196,7 @@ abstract readonly class AbstractGdWriter implements WriterInterface, ValidatingW
         return new GdResult($result->getMatrix(), $targetImage);
     }
 
+    #[\Override]
     public function validateResult(ResultInterface $result, string $expectedData): void
     {
         $string = $result->getString();

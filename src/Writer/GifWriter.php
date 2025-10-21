@@ -13,6 +13,7 @@ use Endroid\QrCode\Writer\Result\ResultInterface;
 
 final readonly class GifWriter extends AbstractGdWriter
 {
+    #[\Override]
     public function write(QrCodeInterface $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null, array $options = []): ResultInterface
     {
         /** @var GdResult $gdResult */

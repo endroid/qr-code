@@ -20,11 +20,13 @@ final class PdfResult extends AbstractResult
         return $this->fpdf;
     }
 
+    #[\Override]
     public function getString(): string
     {
         return $this->fpdf->Output('S');
     }
 
+    #[\Override]
     public function getMimeType(): string
     {
         return 'application/pdf';

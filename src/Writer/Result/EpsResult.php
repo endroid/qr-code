@@ -16,11 +16,13 @@ final class EpsResult extends AbstractResult
         parent::__construct($matrix);
     }
 
+    #[\Override]
     public function getString(): string
     {
         return implode("\n", $this->lines);
     }
 
+    #[\Override]
     public function getMimeType(): string
     {
         return 'image/eps';

@@ -6,6 +6,7 @@ namespace Endroid\QrCode\Writer\Result;
 
 final class GifResult extends GdResult
 {
+    #[\Override]
     public function getString(): string
     {
         ob_start();
@@ -14,6 +15,7 @@ final class GifResult extends GdResult
         return strval(ob_get_clean());
     }
 
+    #[\Override]
     public function getMimeType(): string
     {
         return 'image/gif';

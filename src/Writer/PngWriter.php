@@ -13,9 +13,10 @@ use Endroid\QrCode\Writer\Result\ResultInterface;
 
 final readonly class PngWriter extends AbstractGdWriter
 {
-    public const WRITER_OPTION_COMPRESSION_LEVEL = 'compression_level';
-    public const WRITER_OPTION_NUMBER_OF_COLORS = 'number_of_colors';
+    public const string WRITER_OPTION_COMPRESSION_LEVEL = 'compression_level';
+    public const string WRITER_OPTION_NUMBER_OF_COLORS = 'number_of_colors';
 
+    #[\Override]
     public function write(QrCodeInterface $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null, array $options = []): ResultInterface
     {
         if (!isset($options[self::WRITER_OPTION_COMPRESSION_LEVEL])) {

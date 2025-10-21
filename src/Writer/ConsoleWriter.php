@@ -13,6 +13,7 @@ use Endroid\QrCode\Writer\Result\ResultInterface;
 
 final readonly class ConsoleWriter implements WriterInterface
 {
+    #[\Override]
     public function write(QrCodeInterface $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null, $options = []): ResultInterface
     {
         $matrixFactory = new MatrixFactory();

@@ -29,6 +29,7 @@ final class DebugResult extends AbstractResult
         $this->validateResult = $validateResult;
     }
 
+    #[\Override]
     public function getString(): string
     {
         $debugLines = [];
@@ -67,6 +68,7 @@ final class DebugResult extends AbstractResult
         return implode("\n", $debugLines);
     }
 
+    #[\Override]
     public function getMimeType(): string
     {
         return 'text/plain';

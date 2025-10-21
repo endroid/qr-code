@@ -9,7 +9,7 @@ use Endroid\QrCode\Matrix\MatrixInterface;
 
 final class ConsoleResult extends AbstractResult
 {
-    private const TWO_BLOCKS = [
+    private const array TWO_BLOCKS = [
         0 => ' ',
         1 => "\xe2\x96\x80",
         2 => "\xe2\x96\x84",
@@ -36,11 +36,13 @@ final class ConsoleResult extends AbstractResult
         );
     }
 
+    #[\Override]
     public function getMimeType(): string
     {
         return 'text/plain';
     }
 
+    #[\Override]
     public function getString(): string
     {
         $matrix = $this->getMatrix();

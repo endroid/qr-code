@@ -21,6 +21,7 @@ final class SvgResult extends AbstractResult
         return $this->xml;
     }
 
+    #[\Override]
     public function getString(): string
     {
         $string = $this->xml->asXML();
@@ -36,6 +37,7 @@ final class SvgResult extends AbstractResult
         return $string;
     }
 
+    #[\Override]
     public function getMimeType(): string
     {
         return 'image/svg+xml';

@@ -13,8 +13,9 @@ use Endroid\QrCode\Writer\Result\ResultInterface;
 
 final readonly class EpsWriter implements WriterInterface
 {
-    public const DECIMAL_PRECISION = 10;
+    public const int DECIMAL_PRECISION = 10;
 
+    #[\Override]
     public function write(QrCodeInterface $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null, array $options = []): ResultInterface
     {
         $matrixFactory = new MatrixFactory();

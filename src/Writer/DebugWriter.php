@@ -13,6 +13,7 @@ use Endroid\QrCode\Writer\Result\ResultInterface;
 
 final readonly class DebugWriter implements WriterInterface, ValidatingWriterInterface
 {
+    #[\Override]
     public function write(QrCodeInterface $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null, array $options = []): ResultInterface
     {
         $matrixFactory = new MatrixFactory();
@@ -21,6 +22,7 @@ final readonly class DebugWriter implements WriterInterface, ValidatingWriterInt
         return new DebugResult($matrix, $qrCode, $logo, $label, $options);
     }
 
+    #[\Override]
     public function validateResult(ResultInterface $result, string $expectedData): void
     {
         if (!$result instanceof DebugResult) {

@@ -17,6 +17,7 @@ final class PngResult extends GdResult
         parent::__construct($matrix, $image);
     }
 
+    #[\Override]
     public function getString(): string
     {
         ob_start();
@@ -28,6 +29,7 @@ final class PngResult extends GdResult
         return strval(ob_get_clean());
     }
 
+    #[\Override]
     public function getMimeType(): string
     {
         return 'image/png';
