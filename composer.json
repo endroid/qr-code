@@ -12,13 +12,13 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "bacon/bacon-qr-code": "^3.0"
     },
     "require-dev": {
         "ext-gd": "*",
         "endroid/quality": "dev-main",
-        "khanamiryan/qrcode-detector-decoder": "^2.0.2",
+        "khanamiryan/qrcode-detector-decoder": "^2.0.3",
         "setasign/fpdf": "^1.8.2"
     },
     "suggest": {

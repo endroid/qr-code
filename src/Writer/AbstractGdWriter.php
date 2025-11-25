@@ -36,13 +36,14 @@ abstract readonly class AbstractGdWriter implements WriterInterface, ValidatingW
         $matrix = $this->getMatrix($qrCode);
 
         $baseBlockSize = RoundBlockSizeMode::None === $qrCode->getRoundBlockSizeMode() ? 10 : intval($matrix->getBlockSize());
-        $baseImage = imagecreatetruecolor($matrix->getBlockCount() * $baseBlockSize, $matrix->getBlockCount() * $baseBlockSize);
+        /** @var int<1, max> $baseImageSize */
+        $baseImageSize = $matrix->getBlockCount() * $baseBlockSize;
+        $baseImage = imagecreatetruecolor($baseImageSize, $baseImageSize);
 
         if (!$baseImage) {
             throw new \Exception('Unable to generate image: please check if the GD extension is enabled and configured correctly');
         }
 
-        /** @var int $foregroundColor */
         $foregroundColor = imagecolorallocatealpha(
             $baseImage,
             $qrCode->getForegroundColor()->getRed(),
@@ -51,8 +52,15 @@ abstract readonly class AbstractGdWriter implements WriterInterface, ValidatingW
             $qrCode->getForegroundColor()->getAlpha()
         );
 
-        /** @var int $transparentColor */
+        if (false === $foregroundColor) {
+            throw new \Exception('Unable to generate image: please check if the GD extension is enabled and configured correctly');
+        }
+
         $transparentColor = imagecolorallocatealpha($baseImage, 255, 255, 255, 127);
+
+        if (false === $transparentColor) {
+            throw new \Exception('Unable to generate image: please check if the GD extension is enabled and configured correctly');
+        }
 
         imagefill($baseImage, 0, 0, $transparentColor);
 
@@ -71,7 +79,9 @@ abstract readonly class AbstractGdWriter implements WriterInterface, ValidatingW
             }
         }
 
+        /** @var int<1, max> $targetWidth */
         $targetWidth = $matrix->getOuterSize();
+        /** @var int<1, max> $targetHeight */
         $targetHeight = $matrix->getOuterSize();
 
         if ($label instanceof LabelInterface) {
@@ -79,13 +89,13 @@ abstract readonly class AbstractGdWriter implements WriterInterface, ValidatingW
             $targetHeight += $labelImageData->getHeight() + $label->getMargin()->getTop() + $label->getMargin()->getBottom();
         }
 
+        /** @var int<1, max> $targetHeight */
         $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
 
         if (!$targetImage) {
             throw new \Exception('Unable to generate image: please check if the GD extension is enabled and configured correctly');
         }
 
-        /** @var int $backgroundColor */
         $backgroundColor = imagecolorallocatealpha(
             $targetImage,
             $qrCode->getBackgroundColor()->getRed(),
@@ -93,6 +103,10 @@ abstract readonly class AbstractGdWriter implements WriterInterface, ValidatingW
             $qrCode->getBackgroundColor()->getBlue(),
             $qrCode->getBackgroundColor()->getAlpha()
         );
+
+        if (false === $backgroundColor) {
+            throw new \Exception('Unable to generate image: please check if the GD extension is enabled and configured correctly');
+        }
 
         imagefill($targetImage, 0, 0, $backgroundColor);
 
@@ -138,8 +152,12 @@ abstract readonly class AbstractGdWriter implements WriterInterface, ValidatingW
         $matrix = $result->getMatrix();
 
         if ($logoImageData->getPunchoutBackground()) {
-            /** @var int $transparent */
             $transparent = imagecolorallocatealpha($targetImage, 255, 255, 255, 127);
+
+            if (false === $transparent) {
+                throw new \Exception('Unable to allocate color: please check if the GD extension is enabled and configured correctly');
+            }
+
             imagealphablending($targetImage, false);
             $xOffsetStart = intval($matrix->getOuterSize() / 2 - $logoImageData->getWidth() / 2);
             $yOffsetStart = intval($matrix->getOuterSize() / 2 - $logoImageData->getHeight() / 2);
@@ -172,7 +190,6 @@ abstract readonly class AbstractGdWriter implements WriterInterface, ValidatingW
 
         $labelImageData = LabelImageData::createForLabel($label);
 
-        /** @var int $textColor */
         $textColor = imagecolorallocatealpha(
             $targetImage,
             $label->getTextColor()->getRed(),
@@ -180,6 +197,10 @@ abstract readonly class AbstractGdWriter implements WriterInterface, ValidatingW
             $label->getTextColor()->getBlue(),
             $label->getTextColor()->getAlpha()
         );
+
+        if (false === $textColor) {
+            throw new \Exception('Unable to allocate color: please check if the GD extension is enabled and configured correctly');
+        }
 
         $x = intval(imagesx($targetImage) / 2 - $labelImageData->getWidth() / 2);
         $y = imagesy($targetImage) - $label->getMargin()->getBottom();

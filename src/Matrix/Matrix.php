@@ -15,7 +15,7 @@ final readonly class Matrix implements MatrixInterface
     private int $marginLeft;
     private int $marginRight;
 
-    /** @param array<array<int>> $blockValues */
+    /** @param array<array<int<0, 1>>> $blockValues */
     public function __construct(
         private array $blockValues,
         int $size,

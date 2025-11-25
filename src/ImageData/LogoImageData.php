@@ -63,12 +63,12 @@ final readonly class LogoImageData
         }
 
         // Only target width specified: calculate height
-        if (null !== $width && null === $height) {
+        if (null !== $width) {
             return new self($data, $image, $mimeType, $width, intval(imagesy($image) * $width / imagesx($image)), $logo->getPunchoutBackground());
         }
 
         // Only target height specified: calculate width
-        if (null === $width && null !== $height) {
+        if (null !== $height) {
             return new self($data, $image, $mimeType, intval(imagesx($image) * $height / imagesy($image)), $height, $logo->getPunchoutBackground());
         }
 

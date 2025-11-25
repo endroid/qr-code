@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.2', '8.3', '8.4']
+        php-versions: ['8.4', '8.5']
       fail-fast: false
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
@@ -54,7 +54,7 @@ jobs:
         run: |
           composer update --prefer-lowest
           vendor/bin/unit-test
-          vendor/bin/functional-test 5.4
+          vendor/bin/functional-test 6.4
 
       - name: Archive logs
         if: ${{ failure() }}
@@ -64,7 +64,7 @@ jobs:
           path: vendor/endroid/quality/application/var/log
 
       - name: Archive code coverage results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: coverage-php-${{ matrix.php-versions }}
           path: tests/coverage
