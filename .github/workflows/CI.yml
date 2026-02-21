@@ -1,16 +1,21 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  - push
+  - pull_request
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        php-versions: ['8.4', '8.5']
+        php-versions: ['8.3', '8.4', '8.4', '8.5', '8.5']
       fail-fast: false
+
     steps:
       - uses: actions/checkout@v5
+
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
@@ -57,7 +62,7 @@ jobs:
           vendor/bin/functional-test 6.4
 
       - name: Archive logs
-        if: ${{ failure() }}
+        if: '${{ failure() }}'
         uses: actions/upload-artifact@v4
         with:
           name: logs-php-${{ matrix.php-versions }}
