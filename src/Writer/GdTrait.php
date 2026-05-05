@@ -68,12 +68,11 @@ trait GdTrait
         for ($rowIndex = 0; $rowIndex < $matrix->getBlockCount(); ++$rowIndex) {
             for ($columnIndex = 0; $columnIndex < $matrix->getBlockCount(); ++$columnIndex) {
                 if (1 === $matrix->getBlockValue($rowIndex, $columnIndex)) {
-                    imagefilledrectangle(
+                    $this->addBlock(
                         $baseImage,
-                        $columnIndex * $baseBlockSize,
-                        $rowIndex * $baseBlockSize,
-                        ($columnIndex + 1) * $baseBlockSize - 1,
-                        ($rowIndex + 1) * $baseBlockSize - 1,
+                        $rowIndex,
+                        $columnIndex,
+                        $baseBlockSize,
                         $foregroundColor
                     );
                 }
@@ -229,5 +228,26 @@ trait GdTrait
         if ($reader->text() !== $expectedData) {
             throw ValidationException::createForInvalidData($expectedData, strval($reader->text()));
         }
+    }
+
+    /**
+     * Draws a single square (block) to the image.
+     * Can be overwritten to use custom shapes instead of squares.
+     */
+    public function addBlock(
+        \GdImage $baseImage,
+        int $rowIndex,
+        int $columnIndex,
+        int $baseBlockSize,
+        int $foregroundColor
+    ): void {
+        imagefilledrectangle(
+            $baseImage,
+            $columnIndex * $baseBlockSize,
+            $rowIndex * $baseBlockSize,
+            ($columnIndex + 1) * $baseBlockSize - 1,
+            ($rowIndex + 1) * $baseBlockSize - 1,
+            $foregroundColor
+        );
     }
 }

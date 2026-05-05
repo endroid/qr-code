@@ -10,7 +10,7 @@ use Endroid\QrCode\QrCodeInterface;
 use Endroid\QrCode\Writer\Result\PngResult;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 
-final readonly class PngWriter implements WriterInterface, ValidatingWriterInterface
+readonly class PngWriter implements WriterInterface, ValidatingWriterInterface
 {
     use GdTrait;
 
