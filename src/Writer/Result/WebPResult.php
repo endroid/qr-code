@@ -16,6 +16,7 @@ final class WebPResult extends GdResult
         parent::__construct($matrix, $image);
     }
 
+    #[\Override]
     public function getString(): string
     {
         if (!function_exists('imagewebp')) {
@@ -28,6 +29,7 @@ final class WebPResult extends GdResult
         return strval(ob_get_clean());
     }
 
+    #[\Override]
     public function getMimeType(): string
     {
         return 'image/webp';

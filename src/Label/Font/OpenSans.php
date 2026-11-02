@@ -8,14 +8,15 @@ final readonly class OpenSans implements FontInterface
 {
     public function __construct(
         private int $size = 16,
-    ) {
-    }
+    ) {}
 
+    #[\Override]
     public function getPath(): string
     {
-        return __DIR__.'/../../../assets/open_sans.ttf';
+        return __DIR__ . '/../../../assets/open_sans.ttf';
     }
 
+    #[\Override]
     public function getSize(): int
     {
         return $this->size;

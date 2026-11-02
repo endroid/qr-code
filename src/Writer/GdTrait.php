@@ -28,57 +28,23 @@ trait GdTrait
     }
 
     /** @param array<string, mixed> $options */
-    public function writeGd(QrCodeInterface $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null, array $options = []): GdResult
-    {
+    public function writeGd(
+        QrCodeInterface $qrCode,
+        ?LogoInterface $logo = null,
+        ?LabelInterface $label = null,
+        array $options = [],
+    ): GdResult {
+        // Options are reserved for format-specific writers; GD rendering is shared.
+        unset($options);
+
         if (!extension_loaded('gd')) {
-            throw new \Exception('Unable to generate image: please check if the GD extension is enabled and configured correctly');
+            throw new \Exception(
+                'Unable to generate image: please check if the GD extension is enabled and configured correctly',
+            );
         }
 
         $matrix = $this->getMatrix($qrCode);
-
-        $baseBlockSize = RoundBlockSizeMode::None === $qrCode->getRoundBlockSizeMode() ? 10 : intval($matrix->getBlockSize());
-        /** @var int<1, max> $baseImageSize */
-        $baseImageSize = $matrix->getBlockCount() * $baseBlockSize;
-        $baseImage = imagecreatetruecolor($baseImageSize, $baseImageSize);
-
-        if (!$baseImage) {
-            throw new \Exception('Unable to generate image: please check if the GD extension is enabled and configured correctly');
-        }
-
-        $foregroundColor = imagecolorallocatealpha(
-            $baseImage,
-            $qrCode->getForegroundColor()->getRed(),
-            $qrCode->getForegroundColor()->getGreen(),
-            $qrCode->getForegroundColor()->getBlue(),
-            $qrCode->getForegroundColor()->getAlpha()
-        );
-
-        if (false === $foregroundColor) {
-            throw new \Exception('Unable to generate image: please check if the GD extension is enabled and configured correctly');
-        }
-
-        $transparentColor = imagecolorallocatealpha($baseImage, 255, 255, 255, 127);
-
-        if (false === $transparentColor) {
-            throw new \Exception('Unable to generate image: please check if the GD extension is enabled and configured correctly');
-        }
-
-        imagefill($baseImage, 0, 0, $transparentColor);
-
-        for ($rowIndex = 0; $rowIndex < $matrix->getBlockCount(); ++$rowIndex) {
-            for ($columnIndex = 0; $columnIndex < $matrix->getBlockCount(); ++$columnIndex) {
-                if (1 === $matrix->getBlockValue($rowIndex, $columnIndex)) {
-                    imagefilledrectangle(
-                        $baseImage,
-                        $columnIndex * $baseBlockSize,
-                        $rowIndex * $baseBlockSize,
-                        ($columnIndex + 1) * $baseBlockSize - 1,
-                        ($rowIndex + 1) * $baseBlockSize - 1,
-                        $foregroundColor
-                    );
-                }
-            }
-        }
+        $baseImage = $this->createBaseImage($qrCode, $matrix);
 
         /** @var int<1, max> $targetWidth */
         $targetWidth = $matrix->getOuterSize();
@@ -87,14 +53,17 @@ trait GdTrait
 
         if ($label instanceof LabelInterface) {
             $labelImageData = LabelImageData::createForLabel($label);
-            $targetHeight += $labelImageData->getHeight() + $label->getMargin()->getTop() + $label->getMargin()->getBottom();
+            $targetHeight +=
+                $labelImageData->getHeight() + $label->getMargin()->getTop() + $label->getMargin()->getBottom();
         }
 
         /** @var int<1, max> $targetHeight */
         $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
 
         if (!$targetImage) {
-            throw new \Exception('Unable to generate image: please check if the GD extension is enabled and configured correctly');
+            throw new \Exception(
+                'Unable to generate image: please check if the GD extension is enabled and configured correctly',
+            );
         }
 
         $backgroundColor = imagecolorallocatealpha(
@@ -102,30 +71,32 @@ trait GdTrait
             $qrCode->getBackgroundColor()->getRed(),
             $qrCode->getBackgroundColor()->getGreen(),
             $qrCode->getBackgroundColor()->getBlue(),
-            $qrCode->getBackgroundColor()->getAlpha()
+            $qrCode->getBackgroundColor()->getAlpha(),
         );
 
         if (false === $backgroundColor) {
-            throw new \Exception('Unable to generate image: please check if the GD extension is enabled and configured correctly');
+            throw new \Exception(
+                'Unable to generate image: please check if the GD extension is enabled and configured correctly',
+            );
         }
 
-        imagefill($targetImage, 0, 0, $backgroundColor);
+        imagefill($targetImage, x: 0, y: 0, color: $backgroundColor);
 
         imagecopyresampled(
             $targetImage,
             $baseImage,
             $matrix->getMarginLeft(),
             $matrix->getMarginLeft(),
-            0,
-            0,
-            $matrix->getInnerSize(),
-            $matrix->getInnerSize(),
-            imagesx($baseImage),
-            imagesy($baseImage)
+            src_x: 0,
+            src_y: 0,
+            dst_width: $matrix->getInnerSize(),
+            dst_height: $matrix->getInnerSize(),
+            src_width: imagesx($baseImage),
+            src_height: imagesy($baseImage),
         );
 
         if ($qrCode->getBackgroundColor()->getAlpha() > 0) {
-            imagesavealpha($targetImage, true);
+            imagesavealpha($targetImage, enable: true);
         }
 
         $result = new GdResult($matrix, $targetImage);
@@ -141,6 +112,65 @@ trait GdTrait
         return $result;
     }
 
+    private function createBaseImage(QrCodeInterface $qrCode, MatrixInterface $matrix): \GdImage
+    {
+        $baseBlockSize = RoundBlockSizeMode::None === $qrCode->getRoundBlockSizeMode()
+            ? 10
+            : intval($matrix->getBlockSize());
+        /** @var int<1, max> $baseImageSize */
+        $baseImageSize = $matrix->getBlockCount() * $baseBlockSize;
+        $baseImage = imagecreatetruecolor($baseImageSize, $baseImageSize);
+
+        if (!$baseImage) {
+            throw new \Exception(
+                'Unable to generate image: please check if the GD extension is enabled and configured correctly',
+            );
+        }
+
+        $foregroundColor = imagecolorallocatealpha(
+            $baseImage,
+            $qrCode->getForegroundColor()->getRed(),
+            $qrCode->getForegroundColor()->getGreen(),
+            $qrCode->getForegroundColor()->getBlue(),
+            $qrCode->getForegroundColor()->getAlpha(),
+        );
+
+        if (false === $foregroundColor) {
+            throw new \Exception(
+                'Unable to generate image: please check if the GD extension is enabled and configured correctly',
+            );
+        }
+
+        $transparentColor = imagecolorallocatealpha($baseImage, red: 255, green: 255, blue: 255, alpha: 127);
+
+        if (false === $transparentColor) {
+            throw new \Exception(
+                'Unable to generate image: please check if the GD extension is enabled and configured correctly',
+            );
+        }
+
+        imagefill($baseImage, x: 0, y: 0, color: $transparentColor);
+
+        for ($rowIndex = 0; $rowIndex < $matrix->getBlockCount(); ++$rowIndex) {
+            for ($columnIndex = 0; $columnIndex < $matrix->getBlockCount(); ++$columnIndex) {
+                if (1 !== $matrix->getBlockValue($rowIndex, $columnIndex)) {
+                    continue;
+                }
+
+                imagefilledrectangle(
+                    $baseImage,
+                    $columnIndex * $baseBlockSize,
+                    $rowIndex * $baseBlockSize,
+                    (($columnIndex + 1) * $baseBlockSize) - 1,
+                    (($rowIndex + 1) * $baseBlockSize) - 1,
+                    $foregroundColor,
+                );
+            }
+        }
+
+        return $baseImage;
+    }
+
     private function addLogo(LogoInterface $logo, GdResult $result): GdResult
     {
         $logoImageData = LogoImageData::createForLogo($logo);
@@ -153,17 +183,19 @@ trait GdTrait
         $matrix = $result->getMatrix();
 
         if ($logoImageData->getPunchoutBackground()) {
-            $transparent = imagecolorallocatealpha($targetImage, 255, 255, 255, 127);
+            $transparent = imagecolorallocatealpha($targetImage, red: 255, green: 255, blue: 255, alpha: 127);
 
             if (false === $transparent) {
-                throw new \Exception('Unable to allocate color: please check if the GD extension is enabled and configured correctly');
+                throw new \Exception(
+                    'Unable to allocate color: please check if the GD extension is enabled and configured correctly',
+                );
             }
 
-            imagealphablending($targetImage, false);
-            $xOffsetStart = intval($matrix->getOuterSize() / 2 - $logoImageData->getWidth() / 2);
-            $yOffsetStart = intval($matrix->getOuterSize() / 2 - $logoImageData->getHeight() / 2);
-            for ($xOffset = $xOffsetStart; $xOffset < $xOffsetStart + $logoImageData->getWidth(); ++$xOffset) {
-                for ($yOffset = $yOffsetStart; $yOffset < $yOffsetStart + $logoImageData->getHeight(); ++$yOffset) {
+            imagealphablending($targetImage, enable: false);
+            $xOffsetStart = intval(($matrix->getOuterSize() / 2) - ($logoImageData->getWidth() / 2));
+            $yOffsetStart = intval(($matrix->getOuterSize() / 2) - ($logoImageData->getHeight() / 2));
+            for ($xOffset = $xOffsetStart; $xOffset < ($xOffsetStart + $logoImageData->getWidth()); ++$xOffset) {
+                for ($yOffset = $yOffsetStart; $yOffset < ($yOffsetStart + $logoImageData->getHeight()); ++$yOffset) {
                     imagesetpixel($targetImage, $xOffset, $yOffset, $transparent);
                 }
             }
@@ -172,14 +204,14 @@ trait GdTrait
         imagecopyresampled(
             $targetImage,
             $logoImageData->getImage(),
-            intval($matrix->getOuterSize() / 2 - $logoImageData->getWidth() / 2),
-            intval($matrix->getOuterSize() / 2 - $logoImageData->getHeight() / 2),
-            0,
-            0,
-            $logoImageData->getWidth(),
-            $logoImageData->getHeight(),
-            imagesx($logoImageData->getImage()),
-            imagesy($logoImageData->getImage())
+            intval(($matrix->getOuterSize() / 2) - ($logoImageData->getWidth() / 2)),
+            intval(($matrix->getOuterSize() / 2) - ($logoImageData->getHeight() / 2)),
+            src_x: 0,
+            src_y: 0,
+            dst_width: $logoImageData->getWidth(),
+            dst_height: $logoImageData->getHeight(),
+            src_width: imagesx($logoImageData->getImage()),
+            src_height: imagesy($logoImageData->getImage()),
         );
 
         return new GdResult($matrix, $targetImage);
@@ -196,23 +228,33 @@ trait GdTrait
             $label->getTextColor()->getRed(),
             $label->getTextColor()->getGreen(),
             $label->getTextColor()->getBlue(),
-            $label->getTextColor()->getAlpha()
+            $label->getTextColor()->getAlpha(),
         );
 
         if (false === $textColor) {
-            throw new \Exception('Unable to allocate color: please check if the GD extension is enabled and configured correctly');
+            throw new \Exception(
+                'Unable to allocate color: please check if the GD extension is enabled and configured correctly',
+            );
         }
 
-        $x = intval(imagesx($targetImage) / 2 - $labelImageData->getWidth() / 2);
+        $x = match ($label->getAlignment()) {
+            LabelAlignment::Left => $label->getMargin()->getLeft(),
+            LabelAlignment::Right => imagesx($targetImage) - $labelImageData->getWidth()
+                - $label->getMargin()->getRight(),
+            default => intval((imagesx($targetImage) / 2) - ($labelImageData->getWidth() / 2)),
+        };
         $y = imagesy($targetImage) - $label->getMargin()->getBottom();
 
-        if (LabelAlignment::Left === $label->getAlignment()) {
-            $x = $label->getMargin()->getLeft();
-        } elseif (LabelAlignment::Right === $label->getAlignment()) {
-            $x = imagesx($targetImage) - $labelImageData->getWidth() - $label->getMargin()->getRight();
-        }
-
-        imagettftext($targetImage, $label->getFont()->getSize(), 0, $x, $y, $textColor, $label->getFont()->getPath(), $label->getText());
+        imagettftext(
+            $targetImage,
+            $label->getFont()->getSize(),
+            angle: 0,
+            x: $x,
+            y: $y,
+            color: $textColor,
+            font_filename: $label->getFont()->getPath(),
+            text: $label->getText(),
+        );
 
         return new GdResult($result->getMatrix(), $targetImage);
     }

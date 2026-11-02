@@ -9,14 +9,16 @@ final class BuilderRegistry implements BuilderRegistryInterface
     /** @var array<BuilderInterface> */
     private array $builders = [];
 
+    #[\Override]
     public function set(string $name, BuilderInterface $builder): void
     {
         $this->builders[$name] = $builder;
     }
 
+    #[\Override]
     public function get(string $name): BuilderInterface
     {
-        if (!isset($this->builders[$name])) {
+        if (null === ($this->builders[$name] ?? null)) {
             throw new \Exception(sprintf('Builder with name "%s" not available from registry', $name));
         }
 

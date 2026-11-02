@@ -43,7 +43,8 @@
             "endroid/*": "source"
         },
         "allow-plugins": {
-            "endroid/installer": true
+            "endroid/installer": true,
+            "carthage-software/mago": true
         }
     },
     "extra": {

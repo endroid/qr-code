@@ -20,11 +20,13 @@ final readonly class Font implements FontInterface
         }
     }
 
+    #[\Override]
     public function getPath(): string
     {
         return $this->path;
     }
 
+    #[\Override]
     public function getSize(): int
     {
         return $this->size;

@@ -18,6 +18,12 @@ final class ValidationException extends \Exception
 
     public static function createForInvalidData(string $expectedData, string $actualData): self
     {
-        return new self('The validation reader read "'.$actualData.'" instead of "'.$expectedData.'". Adjust your parameters to increase readability or disable validation.');
+        return new self(
+            'The validation reader read "'
+            . $actualData
+            . '" instead of "'
+            . $expectedData
+            . '". Adjust your parameters to increase readability or disable validation.',
+        );
     }
 }

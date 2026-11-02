@@ -17,17 +17,19 @@ final class PngResult extends GdResult
         parent::__construct($matrix, $image);
     }
 
+    #[\Override]
     public function getString(): string
     {
         ob_start();
         if (null !== $this->numberOfColors) {
-            imagetruecolortopalette($this->image, false, $this->numberOfColors);
+            imagetruecolortopalette($this->image, dither: false, num_colors: $this->numberOfColors);
         }
         imagepng($this->image, quality: $this->quality);
 
         return strval(ob_get_clean());
     }
 
+    #[\Override]
     public function getMimeType(): string
     {
         return 'image/png';

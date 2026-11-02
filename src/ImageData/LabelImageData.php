@@ -11,8 +11,7 @@ final readonly class LabelImageData
     private function __construct(
         private int $width,
         private int $height,
-    ) {
-    }
+    ) {}
 
     public static function createForLabel(LabelInterface $label): self
     {
@@ -24,16 +23,19 @@ final readonly class LabelImageData
             throw new \Exception('Function "imagettfbbox" does not exist: check your FreeType installation');
         }
 
-        $labelBox = imagettfbbox($label->getFont()->getSize(), 0, $label->getFont()->getPath(), $label->getText());
+        /** @var array{int, int, int, int, int, int, int, int}|false $labelBox FreeType returns four coordinate pairs. */
+        $labelBox = imagettfbbox(
+            $label->getFont()->getSize(),
+            angle: 0,
+            font_filename: $label->getFont()->getPath(),
+            string: $label->getText(),
+        );
 
         if (!is_array($labelBox)) {
             throw new \Exception('Unable to generate label image box: check your FreeType installation');
         }
 
-        return new self(
-            intval($labelBox[2] - $labelBox[0]),
-            intval($labelBox[0] - $labelBox[7])
-        );
+        return new self(intval($labelBox[2] - $labelBox[0]), intval($labelBox[0] - $labelBox[7]));
     }
 
     public function getWidth(): int

@@ -6,5 +6,6 @@ namespace Endroid\QrCode\Encoding;
 
 interface EncodingInterface extends \Stringable
 {
+    #[\Override]
     public function __toString(): string;
 }

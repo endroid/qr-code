@@ -15,39 +15,45 @@ final readonly class Color implements ColorInterface
         private int $blue,
         /** @var int<0, 127> */
         private int $alpha = 0,
-    ) {
-    }
+    ) {}
 
+    #[\Override]
     public function getRed(): int
     {
         return $this->red;
     }
 
+    #[\Override]
     public function getGreen(): int
     {
         return $this->green;
     }
 
+    #[\Override]
     public function getBlue(): int
     {
         return $this->blue;
     }
 
+    #[\Override]
     public function getAlpha(): int
     {
         return $this->alpha;
     }
 
+    #[\Override]
     public function getOpacity(): float
     {
-        return 1 - $this->alpha / 127;
+        return 1 - ($this->alpha / 127);
     }
 
+    #[\Override]
     public function getHex(): string
     {
         return sprintf('#%02x%02x%02x', $this->red, $this->green, $this->blue);
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return [

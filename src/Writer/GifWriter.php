@@ -14,8 +14,13 @@ final readonly class GifWriter implements WriterInterface, ValidatingWriterInter
 {
     use GdTrait;
 
-    public function write(QrCodeInterface $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null, array $options = []): ResultInterface
-    {
+    #[\Override]
+    public function write(
+        QrCodeInterface $qrCode,
+        ?LogoInterface $logo = null,
+        ?LabelInterface $label = null,
+        array $options = [],
+    ): ResultInterface {
         $gdResult = $this->writeGd($qrCode, $logo, $label, $options);
 
         return new GifResult($gdResult->getMatrix(), $gdResult->getImage());

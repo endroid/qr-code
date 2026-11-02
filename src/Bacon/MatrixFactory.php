@@ -12,10 +12,17 @@ use Endroid\QrCode\QrCodeInterface;
 
 final readonly class MatrixFactory implements MatrixFactoryInterface
 {
+    #[\Override]
     public function create(QrCodeInterface $qrCode): MatrixInterface
     {
-        $baconErrorCorrectionLevel = ErrorCorrectionLevelConverter::convertToBaconErrorCorrectionLevel($qrCode->getErrorCorrectionLevel());
-        $baconMatrix = Encoder::encode($qrCode->getData(), $baconErrorCorrectionLevel, strval($qrCode->getEncoding()))->getMatrix();
+        $baconErrorCorrectionLevel = ErrorCorrectionLevelConverter::convertToBaconErrorCorrectionLevel(
+            $qrCode->getErrorCorrectionLevel(),
+        );
+        $baconMatrix = Encoder::encode(
+            $qrCode->getData(),
+            $baconErrorCorrectionLevel,
+            strval($qrCode->getEncoding()),
+        )->getMatrix();
 
         $blockValues = [];
         $columnCount = $baconMatrix->getWidth();
