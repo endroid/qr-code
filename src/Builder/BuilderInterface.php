@@ -16,7 +16,7 @@ use Endroid\QrCode\Writer\WriterInterface;
 
 interface BuilderInterface
 {
-    /** @param array<mixed>|null $writerOptions */
+    /** @param array<string, mixed>|null $writerOptions */
     public function build(
         ?WriterInterface $writer = null,
         ?array $writerOptions = null,

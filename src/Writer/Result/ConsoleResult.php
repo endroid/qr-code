@@ -9,7 +9,7 @@ use Endroid\QrCode\Matrix\MatrixInterface;
 
 final class ConsoleResult extends AbstractResult
 {
-    private const TWO_BLOCKS = [
+    private const array TWO_BLOCKS = [
         0 => ' ',
         1 => "\xe2\x96\x80",
         2 => "\xe2\x96\x84",
@@ -18,11 +18,8 @@ final class ConsoleResult extends AbstractResult
 
     private string $colorEscapeCode;
 
-    public function __construct(
-        MatrixInterface $matrix,
-        ColorInterface $foreground,
-        ColorInterface $background,
-    ) {
+    public function __construct(MatrixInterface $matrix, ColorInterface $foreground, ColorInterface $background)
+    {
         parent::__construct($matrix);
 
         $this->colorEscapeCode = sprintf(
@@ -32,33 +29,40 @@ final class ConsoleResult extends AbstractResult
             $foreground->getBlue(),
             $background->getRed(),
             $background->getGreen(),
-            $background->getBlue()
+            $background->getBlue(),
         );
     }
 
+    #[\Override]
     public function getMimeType(): string
     {
         return 'text/plain';
     }
 
+    #[\Override]
     public function getString(): string
     {
         $matrix = $this->getMatrix();
 
         $side = $matrix->getBlockCount();
-        $marginLeft = $this->colorEscapeCode.self::TWO_BLOCKS[0].self::TWO_BLOCKS[0];
-        $marginRight = self::TWO_BLOCKS[0].self::TWO_BLOCKS[0]."\e[0m".PHP_EOL;
-        $marginVertical = $marginLeft.str_repeat(self::TWO_BLOCKS[0], $side).$marginRight;
+        $marginLeft = $this->colorEscapeCode . self::TWO_BLOCKS[0] . self::TWO_BLOCKS[0];
+        $marginRight = self::TWO_BLOCKS[0] . self::TWO_BLOCKS[0] . "\e[0m" . PHP_EOL;
+        $marginVertical = $marginLeft . str_repeat(self::TWO_BLOCKS[0], $side) . $marginRight;
 
         $qrCodeString = $marginVertical;
         for ($rowIndex = 0; $rowIndex < $side; $rowIndex += 2) {
             $qrCodeString .= $marginLeft;
             for ($columnIndex = 0; $columnIndex < $side; ++$columnIndex) {
                 $combined = $matrix->getBlockValue($rowIndex, $columnIndex);
-                if ($rowIndex + 1 < $side) {
+                if (($rowIndex + 1) < $side) {
                     $combined |= $matrix->getBlockValue($rowIndex + 1, $columnIndex) << 1;
                 }
-                $qrCodeString .= self::TWO_BLOCKS[$combined];
+                $qrCodeString .= match ($combined) {
+                    0 => self::TWO_BLOCKS[0],
+                    1 => self::TWO_BLOCKS[1],
+                    2 => self::TWO_BLOCKS[2],
+                    3 => self::TWO_BLOCKS[3],
+                };
             }
             $qrCodeString .= $marginRight;
         }

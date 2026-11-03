@@ -11,15 +11,21 @@ final readonly class Encoding implements EncodingInterface
     ) {
         if ('UTF-8' !== $value) {
             if (!function_exists('mb_list_encodings')) {
-                throw new \Exception('Unable to validate encoding: make sure the mbstring extension is installed and enabled');
+                throw new \Exception(
+                    'Unable to validate encoding: make sure the mbstring extension is installed and enabled',
+                );
             }
 
-            if (!in_array($value, mb_list_encodings())) {
-                throw new \Exception(sprintf('Invalid encoding "%s": choose one of '.implode(', ', mb_list_encodings()), $value));
+            if (!in_array($value, mb_list_encodings(), strict: true)) {
+                throw new \Exception(sprintf(
+                    'Invalid encoding "%s": choose one of ' . implode(', ', mb_list_encodings()),
+                    $value,
+                ));
             }
         }
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->value;

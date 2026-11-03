@@ -14,13 +14,17 @@ final readonly class WebPWriter implements WriterInterface, ValidatingWriterInte
 {
     use GdTrait;
 
-    public const WRITER_OPTION_QUALITY = 'quality';
+    public const string WRITER_OPTION_QUALITY = 'quality';
 
-    public function write(QrCodeInterface $qrCode, ?LogoInterface $logo = null, ?LabelInterface $label = null, array $options = []): ResultInterface
-    {
-        if (!isset($options[self::WRITER_OPTION_QUALITY])) {
-            $options[self::WRITER_OPTION_QUALITY] = -1;
-        }
+    #[\Override]
+    public function write(
+        QrCodeInterface $qrCode,
+        ?LogoInterface $logo = null,
+        ?LabelInterface $label = null,
+        array $options = [],
+    ): ResultInterface {
+        /** @var array{quality?: int|null} $options */
+        $options[self::WRITER_OPTION_QUALITY] ??= -1;
 
         $gdResult = $this->writeGd($qrCode, $logo, $label, $options);
 

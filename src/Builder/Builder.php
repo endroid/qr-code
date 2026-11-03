@@ -28,7 +28,7 @@ final readonly class Builder implements BuilderInterface
 {
     public function __construct(
         private WriterInterface $writer = new PngWriter(),
-        /** @var array<mixed> */
+        /** @var array<string, mixed> */
         private array $writerOptions = [],
         private bool $validateResult = false,
         // QrCode options
@@ -42,7 +42,7 @@ final readonly class Builder implements BuilderInterface
         private ColorInterface $backgroundColor = new Color(255, 255, 255),
         // Label options
         private string $labelText = '',
-        private FontInterface $labelFont = new Font(__DIR__.'/../../assets/open_sans.ttf', 16),
+        private FontInterface $labelFont = new Font(__DIR__ . '/../../assets/open_sans.ttf', 16),
         private LabelAlignment $labelAlignment = LabelAlignment::Center,
         private MarginInterface $labelMargin = new Margin(0, 10, 10, 10),
         private ColorInterface $labelTextColor = new Color(0, 0, 0),
@@ -51,10 +51,10 @@ final readonly class Builder implements BuilderInterface
         private ?int $logoResizeToWidth = null,
         private ?int $logoResizeToHeight = null,
         private bool $logoPunchoutBackground = false,
-    ) {
-    }
+    ) {}
 
-    /** @param array<mixed>|null $writerOptions */
+    /** @param array<string, mixed>|null $writerOptions */
+    #[\Override]
     public function build(
         ?WriterInterface $writer = null,
         ?array $writerOptions = null,
@@ -84,9 +84,9 @@ final readonly class Builder implements BuilderInterface
             throw ValidationException::createForUnsupportedWriter(get_class($this->writer));
         }
 
-        $writer = $writer ?? $this->writer;
-        $writerOptions = $writerOptions ?? $this->writerOptions;
-        $validateResult = $validateResult ?? $this->validateResult;
+        $writer ??= $this->writer;
+        $writerOptions ??= $this->writerOptions;
+        $validateResult ??= $this->validateResult;
 
         $createLabel = $this->labelText || $labelText;
         $createLogo = $this->logoPath || $logoPath;
@@ -99,23 +99,27 @@ final readonly class Builder implements BuilderInterface
             margin: $margin ?? $this->margin,
             roundBlockSizeMode: $roundBlockSizeMode ?? $this->roundBlockSizeMode,
             foregroundColor: $foregroundColor ?? $this->foregroundColor,
-            backgroundColor: $backgroundColor ?? $this->backgroundColor
+            backgroundColor: $backgroundColor ?? $this->backgroundColor,
         );
 
-        $logo = $createLogo ? new Logo(
-            path: $logoPath ?? $this->logoPath,
-            resizeToWidth: $logoResizeToWidth ?? $this->logoResizeToWidth,
-            resizeToHeight: $logoResizeToHeight ?? $this->logoResizeToHeight,
-            punchoutBackground: $logoPunchoutBackground ?? $this->logoPunchoutBackground
-        ) : null;
+        $logo = $createLogo
+            ? new Logo(
+                path: $logoPath ?? $this->logoPath,
+                resizeToWidth: $logoResizeToWidth ?? $this->logoResizeToWidth,
+                resizeToHeight: $logoResizeToHeight ?? $this->logoResizeToHeight,
+                punchoutBackground: $logoPunchoutBackground ?? $this->logoPunchoutBackground,
+            )
+            : null;
 
-        $label = $createLabel ? new Label(
-            text: $labelText ?? $this->labelText,
-            font: $labelFont ?? $this->labelFont,
-            alignment: $labelAlignment ?? $this->labelAlignment,
-            margin: $labelMargin ?? $this->labelMargin,
-            textColor: $labelTextColor ?? $this->labelTextColor
-        ) : null;
+        $label = $createLabel
+            ? new Label(
+                text: $labelText ?? $this->labelText,
+                font: $labelFont ?? $this->labelFont,
+                alignment: $labelAlignment ?? $this->labelAlignment,
+                margin: $labelMargin ?? $this->labelMargin,
+                textColor: $labelTextColor ?? $this->labelTextColor,
+            )
+            : null;
 
         $result = $writer->write($qrCode, $logo, $label, $writerOptions);
 
